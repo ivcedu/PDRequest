@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>College Originate Event Report</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+        <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
+        <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>        
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="nav_admin"><i class="icon-lock icon-white"></i> Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- filter option -->
+            <div class="row-fluid">
+                <div class="span2" style="padding-top: 5px;">Start Date:</div>
+                <div class="span2"><input type="text" class="span12" id="start_date"></div>
+                <div class="span2" style="padding-top: 5px;">End Date:</div>
+                <div class="span2"><input type="text" class="span12" id="end_date"></div>
+                <div class="span2" style="padding-top: 5px;">Fiscal Yrs:</div>
+                <div class="span2"><select class="selectpicker span12" id="fw_fiscal_yrs"></select></div>
+            </div>
+            <div class="row-fluid">
+                <div class="span2" style="padding-top: 5px;">Justification:</div>
+                <div class="span6">
+                    <select class="selectpicker span12" id="justification_id">
+                        <option value="All">All Justifications</option>
+                        <option value="FWJust1">Improvement of teaching</option>
+                        <option value="FWJust2">Maintenance of current academic, technical knowledge and skills</option>
+                        <option value="FWJust3">In-service training for vocational education and employment ...</option>
+                        <option value="FWJust4">Retraining to meet changing institutional needs</option>
+                        <option value="FWJust5">Intersegmental exchange programs</option>
+                        <option value="FWJust6">Development of innovations in instructional and administrative ...</option>
+                        <option value="FWJust7">Computer and technology proficiency programs</option>
+                        <option value="FWJust8">Courses and training implementing affirmative action and upward ...</option>
+                        <option value="FWJust9">Other activities determined to be related to educational and ...</option>
+                    </select>
+                </div>
+                <div class="span2"><button class="btn span12" id="btn_to_excel"><i class="icon-th icon-black"></i> To Excel</button></div>
+                <div class="span2"><button class="btn btn-inverse span12" id="btn_refresh"><i class="icon-refresh icon-white"></i> Refresh</button></div>
+            </div>
+            
+            <!-- detail flex week list  -->
+            <div class="row-fluid">
+                <h4 style="text-align: center;">All Flex Week List</h4>
+            </div>
+            <div class="row-fluid">
+                <table class="table table-condensed table-bordered" id="flex_detail_tbl">
+                    <thead id="head_tr" style="background-color: grey;">
+                        <tr>
+                            <th class="span3"><a href="#" style="color: white;">Faculty Name</a></th>
+                            <th class="span5"><a href="#" style="color: white;">Activity Title</a></th>
+                            <th class="span1"><a href="#" style="color: white;">Start Date</a></th>
+                            <th class="span1"><a href="#" style="color: white;">End Date</a></th>
+                            <th class="span1"><a href="#" style="color: white;">Hrs</a></th>
+                            <th class="span1"><a href="#" style="color: white;">Confirm</a></th>
+                        </tr>
+                    </thead>
+                    <tbody id="body_tr">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.core.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.widget.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.datepicker.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/rptAdmFlexDetail.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+    </body>
+</html>

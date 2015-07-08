@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Professional Development</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+        <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
+        <!-- application css -->
+        <link rel="stylesheet" href="css/home.css"/>
+        <link rel="stylesheet" href="css/printPDRequest.css"/>
+        
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="nav_pd_request"><i class="icon-th-list icon-white"></i> PD Request</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a href=# id="nav_flex_week"><i class="icon-calendar icon-white"></i> FlexWeek</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a href=# id="nav_system_setting"><i class="icon-briefcase icon-white"></i> System Setting</a></li>
+                    </ul>
+                    <ul class="nav" id="nav_reports_section">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href=#>Reports<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href=# id="nav_report_justification">Justification Report</a></li>
+                                <li><a href=# id="nav_report_college_originate_event">College Originate Event</a></li>
+                                <li><a href=# id="nav_report_pd_week">PD Week</a></li>
+                                <li class="divider"></li>
+                                <li><a href=# id="nav_report_pd_tracking_doc">PD Tracking Doc.</a></li>
+                                <li><a href=# id="nav_report_pd_deleted_list">PD Deleted List</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="home"><i class="icon-home icon-white"></i> Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="refresh"><i class="icon-refresh icon-white"></i> Refresh</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- professional development list  -->
+            <div id="pd_request_section">
+                <div class='row-fluid'>
+                    <div class="span8 offset2"><h4 class="span12" style="text-align: center">PD Request Approval List</h4></div>
+                    <div class="span2 text-right" style="vertical-align: bottom;"><a href="doc/PD Request Admin Manual.pdf" target="_blank">Admin Manual</a></div>
+                </div>
+                <div class="row-fluid">
+                    <table class="table table-condensed table-bordered" id="pd_request_tbl">
+                        <thead id="head_tr" style="background-color: grey;">
+                            <tr>
+                                <th class="span2"><a href="#" style="color: white;">Activity Title</a></th>
+                                <th class="span1"><a href="#" style="color: white;">Date</a></th>
+                                <th class="span2"><a href="#" style="color: white;">Requestor</a></th>
+                                <th class="span3"><a href="#" style="color: white;">Request Type</a></th>
+                                <th class="span2"><a href="#" style="color: white;">Step</a></th>
+                                <th class="span2"><a href="#" style="color: white;">Status</a></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pd_request_body_tr">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- flex week list  -->
+            <div id="flex_week_section">
+                <div class='row-fluid'>
+                    <div class="span2"><button class="btn span12" id="btn_add_flex_week"><i class="icon-pencil icon-black"></i> Add FlexWeek</button></div>
+                    <div class="span8"><h4 class="span12" style="text-align: center">Flex Week List</h4></div>
+                    <div class="span2 text-right" style="vertical-align: bottom;"><a href="doc/PD Request Admin Manual.pdf" target="_blank">Admin Manual</a></div>
+                </div>
+                <div class='row-fluid'>
+                    <div class="span2" style="padding-top: 5px; font-weight: bold;">Fiscal Yrs:</div>
+                    <div class="span3"><select class="selectpicker span12" id="fw_fiscal_yrs"></select></div>
+                    <div class="span2"><button class="btn btn-inverse span12" id="btn_fw_list_refresh"><i class="icon-refresh icon-white"></i> Refresh</button></div>
+                </div>
+                <div class="row-fluid">
+                    <table class="table table-condensed table-bordered" id="flex_week_tbl">
+                        <thead id="head_tr" style="background-color: grey;">
+                            <tr>
+                                <th class="span3"><a href="#" style="color: white;">Name</a></th>
+                                <th class="span1"><a href="#" style="color: white;">Start</a></th>
+                                <th class="span3"><a href="#" style="color: white;">Presenter</a></th>
+                                <th class="span2"><a href="#" style="color: white;">Location</a></th>
+                                <th class="span2"><a href="#" style="color: white;">Created By</a></th>
+                                <th class="span1"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="flex_week_body_tr">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Modal system setting -->
+            <div class="modal hide fade" id="mod_system_setting">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"> x </button>
+                    <h4 class="text-center" id="mod_header">Professional Development System Setting</h4>
+                </div>
+                <div class="modal-body">                    
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Mileage Cost:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_mil_cost"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Breakfast Cost:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_brk_cost"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Lunch Cost:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_lun_cost"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Dinner Cost:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_din_cost"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Full Time PD Flex Hrs:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_fh_required"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Part Time PD Flex Hrs:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_ph_required"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Full Time Faculty Limit:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_ffl_required"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 text-left" style="padding-top: 5px;">Part Time Faculty Limit:</div>
+                        <div class="span6"><input type="text" class="span12" id="mod_sys_pfl_required"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" id="mod_btn_sys_save">Save</button>
+                    <button class="btn btn-inverse" data-dismiss="modal" id="mod_btn_sys_close">Close</button>
+                </div>
+            </div>
+            
+            <!-- Modal delete flex week admin -->
+            <div class="modal hide fade" id="mod_popup_flex_week_delete_admin">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"> x </button>
+                    <h4 class="text-center" id="mod_header">Warning !!!</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align:center; color:blue; font-weight:bold;">It will delete Available and all faculty Flex Week Activity. Are you sure you want to delete?</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" id="mod_flex_week_delete_admin_yes">Yes</button>
+                    <button class="btn btn-inverse" data-dismiss="modal" id="mod_flex_week_delete_admin_no">No</button>
+                </div>
+            </div>
+            
+            <!-- Modal fiscal year -->
+            <div class="modal hide fade" id="mod_fiscal_yrs">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"> x </button>
+                    <h4 class="text-center">Fiscal Year Selection</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row-fluid">
+                        <div class="span4" style="padding-top: 5px;">Fiscal Yrs:</div>
+                        <div class="span6"><select class="selectpicker span12" data-container="body" id="mod_opt_fiscal_yrs"></select></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" id="mod_btn_fiscal_yrs_run">Run</button>
+                    <button class="btn btn-inverse" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-autosize/jquery.autosize.1.18.1.min.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/administrator.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+        <script src="js/sendEmail.js"></script>
+    </body>
+</html>

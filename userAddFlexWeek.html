@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Flex Week Activity</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+        <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
+        <!-- application css -->
+        <link rel="stylesheet" href="css/home.css"/>
+        <link rel="stylesheet" href="css/printPDRequest.css"/>
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="nav_print"><i class="icon-print icon-white"></i> Print</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="nav_close"><i class="icon-eye-close icon-white"></i> Close</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row-fluid">
+                <div class="span12"><h3 class="span12" style="text-align: center">Flex Week Activity</h3></div>
+            </div>
+            
+            <!-- activity detail -->
+            <div class="row" style="padding-bottom: 10px">
+                <div class="span12 text-center print-color-box" style="background-color: gray; color: white">Activity Detail</div>
+            </div>
+            <div class="row">
+                <div class="span2" style="padding-top: 5px;">Activity Title:</div>
+                <div class="span4" style="padding-top: 5px;" id="activity_title"></div>
+                <div class="span2" style="padding-top: 5px;">Activity Presenter:</div>
+                <div class="span4" style="padding-top: 5px;" id="activity_presenter"></div>
+            </div>
+            <div class="row">
+                <div class="span2" style="padding-top: 5px;">Location:</div>
+                <div class="span10" style="padding-top: 5px;" id="location"></div>
+            </div>
+            <div class="row">
+                <div class="span2" style="padding-top: 5px;">Activity City:</div>
+                <div class="span4" style="padding-top: 5px;" id="activity_city"></div>
+                <div class="span2" style="padding-top: 5px;">Activity State:</div>
+                <div class="span4" style="padding-top: 5px;" id="activity_state"></div>
+            </div>
+            <div class="row">
+                <div class="span2" style="padding-top: 5px;">Activity Description:</div>
+                <div class="span10" style="padding-top: 5px;" id="activity_description"></div>
+            </div>
+            <div class="row">
+                <div class="span2" style="padding-top: 5px;">Activity Link:</div>
+                <div class="span10" style="padding-top: 5px;" id="activity_link"></div>
+            </div>
+            <div class="row">
+                <div class="span2" style="padding-top: 5px;">Start Date:</div>
+                <div class="span2" style="padding-top: 5px;" id="start_date"></div>
+                <div class="span2" style="padding-top: 5px;" id="start_time"></div>
+                <div class="span2" style="padding-top: 5px;">End Date:</div>
+                <div class="span2" style="padding-top: 5px;" id="end_date"></div>
+                <div class="span2" style="padding-top: 5px;" id="end_time"></div>
+            </div>
+            <div class="row">&nbsp;</div>
+            
+            <!-- justification Area -->
+            <div id="justification_Area">
+                <div class="row" style="padding-bottom: 10px">
+                    <div class="span12 text-center print-color-box" style="background-color: gray; color: white">Justification Area(s)</div>
+                </div>
+                <div class="row">
+                    <div class="span10 text-center" style="font-weight: bold; border-bottom: 1px solid;">Description</div>
+                    <div class="span2 text-center" style="font-weight: bold; border-bottom: 1px solid;">Check all that apply</div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Improvement of teaching.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust1"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Maintenance of current academic, technical knowledge and skills.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust2"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">In-service training for vocational education and employment preparation programs.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust3"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Retraining to meet changing institutional needs.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust4"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Intersegmental exchange programs.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust5"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Development of innovations in instructional and administrative techniques and program effectiveness.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust6"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Computer and technology proficiency programs.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust7"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Courses and training implementing affirmative action and upward mobility programs.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust8"></div>
+                </div>
+                <div class="row">
+                    <div class="span10 vertical_middle">Other activities determined to be related to educational and professional development.</div>
+                    <div class="span2 text-center vertical_middle"><input type="checkbox" disabled="disabled" id="FWJust9"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.core.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.widget.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.datepicker.js"></script>
+        <script src="../include/jquery-autosize/jquery.autosize.1.18.1.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/userAddFlexWeek.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+    </body>
+</html>

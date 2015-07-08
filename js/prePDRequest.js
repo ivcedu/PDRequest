@@ -1,0 +1,1230 @@
+////////////////////////////////////////////////////////////////////////////////
+window.onload = function() {    
+    if (sessionStorage.key(0) !== null) {
+        setDefaultSetting();
+        getGeneralInfo();    
+            
+        if (sessionStorage.getItem('m_PDRequestID') !== null) {            
+            PDRequestID = sessionStorage.getItem('m_PDRequestID');
+            getSelectPDRequest();
+            getSelectPDReqUserInfo();
+            getSelectJustArea();
+            getSelectNarrative();
+            getSelectResourceType();
+        }
+    }
+    else {
+        window.open('Login.html', '_self');
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+$(document).ready(function() {     
+    $('#logout').click(function() {
+        sessionStorage.clear();
+        window.open('Login.html', '_self');
+    });
+    
+    $('#home').click(function() {
+        sessionStorage.removeItem("m_PDRequestID");
+        window.open('home.html', '_self');
+    });
+    
+    $('#print_view').click(function() {
+        if (PDRequestID !== "") {
+            sessionStorage.setItem('m_PDRequestID', PDRequestID);
+            window.open('printPDRequest.html?pdrequest_id=' + PDRequestID, '_blank');
+        }
+    });
+    
+    $('#start_date').change(function() {
+        var start_date = $(this).val();
+        $('#end_date').datepicker( "option", "minDate", new Date(start_date));
+    });
+    
+    // change resource type ////////////////////////////////////////////////////
+    $('#resource_type').change(function() {      
+        var err = formActivityTitleValidation();
+        if (err !== "") {
+            alert(err);
+            $('#resource_type').val("Select...");
+            return false;
+        }
+        
+        var resource_type = $(this).val();
+        if (resource_type === "Select...") {
+            setDefaultSetting();
+            alert("Please select Resource Type");
+            return false;
+        }
+        else if (resource_type === "Hours") {
+            ResourceTypeID = getResourceTypeID(resource_type);
+            addPDRequest(ResourceTypeID);
+            setHoursSetting();
+        }
+        else if (resource_type === "Reimbursement") {
+            ResourceTypeID = getResourceTypeID(resource_type); 
+            addPDRequest(ResourceTypeID);
+            setReimbursementSetting();
+        }
+        else {
+            ResourceTypeID = getResourceTypeID(resource_type);      
+            addPDRequest(ResourceTypeID);
+            setHoursReimbursementSetting();
+        }
+        
+        setStepStatus();
+    });
+    
+    // justification narrative add file click //////////////////////////////////
+    $('#btn_just_narrative_add').click(function() {
+        justNarrativeAttachFile(PDRequestID);
+    });
+    
+    $(document).on('click', 'button[id^="just_narr_file_remove_btn_"]', function() {
+        var currentId = $(this).attr('id');       
+        var ID = currentId.replace("just_narr_file_remove_btn_", "");
+        var file_name = $("#just_narr_file_view_" + ID).html();
+        
+        var file_link_name = "narrative_" + PDRequestID + "_" + ID + "_" + file_name;
+        if (deleteAttachFileJustNarrative(file_link_name)) {
+            var fileID = "just_narr_file_" + ID;
+            $("#" + fileID).remove();
+            $("#just_narrative_file").filestyle('clear');
+            $('#just_narrative_file').val("");
+        }
+    });
+    
+    // pd request hours fields change //////////////////////////////////////////
+    $('#pre_input_hrs').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);         
+        var new_val = input_val * 3;
+        $(this).val(input_val);
+        $('#pre_presenter_hrs').html(new_val.toFixed(2));
+        preCalculateTotalHrs();
+    }); 
+    
+    $('#pre_participant_hrs').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);       
+            $(this).val(input_val);
+        preCalculateTotalHrs();
+    });
+    
+    // pd request reimbursement fields change //////////////////////////////////
+    $('#pre_reg_fee').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));         
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_travel_cost').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));         
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_mileage').change(function() {
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_mileage_cost').html('$0.00');
+        }
+        else {     
+            $(this).val(input_val);
+            $('#pre_mileage_cost').html(formatDollar(sys_mileage_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_lodging_cost').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));         
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_breakfast').change(function() {      
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_breakfast_cost').html('$0.00');
+        }
+        else {          
+            $(this).val(input_val);
+            $('#pre_breakfast_cost').html(formatDollar(sys_breakfast_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_lunch').change(function() {      
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_lunch_cost').html('$0.00');
+        }
+        else {         
+            $(this).val(input_val);
+            $('#pre_lunch_cost').html(formatDollar(sys_lunch_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_dinner').change(function() {      
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_dinner_cost').html('$0.00');
+        }
+        else {       
+            $(this).val(input_val);
+            $('#pre_dinner_cost').html(formatDollar(sys_dinner_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_other_cost').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));       
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_funding_other').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));        
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $("input[name=rdo_fs_approval]:radio").change(function () {
+        preCalculateTotalCost();
+    });
+    
+    // user save as draft click ////////////////////////////////////////////////
+    $('#btn_save_draft').click(function() { 
+        var err = formActivityTitleValidation();
+        if (err !== "") {
+            alert(err);
+            return false;
+        }
+        
+        addPDRequest(ResourceTypeID);
+        updatePDReqUserInfo();
+        updatePDRequest(false);
+        updateJustArea();
+        updateNarrative();
+        updateRequestDetail();
+        
+        // insert log
+        db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "pre-activity save as draft");
+        
+        window.open('home.html', '_self');
+    });
+    
+    // user submit click ///////////////////////////////////////////////////////
+    $('#btn_submit').click(function() {
+        var err = formMainValidation();
+        err += formNarrativeValidation();
+        if (err !== "") {
+            alert(err);
+            return false;
+        }
+        
+        addPDRequest(ResourceTypeID);
+        updatePDReqUserInfo();
+        updatePDRequest(true);
+        updateJustArea();
+        updateNarrative();
+        updateRequestDetail();
+        updateStatus(2);
+        addTransaction();
+        
+        db_deleteTracDoc(PDRequestID);
+        db_insertTracDoc(PDRequestID);
+        
+        // insert log
+        db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "submit pre-activity");
+        
+        sendPreActivityCreatorSubmitted();
+        if (StatusID === "5") {
+            sendPreActivityApproverMoreInfo();
+        }
+        else {
+            sendPreActivityApproverSubmitted();
+        }
+
+        sessionStorage.removeItem("m_PDRequestID");
+        window.open('home.html', '_self');
+    });
+    
+    $('#ckb_comments').change(function() {      
+        var ckb_comm = ($(this).is(':checked') ? true : false);
+        if (ckb_comm) {
+            $('#comments_block').show();
+        }
+        else {
+            $('#comments_block').hide();
+        }
+    });
+    
+    // auto size
+    $('#activity_description').autosize();
+    $('#just_narrative_descrip').autosize();
+    $('#user_comments').autosize();
+    
+    // datepicker
+    $('#start_date').datepicker();
+    $('#end_date').datepicker();
+    
+    // bootstrap filestyle
+    $(":file").filestyle({classButton: "btn btn-primary"});
+    
+    // popover
+    $('#other_cost_description').popover({content:"Parking, Air Port Shuttle, Internet etc", placement:"top"});
+    
+    // selectpicker
+    $('.selectpicker').selectpicker();
+});
+
+////////////////////////////////////////////////////////////////////////////////
+function setFiscalYrs() {
+    var today = new Date();
+    var mon = today.getMonth()+1;
+    var yr = today.getFullYear();
+    
+    var fiscal_yrs_0 = (yr - 1) + "-" + yr;
+    var fiscal_yrs_1 = yr + "-" + (yr + 1);
+    var fiscal_yrs_2 = (yr + 1) + "-" + (yr + 2);
+    
+    var fiscal_html ="";
+    if (mon > 6) {
+        fiscal_html += "<option value='" + fiscal_yrs_1 + "'>" + fiscal_yrs_1 + "</option>";
+        fiscal_html += "<option value='" + fiscal_yrs_2 + "'>" + fiscal_yrs_2 + "</option>";
+    }
+    else {
+        fiscal_html += "<option value='" + fiscal_yrs_0 + "'>" + fiscal_yrs_0 + "</option>";
+        fiscal_html += "<option value='" + fiscal_yrs_1 + "'>" + fiscal_yrs_1 + "</option>";
+    }
+    
+    $("#fiscal").append(fiscal_html);    
+    $('#fiscal').selectpicker('refresh');
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function formJustificationValidation() {
+    var err = "";
+    var just_area_1 = ($('#just_area_1').is(':checked') ? true : false);
+    var just_area_2 = ($('#just_area_2').is(':checked') ? true : false);
+    var just_area_3 = ($('#just_area_3').is(':checked') ? true : false);
+    var just_area_4 = ($('#just_area_4').is(':checked') ? true : false);
+    var just_area_5 = ($('#just_area_5').is(':checked') ? true : false);
+    var just_area_6 = ($('#just_area_6').is(':checked') ? true : false);
+    var just_area_7 = ($('#just_area_7').is(':checked') ? true : false);
+    var just_area_8 = ($('#just_area_8').is(':checked') ? true : false);
+    var just_area_9 = ($('#just_area_9').is(':checked') ? true : false);
+    
+    if (just_area_1 === false && just_area_2 === false && just_area_3 === false
+            && just_area_4 === false && just_area_5 === false && just_area_6 === false
+            && just_area_7 === false && just_area_8 === false && just_area_9 === false) {
+        err = "Minimum one Justification Area is a required\n";
+    }
+    
+    return err;
+}
+
+function formMainValidation() {
+    var err = "";
+    
+    if (isValidEmailAddress($('#email').val()) === false) {
+        err += "Email is a required field or you entered incorrect email address\n";
+    }
+    if ($('#department').val().replace(/\s+/g, '') === "") {
+        err += "Department is a required field\n";
+    }
+    if ($('#phone').val().replace(/\s+/g, '') === "") {
+        err += "Phone is a required field\n";
+    }
+    if ($('#school').val().replace(/\s+/g, '') === "") {
+        err += "School is a required field\n";
+    }
+    if ($('#employee_type').val().replace(/\s+/g, '') === "") {
+        err += "Employee Type is a required field\n";
+    }
+    if ($('#activity_title').val().replace(/\s+/g, '') === "") {
+        err += "Activity Title is a required field\n";
+    }
+    if ($('#activity_organizer').val().replace(/\s+/g, '') === "") {
+        err += "Activity Organizer is a required field\n";
+    }
+    if ($('#activity_city').val().replace(/\s+/g, '') === "") {
+        err += "Activity City is a required field\n";
+    }
+    if ($('#activity_state').val() === "Select...") {
+        err += "Activity State is a required field\n";
+    }
+    if ($('#activity_description').val().replace(/\s+/g, '') === "") {
+        err += "Activity Description is a required field\n";
+    }
+    if ($('#start_date').val().replace(/\s+/g, '') === "") {
+        err += "Start Date is a required field\n";
+    }
+    if ($('#end_date').val().replace(/\s+/g, '') === "") {
+        err += "End Date is a required field\n";
+    }
+    err += formJustificationValidation();
+
+    return err;
+}
+
+function formNarrativeValidation() {
+    var err = "";
+    
+    if ($('#just_narrative_descrip').val().replace(/\s+/g, '') === "") {
+        err += "Justification Narrative is a required field\n";
+    }
+
+    return err;
+}
+
+function formActivityTitleValidation() {
+    var err = "";
+    
+    if ($('#activity_title').val().replace(/\s+/g, '') === "") {
+        err += "Activity Title is a required field\n";
+    }
+    if ($('#start_date').val().replace(/\s+/g, '') === "") {
+        err += "Start Date is a required field\n";
+    }
+    if ($('#end_date').val().replace(/\s+/g, '') === "") {
+        err += "End Date is a required field\n";
+    }
+
+    return err;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function setDefaultSetting() {
+    $('#request_hours').hide();
+    $('#request_reimbursement').hide();
+    $('#approval_section').hide();
+    $('#comments_section').hide();
+    $('#justification_Area').hide();
+    $('#just_narrative_section').hide();
+    $('#just_narrative_descrip').hide();
+    $('#comments_block').hide();
+}
+
+function setHoursSetting() {
+    $('#request_hours').show();
+    $('#request_reimbursement').hide();
+    $('#justification_Area').show();
+    $('#just_narrative_section').show();
+    $('#just_narrative_descrip').show();
+    $('#approval_section').show();
+    $('#comments_section').show();
+}
+
+function setReimbursementSetting() {
+    $('#request_hours').hide();
+    $('#request_reimbursement').show();
+    $('#justification_Area').show();
+    $('#just_narrative_section').show();
+    $('#just_narrative_descrip').show();
+    $('#approval_section').show();
+    $('#comments_section').show();
+    
+    setPDLimitSummary();
+}
+
+function setHoursReimbursementSetting() {
+    $('#request_hours').show();
+    $('#request_reimbursement').show();
+    $('#justification_Area').show();
+    $('#just_narrative_section').show();
+    $('#just_narrative_descrip').show();
+    $('#approval_section').show();
+    $('#comments_section').show();
+    
+    setPDLimitSummary();
+}
+
+function setClearJustArea() {
+    $("#just_area_1").prop('checked', false);
+    $("#just_area_2").prop('checked', false);
+    $("#just_area_3").prop('checked', false);
+    $("#just_area_4").prop('checked', false);
+    $("#just_area_5").prop('checked', false);
+    $("#just_area_6").prop('checked', false);
+    $("#just_area_7").prop('checked', false);
+    $("#just_area_8").prop('checked', false);
+    $("#just_area_9").prop('checked', false);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function getGeneralInfo() {  
+    getLoginID();
+    getPDSystem();
+    setCurrentDate();
+    setFiscalYrs();
+    getActState();
+    getResourceType();
+}
+
+function getLoginID() {    
+    var email = sessionStorage.getItem('m_loginEmail');
+    var login = new Array();
+    login = db_getLogin(email);
+    
+    if (login.length === 1) {
+        LoginID = login[0]['LoginID'];
+        $('#requestor').val(login[0]['LoginName']);
+        $('#email').val(login[0]['LoginEmail']);
+        $('#department').val(login[0]['LoginDepart']);
+        $('#phone').val(login[0]['LoginPhone']);
+        $('#school').val(login[0]['LoginDiv']);
+        $('#employee_type').val(login[0]['LoginEType']);
+    }
+}
+
+function addPDRequest(ResourceTypeID) {
+    if (PDRequestID === "") {
+        var fiscal_yrs = $('#fiscal').val();
+        var act_title = textReplaceApostrophe($('#activity_title').val());
+        var start_date = textReplaceApostrophe($('#start_date').val());
+        var end_date = textReplaceApostrophe($('#end_date').val());
+
+        var result_ID = db_insertPDRequest(LoginID, ResourceTypeID, 1, 1, fiscal_yrs, act_title, start_date, end_date);
+        if (result_ID !== "") {
+            PDRequestID = result_ID;
+            addPDReqUserInfo(PDRequestID);
+        }
+    }
+}
+
+function addPDReqUserInfo(PDRequestID) {
+    if (PDReqUserInfoID === "" && PDRequestID !== "") {
+        var name = textReplaceApostrophe($('#requestor').val());
+        var email = textReplaceApostrophe($('#email').val());
+        var depart = textReplaceApostrophe($('#department').val());
+        var phone = textReplaceApostrophe($('#phone').val());
+        var division = textReplaceApostrophe($('#school').val());
+        var emp_type = textReplaceApostrophe($('#employee_type').val());
+        
+        var result_ID = db_insertPDReqUserInfo(PDRequestID, name, email, depart, phone, division, emp_type);
+        if (result_ID !== "") {
+            PDReqUserInfoID = result_ID;
+        }
+    }
+}
+
+function addJustArea() {
+    if (PDJustAreaID === "" && PDRequestID !== "") {
+        var result_ID = db_insertPDJustArea(PDRequestID);
+        if (result_ID !== "") {
+            PDJustAreaID = result_ID;
+        }
+    }
+}
+
+function addNarrative() {
+    if (NarrativeID === "" && PDRequestID !== "") {
+        var result_ID = db_insertNarrative(PDRequestID);
+        if (result_ID !== "") {
+            NarrativeID = result_ID;
+        }
+    }
+}
+
+function addPDReqHours() {
+    if (PDReqHoursID === "" && PDRequestID !== "") {
+        var result_ID = db_insertPDReqHours(PDRequestID);
+        if (result_ID !== "") {
+            PDReqHoursID = result_ID;
+        }
+    }
+}
+
+function addPDReqReimb() {
+    if (PDReqReimbID === "" && PDRequestID !== "") {
+        var result_ID = db_insertPDReqReimb(PDRequestID);
+        if (result_ID !== "") {
+            PDReqReimbID = result_ID;
+        }
+    }
+}
+
+function setStepStatus() {
+    if (PDRequestID === "") {
+        $('#current_step').val("Pre-activity");
+        $('#current_status').val("Draft");
+    }
+    else {
+        getSelectStepStatus();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function addTransaction() {
+    var login_name = textReplaceApostrophe(sessionStorage.getItem('m_loginName'));
+    var comments = textReplaceApostrophe($('#user_comments').val());
+    if (comments !== "") {
+        db_insertTransaction(PDRequestID, login_name, comments);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function updatePDReqUserInfo() {
+    var name = textReplaceApostrophe($('#requestor').val());
+    var email = textReplaceApostrophe($('#email').val());
+    var depart = textReplaceApostrophe($('#department').val());
+    var phone = textReplaceApostrophe($('#phone').val());
+    var division = textReplaceApostrophe($('#school').val());
+    var emp_type = textReplaceApostrophe($('#employee_type').val());
+
+    db_updatePDReqUserInfo(PDRequestID, name, email, depart, phone, division, emp_type);
+}
+
+function updatePDRequest(submit) {
+    var act_title = textReplaceApostrophe($('#activity_title').val());
+    var act_organizer = textReplaceApostrophe($('#activity_organizer').val());
+    var act_city = textReplaceApostrophe($('#activity_city').val());
+    var act_state_ID = $('#activity_state').val();
+    var act_descrip = textReplaceApostrophe($('#activity_description').val());
+    var act_link = textReplaceApostrophe($('#activity_link').val());
+    var start_date = textReplaceApostrophe($('#start_date').val());
+    var end_date = textReplaceApostrophe($('#end_date').val());
+    var create_date = textReplaceApostrophe($('#current_date').val());
+    var ckb_comm = false;
+    var comments = "";
+    if (submit === false) {
+        ckb_comm = ($('#ckb_comments').is(':checked') ? true : false);
+        comments = textReplaceApostrophe($('#user_comments').val());
+    }
+    
+    db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, act_title, act_organizer, act_city, act_state_ID, act_descrip, act_link, start_date, end_date, create_date, comments, ckb_comm);
+    db_updatePDRequestPreSubDate(PDRequestID);
+}
+
+function updateJustArea() {
+    addJustArea();
+        
+    var just_area_1 = ($('#just_area_1').is(':checked') ? true : false);
+    var just_area_2 = ($('#just_area_2').is(':checked') ? true : false);
+    var just_area_3 = ($('#just_area_3').is(':checked') ? true : false);
+    var just_area_4 = ($('#just_area_4').is(':checked') ? true : false);
+    var just_area_5 = ($('#just_area_5').is(':checked') ? true : false);
+    var just_area_6 = ($('#just_area_6').is(':checked') ? true : false);
+    var just_area_7 = ($('#just_area_7').is(':checked') ? true : false);
+    var just_area_8 = ($('#just_area_8').is(':checked') ? true : false);
+    var just_area_9 = ($('#just_area_9').is(':checked') ? true : false);
+
+    db_updatePDJustArea(PDRequestID, just_area_1, just_area_2, just_area_3, just_area_4, just_area_5, just_area_6, just_area_7, just_area_8, just_area_9);
+}
+
+function updateNarrative() {
+    addNarrative();
+    var narrative = textReplaceApostrophe($('#just_narrative_descrip').val());
+
+    db_updateNarrative(PDRequestID, narrative);
+}
+
+function updateRequestDetail() {
+    if (ResourceTypeID === "1") {
+        updatePDReqHoursPreActivity();
+    }
+    else if (ResourceTypeID === "2") {
+        updatePDReqReimbPreActivity();
+    }
+    else {
+        updatePDReqHoursPreActivity();
+        updatePDReqReimbPreActivity();
+    }
+}
+
+function updatePDReqHoursPreActivity() {
+    addPDReqHours();
+    
+    var pre_input_hrs = Number($('#pre_input_hrs').val());
+    var pre_pres_hrs = Number($('#pre_presenter_hrs').html());
+    var pre_part_hrs = Number($('#pre_participant_hrs').val());
+    var pre_total_hrs = Number($('#pre_total_hrs').html());
+    
+    db_updatePDReqHoursPreActivity(PDRequestID, pre_input_hrs, pre_pres_hrs, pre_part_hrs, pre_total_hrs);
+}
+
+function updatePDReqReimbPreActivity() {
+    addPDReqReimb();
+    
+    var pre_reg_fee = revertDollar($('#pre_reg_fee').val());
+    var pre_travel_cost = revertDollar($('#pre_travel_cost').val());
+    var pre_input_mileage = Number($('#pre_input_mileage').val());
+    var pre_mileage_cost = revertDollar($('#pre_mileage_cost').html());
+    var pre_lodging_cost = revertDollar($('#pre_lodging_cost').val());
+    var pre_input_breakfast = Number($('#pre_input_breakfast').val());
+    var pre_breakfast_cost = revertDollar($('#pre_breakfast_cost').html());
+    var pre_input_lunch = Number($('#pre_input_lunch').val());
+    var pre_lunch_cost = revertDollar($('#pre_lunch_cost').html());
+    var pre_input_dinner = Number($('#pre_input_dinner').val());
+    var pre_dinner_cost = revertDollar($('#pre_dinner_cost').html());
+    var other_cost_description = textReplaceApostrophe($('#other_cost_description').val());
+    var pre_other_cost = revertDollar($('#pre_other_cost').val());
+    var pre_sub_total = revertDollar($('#pre_sub_total').html());
+    var funding_other_source = textReplaceApostrophe($('#funding_other_source').val());
+    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
+    var fs_comments = textReplaceApostrophe($('#fs_comments').val());
+    var pre_funding_other = revertDollar($('#pre_funding_other').val());
+    var pre_total_cost = revertDollar($('#pre_total_cost').html());
+    var pre_total_amount_request = revertDollar($('#pre_total_amount_request').html());
+    
+    db_updatePDReqReimbPreActivity(PDRequestID, pre_reg_fee, pre_travel_cost, pre_input_mileage, pre_mileage_cost, pre_lodging_cost, pre_input_breakfast, pre_breakfast_cost, 
+                                    pre_input_lunch, pre_lunch_cost, pre_input_dinner, pre_dinner_cost, other_cost_description, pre_other_cost, 
+                                    pre_sub_total, funding_other_source, fs_approved, fs_comments, pre_funding_other, pre_total_cost, pre_total_amount_request);
+}
+
+function updateStep(new_step_ID) {
+    db_updatePDRequestStep(PDRequestID, new_step_ID);
+}
+
+function updateStatus(new_status_ID) {
+    db_updatePDRequestStatus(PDRequestID, new_status_ID);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function getSelectPDRequest() {
+    var pd_request = new Array();
+    pd_request = db_getPDRequest(PDRequestID);
+    
+    if (pd_request.length === 1) {
+        $('#activity_title').val(pd_request[0]['ActTitle']);
+        $('#activity_organizer').val(pd_request[0]['ActOrganizer']);
+        $('#activity_city').val(pd_request[0]['ActCity']);
+        $('#activity_state').val(pd_request[0]['ActStateID']);
+        $('#activity_description').val(pd_request[0]['ActDescrip']);
+        $('#activity_link').val(pd_request[0]['ActLink']);
+        $('#start_date').val(pd_request[0]['StartDate']);
+        $('#end_date').val(pd_request[0]['EndDate']);
+        $('#user_comments').val(pd_request[0]['Comments']);
+        if (pd_request[0]['ckbCom'] === "1") {
+            $("#ckb_comments").prop('checked', true);
+            $('#comments_block').show();
+        }
+        
+        LoginID = pd_request[0]['LoginID'];
+        StatusID = pd_request[0]['StatusID'];
+        PDReqStepID = pd_request[0]['PDReqStepID'];
+        ResourceTypeID = pd_request[0]['ResourceTypeID'];
+        
+        if (StatusID !== "1") {
+            $('#current_date').val(pd_request[0]['CreateDate']);
+        }
+    }
+}
+
+function getSelectPDReqUserInfo() {
+    var pd_req_user_info = new Array();
+    pd_req_user_info = db_getPDReqUserInfo(PDRequestID);
+    
+    if (pd_req_user_info.length === 1) {
+        PDReqUserInfoID = pd_req_user_info[0][0];
+        $('#requestor').val(pd_req_user_info[0]['Name']);
+        $('#email').val(pd_req_user_info[0]['Email']);
+        $('#department').val(pd_req_user_info[0]['Depart']);
+        $('#phone').val(pd_req_user_info[0]['Phone']);
+        $('#school').val(pd_req_user_info[0]['Division']);
+        $('#employee_type').val(pd_req_user_info[0]['EmployeeType']);
+    }
+}
+
+function getSelectResourceType() {
+    var resource_type = new Array();
+    resource_type = db_getResourceType();
+
+    for(var i = 0; i < resource_type.length; i++) { 
+        var ID = resource_type[i][0];
+        if (ID === ResourceTypeID) {
+            $('#resource_type').val(resource_type[i][1]);
+            $('.selectpicker').selectpicker('refresh');
+            if (ResourceTypeID === "1") {
+                setHoursSetting();
+                getSelectPDReqHours();
+            }
+            else if (ResourceTypeID === "2") {
+                setReimbursementSetting();
+                getSelectPDReqReimb();
+            }
+            else {
+                setHoursReimbursementSetting();
+                getSelectPDReqHours();
+                getSelectPDReqReimb();
+            }
+
+            getSelectStepStatus();
+            getSelectTransaction();
+            break;
+        }
+    } 
+}
+
+function getSelectJustArea() {
+    var just_area = new Array();
+    just_area = db_getPDJustArea(PDRequestID);
+    
+    setClearJustArea();
+    if (just_area.length === 1) {
+        PDJustAreaID = just_area[0][0];
+        if (just_area[0]['JustArea_1'] === "1") {
+            $("#just_area_1").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_2'] === "1") {
+            $("#just_area_2").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_3'] === "1") {
+            $("#just_area_3").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_4'] === "1") {
+            $("#just_area_4").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_5'] === "1") {
+            $("#just_area_5").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_6'] === "1") {
+            $("#just_area_6").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_7'] === "1") {
+            $("#just_area_7").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_8'] === "1") {
+            $("#just_area_8").prop('checked', true);
+        }
+        if (just_area[0]['JustArea_9'] === "1") {
+            $("#just_area_9").prop('checked', true);
+        }
+    }
+}
+
+function getSelectNarrative() {
+    var narrative = new Array();
+    narrative = db_getNarrative(PDRequestID);
+    
+    if (narrative.length === 1) {
+        NarrativeID = narrative[0][0];
+        $('#just_narrative_descrip').val(narrative[0]['Narrative']);
+    }
+    
+    getSelectNarrativeAttachment();
+}
+
+function getSelectNarrativeAttachment() {
+    var attach_files = new Array();
+    attach_files = db_getNarrativeAttach(PDRequestID);
+    
+    $('#just_narrative_attached_list').empty();
+    if (attach_files.length > 0) {
+        for (var i = 0; i < attach_files.length; i++) {
+            var fl_name = attach_files[i]['FileLinkName'];
+            var f_name = attach_files[i]['FileName'];
+            var f_index = getFileIndex(fl_name, f_name);
+            var html = justNarrativeAttachFileHTML(f_index, fl_name, f_name);
+            $("#just_narrative_attached_list").append(html);
+        }
+    }
+}
+
+function getSelectPDReqHours() {
+    var pd_req_hours = new Array();
+    pd_req_hours = db_getPDReqHours(PDRequestID);
+    if (pd_req_hours.length === 1) {
+        PDReqHoursID = pd_req_hours[0][0];
+        // pre activity fields
+        if(Number(pd_req_hours[0]['PreInputHr']) > 0) {
+            $('#pre_input_hrs').val(pd_req_hours[0]['PreInputHr']);
+        }
+        if(Number(pd_req_hours[0]['PrePresHr']) > 0) {
+            $('#pre_presenter_hrs').html(pd_req_hours[0]['PrePresHr']);
+        }
+        if(Number(pd_req_hours[0]['PrePartHr']) > 0) {
+            $('#pre_participant_hrs').val(pd_req_hours[0]['PrePartHr']);
+        }
+        if(Number(pd_req_hours[0]['PreTotalHr']) > 0) {
+            $('#pre_total_hrs').html(pd_req_hours[0]['PreTotalHr']);
+        }
+    }
+}
+
+function getSelectPDReqReimb() {
+    var pd_req_reimb = new Array();
+    pd_req_reimb = db_getPDReqReimb(PDRequestID);
+    if (pd_req_reimb.length === 1) {
+        PDReqReimbID = pd_req_reimb[0][0];
+        // pre activity fields
+        var pre_reg_fee = Number(pd_req_reimb[0]['PreReqFee']);
+        if(pre_reg_fee > 0) {
+            $('#pre_reg_fee').val(formatDollar(pre_reg_fee, 2));
+        }
+        var pre_travel = Number(pd_req_reimb[0]['PreTravel']);
+        if(pre_travel > 0) {
+            $('#pre_travel_cost').val(formatDollar(pre_travel, 2));
+        }
+        var pre_mileage = Number(pd_req_reimb[0]['PreMileage']);
+        if(pre_mileage > 0) {
+            $('#pre_input_mileage').val(pre_mileage);
+        }
+        var pre_mil_cost = Number(pd_req_reimb[0]['PreMilCost']);
+        if(pre_mil_cost > 0) {
+            $('#pre_mileage_cost').html(formatDollar(pre_mil_cost, 2));
+        }
+        var pre_lodging = Number(pd_req_reimb[0]['PreLodging']);
+        if(pre_lodging > 0) {
+            $('#pre_lodging_cost').val(formatDollar(pre_lodging, 2));
+        }
+        var pre_num_brk = Number(pd_req_reimb[0]['PreNumBrk']);
+        if(pre_num_brk > 0) {
+            $('#pre_input_breakfast').val(pre_num_brk);
+        }
+        var pre_brk_cost = Number(pd_req_reimb[0]['PreBrkCost']);
+        if(pre_brk_cost > 0) {
+            $('#pre_breakfast_cost').html(formatDollar(pre_brk_cost, 2));
+        }
+        var pre_num_lun = Number(pd_req_reimb[0]['PreNumLun']);
+        if(pre_num_lun > 0) {
+            $('#pre_input_lunch').val(pre_num_lun);
+        }
+        var pre_lun_cost = Number(pd_req_reimb[0]['PreLunCost']);
+        if(pre_lun_cost > 0) {
+            $('#pre_lunch_cost').html(formatDollar(pre_lun_cost, 2));
+        }
+        var pre_num_din = Number(pd_req_reimb[0]['PreNumDin']);
+        if(pre_num_din > 0) {
+            $('#pre_input_dinner').val(pre_num_din);
+        }
+        var pre_din_cost = Number(pd_req_reimb[0]['PreDinCost']);
+        if(pre_din_cost > 0) {
+            $('#pre_dinner_cost').html(formatDollar(pre_din_cost, 2));
+        }
+        
+        $('#other_cost_description').val(pd_req_reimb[0]['OtherSource']);
+        
+        var pre_oth_cost = Number(pd_req_reimb[0]['PreOthCost']);
+        if(pre_oth_cost > 0) {
+            $('#pre_other_cost').val(formatDollar(pre_oth_cost, 2));
+        }
+        var pre_sub_total = Number(pd_req_reimb[0]['PreSubTotal']);
+        if(pre_sub_total > 0) {
+            $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
+        }
+        
+        $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
+        var fs_approved = pd_req_reimb[0]['FSApproved'];
+        if (fs_approved === "1") {
+            $('#fs_approved_2').prop("checked", true);
+        }
+        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
+        
+        var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
+        if(pre_fun_cost > 0) {
+            $('#pre_funding_other').val(formatDollar(pre_fun_cost, 2));
+        }
+        var pre_total_cost = Number(pd_req_reimb[0]['PreTotalCost']);
+        if(pre_total_cost > 0) {
+            $('#pre_total_cost').html(formatDollar(pre_total_cost, 2));
+        }
+        var pre_total_amt_request = Number(pd_req_reimb[0]['PreTotalAmtRequest']);
+        if(pre_total_amt_request > 0) {
+            $('#pre_total_amount_request').html(formatDollar(pre_total_amt_request, 2));
+        }
+    }
+    
+    setPDLimitSummary();
+}
+
+function setPDLimitSummary() {
+    var pd_limit = Number(sessionStorage.getItem('m_pd_limit'));
+    var amount_convert = Number(sessionStorage.getItem('m_amount_convert'));
+    var available_amount = Number(sessionStorage.getItem('m_available_amount'));
+    $('#sys_pd_limit_amount').html(formatDollar(pd_limit, 2));
+    $('#pd_amount_convert').html(formatDollar(amount_convert, 2));
+    $('#pd_available_amount').html(formatDollar(available_amount, 2));
+    
+    if (available_amount < 0) {
+        $('#pd_available_amount').css('color', 'red');
+    }
+}
+
+function getSelectStepStatus() {
+    var pd_step_status = new Array();
+    pd_step_status = db_getPDRequest(PDRequestID);
+    if (pd_step_status.length === 1) {
+        PDReqStepID = pd_step_status[0]['PDReqStepID'];
+        var pd_req_step_list = new Array();
+        pd_req_step_list = db_getPDReqStep(PDReqStepID);
+        if (pd_req_step_list.length === 1) {
+            $('#current_step').html(pd_req_step_list[0][1]);
+        }
+        
+        StatusID = pd_step_status[0]['StatusID'];
+        var status_list = new Array();
+        status_list = db_getStatus(StatusID);
+        if (status_list.length === 1) {
+            $('#current_status').html(status_list[0][1]);
+        }
+    }
+}
+
+function getSelectTransaction() {
+    var transaction = new Array();
+    transaction = db_getTransaction(PDRequestID);
+    if (transaction.length > 0) {
+        for (var i = 0; i < transaction.length; i++) {
+            var dt_stamp = convertDBDateTimeToString(transaction[i]['DTStamp']);
+            var login_name = transaction[i]['LoginName'];
+            var note = transaction[i]['Note'];
+            
+            var html = login_name + " : " + dt_stamp + "<br/>" + note.replace(/\n/g, "</br>") + "<br/><br/>";
+            $("#comments_history").append(html);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function setCurrentDate() {
+    var today = new Date();
+    var day = today.getDate();
+    var mon = today.getMonth()+1;
+    var yr = today.getFullYear();
+    var curDate = mon + "/" + day + "/" + yr;
+    $('#current_date').val(curDate);
+}
+
+function getActState() {
+    var act_state = new Array();
+    act_state = db_getActState();
+    
+    var state_html = "<option value='Select...'>Select...</option>";
+    for(var i = 0; i < act_state.length; i++) { 
+        var state_id = act_state[i][0];
+        var state = act_state[i]['State'];
+        state_html += "<option value='" + state_id + "'>" + state + "</option>";
+    }
+    
+    $("#activity_state").append(state_html);
+    $('#activity_state').selectpicker('refresh');
+}
+
+function getResourceType() {
+    var resource_type = new Array();
+    resource_type = db_getResourceType();
+    
+    var resource_html = "<option value='Select...'>Select...</option>";
+    for(var i = 0; i < resource_type.length; i++) { 
+        var resource = resource_type[i][1];
+        resource_html += "<option value='" + resource + "'>" + resource + "</option>";
+    }
+    
+    $("#resource_type").append(resource_html);
+    $('.selectpicker').selectpicker('refresh');
+}
+
+function getResourceTypeID(ResourceType) {
+    var resource_type = new Array();
+    resource_type = db_getResourceTypeID(ResourceType);
+    
+    if (resource_type.length === 1) {
+        return resource_type[0][0];
+    }
+    else {
+        return "";
+    }
+}
+
+function getPDSystem() {
+    var pdsystem = new Array();
+    pdsystem = db_getPDSystem();
+    
+    for(var i = 0; i < pdsystem.length; i++) {
+        var sys_name = pdsystem[i][1];
+        
+        if (sys_name === "Breakfast") {
+            sys_breakfast_amt = Number(pdsystem[i][2]);
+            var str_breakfast_amt = formatDollar(sys_breakfast_amt, 0);
+            $('#breakfast_text').html("Number of Breakfasts ( " + str_breakfast_amt + " per breakfast):");
+        }
+        else if (sys_name === "Lunch") {
+            sys_lunch_amt = Number(pdsystem[i][2]);
+            var str_lunch_amt = formatDollar(sys_lunch_amt, 0);
+            $('#lunch_text').html("Number of Lunches ( " + str_lunch_amt + " per lunch):");
+        }
+        else if (sys_name === "Dinner") {
+            sys_dinner_amt = Number(pdsystem[i][2]);
+            var str_dinner_amt = formatDollar(sys_dinner_amt, 0);
+            $('#dinner_text').html("Number of Dinners ( " + str_dinner_amt + " per dinner):");
+        }
+        else if (sys_name === "Mileage") {
+            sys_mileage_amt = Number(pdsystem[i][2]);
+            var str_mileage_amt = formatDollar(sys_mileage_amt, 3);
+            $('#mileage_text').html("Mileage ( " + str_mileage_amt + " per mile):");
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function justNarrativeAttachFile(PDRequestID) {
+    var file = $('#just_narrative_file').get(0).files[0]; 
+    var file_val = $('#just_narrative_file').val();
+    if (file_val === "") {
+        return false;
+    }
+    
+    var f_extension = getFileExtension(file.name);
+    if (f_extension !== "pdf") {
+        alert("Only pdf file can upload");
+        return false;
+    }
+
+    var file_data = new FormData();  
+    var php_flname = PDRequestID + ":PDRequestID_" + just_narrative_file_index + ":fileIndex_" + file.name;
+    file_data.append("files[]", file, php_flname); 
+
+    var resultID = uploadAttachFileJustNarrative(file_data);
+    if (resultID === "") {
+        return false;
+    }
+    else {
+        var file_link_name = "narrative_" + PDRequestID + "_" + just_narrative_file_index + "_" + file.name;
+        var html = justNarrativeAttachFileHTML(just_narrative_file_index, file_link_name, file.name);
+        
+        $('#just_narrative_attached_list').append(html);        
+        $('#just_narrative_file').filestyle('clear');
+        
+        return resultID;
+    }
+}
+
+function justNarrativeAttachFileHTML(index, file_link_name, file_name) {    
+    var html = "<div class='row' id='just_narr_file_" + index + "'>";
+    html += "<div class='row'>&nbsp;</div>";
+    html += "<div class='span5 offset3' style='padding-top: 5px'><a href='attach_files/" + file_link_name + "' target='_blank' id='just_narr_file_view_" + index + "'>" + file_name + "</a></div>";
+    html += "<div class='span2'><button class='btn btn-danger span2' id='just_narr_file_remove_btn_" + index + "'>Remove File</button></div>";
+    html += "</div>";
+    
+    just_narrative_file_index++;
+    
+    return html;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function preCalculateTotalHrs() {
+    var pre_pres_hr = Number($('#pre_presenter_hrs').html());
+    var pre_part_hr = Number($('#pre_participant_hrs').val());
+    var pre_total_hr = pre_pres_hr + pre_part_hr;
+    if (pre_total_hr > 0) {
+        $('#pre_total_hrs').html(pre_total_hr.toFixed(2));
+    }
+    else {
+        $('#pre_total_hrs').html('');
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function preCalculateSubTotal() {
+    var pre_reg_fee = Number(revertDollar($('#pre_reg_fee').val()));
+    var pre_travel_cost = Number(revertDollar($('#pre_travel_cost').val()));
+    var pre_mileage_cost = Number(revertDollar($('#pre_mileage_cost').html()));
+    var pre_lodging_cost = Number(revertDollar($('#pre_lodging_cost').val()));
+    var pre_breakfast_cost = Number(revertDollar($('#pre_breakfast_cost').html()));
+    var pre_lunch_cost = Number(revertDollar($('#pre_lunch_cost').html()));
+    var pre_dinner_cost = Number(revertDollar($('#pre_dinner_cost').html()));
+    var pre_other_cost = Number(revertDollar($('#pre_other_cost').val()));
+    
+    var pre_sub_total = pre_reg_fee + pre_travel_cost + pre_mileage_cost + pre_lodging_cost + pre_breakfast_cost + pre_lunch_cost + pre_dinner_cost + pre_other_cost;
+    if (pre_sub_total > 0) {
+        $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
+    }
+    else {
+        $('#pre_sub_total').html('');
+    }
+}
+
+function preCalculateTotalCost() {
+    var pre_sub_total = Number(revertDollar($('#pre_sub_total').html()));
+    var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));
+    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
+    var pre_total_cost = 0;
+    
+    if (fs_approved === "1") {
+        pre_total_cost = pre_sub_total - pre_funding_other;
+    }
+    else {
+        pre_total_cost = pre_sub_total;
+    }
+    
+    if (pre_total_cost === 0) {
+        $('#pre_total_cost').html('');
+        $('#pre_total_amount_request').html('');
+    }
+    else {
+        $('#pre_total_cost').html(formatDollar(pre_total_cost, 2));
+        $('#pre_total_amount_request').html(formatDollar(pre_total_cost, 2));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function getFileIndex(fl_name, f_name) {
+    var temp = fl_name.replace("narrative_" + PDRequestID + "_", "");
+    temp = temp.replace("_" + f_name, "");
+    
+    return temp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function sendPreActivityCreatorSubmitted() {
+    var login_email = $('#email').val();
+    var login_name = $('#requestor').val();
+    var act_title = $('#activity_title').val();
+    
+    var subject = "Professional Development Request has been submitted";
+    var message = "Dear " + login_name + ", <br/><br/>";
+    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been submitted. ";
+    message += "Your request will be forwarded to the IVC Professional Development Officer and Academic Affairs Committee, ";
+    message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
+    message += "In some circumstances, additional processing time may be required.<br/><br/>";
+    message += "Please use the link below to review the status of your submission at any time.<br/><br/>";
+    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
+    
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
+    message += "flexofficer@ivc.edu";
+    
+    proc_sendEmail(login_email, login_name, subject, message);
+}
+
+function sendPreActivityApproverSubmitted() {
+    var approver_email = "bmckim@ivc.edu";
+    var approver_name = "Brett McKim";
+    var act_title = $('#activity_title').val();
+    
+    var subject = "New Pre-activity Professional Development Request has been assigned to you";
+    var message = "Dear Brett McKim,<br/><br/>";
+    message += "A New Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
+    message += "Please use the link below to start the approval process.<br/><br/>";
+    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.";
+    
+    proc_sendEmail(approver_email, approver_name, subject, message);
+}
+
+function sendPreActivityApproverMoreInfo() {
+    var approver_email = "bmckim@ivc.edu";
+    var approver_name = "Brett McKim";
+    var act_title = $('#activity_title').val();
+    
+    var subject = "More Information Pre-activity Professional Development Request has been updated";
+    var message = "Dear Brett McKim,<br/><br/>";
+    message += "Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been updated and assigned to you for approval.<br/>";
+    message += "Please use the link below to start the approval process.<br/><br/>";
+    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.";
+    
+    proc_sendEmail(approver_email, approver_name, subject, message);
+}

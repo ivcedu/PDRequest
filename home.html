@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Professional Development</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+        <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
+        <!-- application css -->
+        <link rel="stylesheet" href="css/home.css"/>
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="new_pd_request"><i class="icon-pencil icon-white"></i> New PD Request</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a href=# id="avail_pd_activity"><i class="icon-folder-open icon-white"></i> Avail. PD Activity</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a href=# id="avail_flex_week"><i class="icon-folder-open icon-white"></i> Avail. Flex Week</a></li>
+                    </ul>
+                    <ul class="nav" id="nav_reports_section">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href=#>Reports<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href=# id="nav_report_usr_pd_request">All PD Request</a></li>
+                                <li class="divider"></li>
+                                <li><a href=# id="nav_report_usr_flex_week">All Flex Week</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="refresh"><i class="icon-refresh icon-white"></i> Refresh</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li id="show_admin"><a href=# id="administrator"><i class="icon-lock icon-white"></i> Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- professional development header -->
+            <div class="row">
+                <div class="span8 offset2 text-center"><a href=# id="user_profile"><h4 id="logn_name"></h4></a></div>
+                <div class="span2 text-right" style="vertical-align: bottom;"><a href="doc/PD Request User Manual.pdf" target="_blank">User Manual</a></div>
+            </div>
+            
+            <!-- flex hours summary -->
+            <div id="flex_hrs_summary">
+                <div class="row">
+                    <div class="span3" style="font-weight: bold;">PD Flex Required Hours:</div>
+                    <div class="span1 text-right" style="font-weight: bold;" id="sys_flex_hrs"></div>
+                    <div class="span3" style="font-weight: bold;">Total Attended Hours:</div>
+                    <div class="span1 text-right" style="font-weight: bold; color: blue;" id="total_hrs_attended"></div>
+                    <div class="span3" style="font-weight: bold;">Total Balance Hours:</div>
+                    <div class="span1 text-right" style="font-weight: bold;" id="total_hrs_balance"></div>
+                </div>
+                <div>&nbsp;</div>
+            </div>
+            
+            <!-- pd amount summary -->
+            <div id="pd_amount_summary">
+                <div class="row">
+                    <div class="span2" style="font-weight: bold;">PD Limit:</div>
+                    <div class="span2 text-right" style="font-weight: bold;" id="sys_pd_limit_amount"></div>
+                    <div class="span2" style="font-weight: bold;">PD Encumbered:</div>
+                    <div class="span2 text-right" style="font-weight: bold;" id="pd_amount_convert"></div>
+                    <div class="span2" style="font-weight: bold;">PD Available:</div>
+                    <div class="span2 text-right" style="font-weight: bold; color: blue;" id="pd_available_amount"></div>
+                </div>
+                <div>&nbsp;</div>
+            </div>
+            
+            <!-- professional development list -->
+            <div class="row" style="padding-bottom: 10px">
+                <div class="span12 text-center" style="background-color: gray; color: white" id="pd_request_header"></div>
+            </div>
+            <div class='row'>
+                <div class="span3" style="padding-top: 5px; font-weight: bold">Activity Title</div>
+                <div class="span1" style="padding-top: 5px; font-weight: bold">StartDate</div>
+                <div class="span3" style="padding-top: 5px; font-weight: bold">Request Type</div>
+                <div class="span2" style="padding-top: 5px; font-weight: bold">Step</div>
+                <div class="span2" style="padding-top: 5px; font-weight: bold">Status</div>
+            </div>
+            <div class="row" style="padding-bottom: 5px">
+                <div class="span12 text-center" style="background-color: gray"></div>
+            </div>
+            <div id="pd_request_list">
+            </div>
+            <div>&nbsp;</div>
+            
+            <!-- flex week list  -->
+            <div class="row">
+                <div class="span12 text-center" style="background-color: gray; color: white" id="flex_week_header">Academic Year Flex Week List</div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="row-fluid">
+                <div class="span2" style="padding-top: 5px; font-weight: bold;">Fiscal Yrs:</div>
+                <div class="span3"><select class="selectpicker span12" id="fw_fiscal_yrs"></select></div>
+                <div class="span2"><button class="btn btn-inverse span12" id="btn_fw_list_refresh"><i class="icon-refresh icon-white"></i> Refresh</button></div>
+            </div>
+            <div class="row-fluid">
+                <div class="span8" style="padding-top: 5px; color: blue;">Please confirm Flex Week Activity after you attended</div>
+                <div class="span4"><button class="btn btn-success span12" id="btn_flex_week_confirmed"><i class="icon-upload icon-white"></i> Update Confirmed Flex Week</button></div>
+            </div>
+            <div class="row-fluid">
+                <table id="flex_week_list">
+                    <thead id="head_tr" style="border-bottom: 1px solid;">
+                        <tr>
+                            <th class="span3" style="text-align: left;">Activity Title</th>
+                            <th class="span2" style="text-align: left;">Activity Presenter</th>
+                            <th class="span2" style="text-align: left;">Start Date</th>
+                            <th class="span2" style="text-align: left;">End Date</th>
+                            <th class="span1" style="text-align: center;">Hrs</th>
+                            <th class="span1" style="text-align: center;">Confirm</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fw_body_tr">
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Modal delete -->
+            <div class="modal hide fade" id="mod_popup_delete">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"> x </button>
+                    <h4 class="text-center" id="mod_header">Warning !!!</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align:center; color:blue; font-weight:bold;">It will delete PD Request. Are you sure you want to delete?</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" id="mod_delete_yes">Yes</button>
+                    <button class="btn btn-inverse" data-dismiss="modal" id="mod_delete_no">No</button>
+                </div>
+            </div>
+            
+            <!-- Modal delete flex week -->
+            <div class="modal hide fade" id="mod_popup_flex_week_delete">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"> x </button>
+                    <h4 class="text-center" id="mod_header">Warning !!!</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align:center; color:blue; font-weight:bold;">It will delete Flex Week Activity. Are you sure you want to delete?</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" id="mod_flex_week_delete_yes">Yes</button>
+                    <button class="btn btn-inverse" data-dismiss="modal" id="mod_flex_week_delete_no">No</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-autosize/jquery.autosize.1.18.1.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <script src="../include/bootstrap-popover/js/bootstrap-popover.2.0.1.min.js"></script>
+        <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/home.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+    </body>
+</html>

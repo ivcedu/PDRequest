@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Flex Week Report</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="nav_home"><i class="icon-home icon-white"></i> Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="nav_logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- professional development header -->
+            <div class="row">
+                <div class="span12 text-center"><h4 id="logn_name"></h4></div>
+            </div>
+            
+            <!-- professional development list -->
+            <div class="row" style="padding-bottom: 10px">
+                <div class="span12 text-center" style="background-color: gray; color: white">Professional Development List History</div>
+            </div>
+            <div class='row'>
+                <div class="span3" style="padding-top: 5px; font-weight: bold">Activity Title</div>
+                <div class="span2" style="padding-top: 5px; font-weight: bold">Start Date</div>
+                <div class="span3" style="padding-top: 5px; font-weight: bold">Request Type</div>
+                <div class="span2" style="padding-top: 5px; font-weight: bold">Step</div>
+                <div class="span2" style="padding-top: 5px; font-weight: bold">Status</div>
+            </div>
+            <div class="row" style="padding-bottom: 5px">
+                <div class="span12 text-center" style="background-color: gray"></div>
+            </div>
+            <div id="rpt_usr_pd_request_list_history">
+            </div>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-autosize/jquery.autosize.1.18.1.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/rptUsrPDRequest.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+    </body>
+</html>

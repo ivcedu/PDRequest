@@ -1,0 +1,23 @@
+.container {
+    width: 1200px;
+}
+
+.col_400 {
+    width: 400px;
+    padding-right: 10px;
+}
+
+.col_150 {
+    width: 150px;
+    padding-right: 10px;
+}
+
+.col_100 {
+    width: 100px;
+    padding-right: 10px;
+}
+
+.col_50 {
+    width: 50px;
+    padding-right: 10px;
+}

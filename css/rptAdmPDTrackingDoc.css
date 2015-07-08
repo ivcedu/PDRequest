@@ -1,0 +1,57 @@
+.container {
+    width: 2700px;
+}
+
+.col_300 {
+    width: 300px;
+    padding-right: 10px;
+}
+
+.col_250 {
+    width: 250px;
+    padding-right: 10px;
+}
+
+.col_200 {
+    width: 200px;
+    padding-right: 10px;
+}
+
+.col_150 {
+    width: 150px;
+    padding-right: 10px;
+}
+
+.fixed_col_150 {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+    width: 150px;
+    max-width:150px;
+}
+
+.col_100 {
+    width: 100px;
+    padding-right: 10px;
+}
+
+.fixed_col_100 {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+    width: 100px;
+    max-width:100px;
+}
+
+.col_50 {
+    width: 50px;
+    padding-right: 10px;
+}
+
+.fixed_col_50 {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+    width: 50px;
+    max-width:50px;
+}
