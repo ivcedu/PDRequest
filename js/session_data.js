@@ -154,10 +154,10 @@ function getAllFiscalYrs() {
     var today = new Date();
     var start_yr = 2014;
     var cur_yr = today.getFullYear();
-    var loop = cur_yr - start_yr;
+    var loop = cur_yr - start_yr + 1;
     
     var ar_fiscal_yrs = [];
-    for (var i = 0; i < loop; i++) {
+    for (var i = 0; i <= loop; i++) {
         var str_fy = (start_yr + i) + "-" + (start_yr + i + 1);
         ar_fiscal_yrs.push(str_fy);
     }
