@@ -760,6 +760,34 @@ function db_getFlexWeekFiscalYrs() {
     return result;
 }
 
+function db_getPDRequestListByFiscalYrs(LoginID, FiscalYrs) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDRequestListByFiscalYrs.php",
+        data:{LoginID:LoginID, FiscalYrs:FiscalYrs},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDReqReimbByLoginFiscalYrs(LoginID, FiscalYrs) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqReimbByLoginFiscalYrs.php",
+        data:{LoginID:LoginID, FiscalYrs:FiscalYrs},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 // copy row DB /////////////////////////////////////////////////////////////////
 function db_copyPDRequest(PDRequestID, LoginID) {
     var ResultID = "";

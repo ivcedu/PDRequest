@@ -21,14 +21,15 @@ window.onload = function() {
             $('#logn_name').text('Welcome ' + login_name);
 
             setAdminOption();
-            setFlexWeekFiscalYrs();
-            getLoginUserPDRequestList();
+            setAllFiscalYrs();
 
-            var fiscal_yrs = $('#fw_fiscal_yrs').val();
+            var fiscal_yrs = $('#all_fiscal_yrs').val();
+            getLoginUserPDRequestList(fiscal_yrs);
             getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
 
+            // calculate header section
             setTotalFlexHrsRequired();
-            setPDAmountSummary();
+            setPDAmountSummary(fiscal_yrs);
         }
         else {
             window.open(usr_profile, '_self');
@@ -40,17 +41,7 @@ window.onload = function() {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-$(document).ready(function() { 
-    $('#refresh').click(function() {        
-        getLoginUserPDRequestList();
-
-        var fiscal_yrs = $('#fw_fiscal_yrs').val();
-        getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
-        
-        setTotalFlexHrsRequired();
-        setPDAmountSummary();
-    });
-    
+$(document).ready(function() {     
     $('#logout').click(function() {
         sessionStorage.clear();
         window.open('Login.html', '_self');
@@ -146,12 +137,12 @@ $(document).ready(function() {
         var pd_request_ID = sessionStorage.getItem('m_PDRequestID');
         db_updatePDRequestStatus(pd_request_ID, 8);
         db_insertLogHistory(pd_request_ID, sessionStorage.getItem('m_loginName'), "PD Request Deleted");
-//        deleteAttachFileByPDRequestID(pd_request_ID);
-//        db_deletePDRequest(pd_request_ID);
         
-        getLoginUserPDRequestList();
+        var fiscal_yrs = $('#all_fiscal_yrs').val();
+        getLoginUserPDRequestList(fiscal_yrs);
+        
         setTotalFlexHrsRequired();
-        setPDAmountSummary();
+        setPDAmountSummary(fiscal_yrs);
     });
     
     // flex week click /////////////////////////////////////////////////////////
@@ -175,7 +166,7 @@ $(document).ready(function() {
         var flex_week_ID = sessionStorage.getItem('m_FlexWeekID');
         db_deleteFlexWeek(flex_week_ID);
         
-        var fiscal_yrs = $('#fw_fiscal_yrs').val();
+        var fiscal_yrs = $('#all_fiscal_yrs').val();
         getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
         
         setTotalFlexHrsRequired();
@@ -212,7 +203,7 @@ $(document).ready(function() {
         updateConfirmedFlexWeek();      
         alert("Confirmed flex week has been updated successfully");
         
-        var fiscal_yrs = $('#fw_fiscal_yrs').val();
+        var fiscal_yrs = $('#all_fiscal_yrs').val();
         getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
         setTotalFlexHrsRequired();
     });
@@ -229,9 +220,16 @@ $(document).ready(function() {
     });
     
     // refresh flex week list button ///////////////////////////////////////////
-    $('#btn_fw_list_refresh').click(function() {
-        var fiscal_yrs = $('#fw_fiscal_yrs').val();
+    $('#btn_fiscal_yrs_refresh').click(function() { 
+        resetHeaderVariable();
+        
+        var fiscal_yrs = $('#all_fiscal_yrs').val();
+        getLoginUserPDRequestList(fiscal_yrs);
         getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
+        
+        // calculate header section
+        setTotalFlexHrsRequired();
+        setPDAmountSummary(fiscal_yrs);
     });
     
     // popover
@@ -268,64 +266,62 @@ function setAdminOption() {
     }
 }
 
-function setFlexWeekFiscalYrs() {
+function setAllFiscalYrs() {
     var result = new Array();
-    result = db_getAvailFlexWeekFiscalYrs();
+    result = getAllFiscalYrs();
     
     var fiscal_html = "";
-    for(var i = 0; i < result.length; i++) {
-        fiscal_html += "<option value='" + result[i]['FiscalYrs'] + "'>" + result[i]['FiscalYrs'] + "</option>";
+    for(var i = result.length - 1; i >= 0; i--) {
+        var tmp = result[i];
+        fiscal_html += "<option value='" + result[i] + "'>" + result[i] + "</option>";
     }
     
-    $("#fw_fiscal_yrs").append(fiscal_html);
-    $('#fw_fiscal_yrs').selectpicker('refresh');
+    $("#all_fiscal_yrs").append(fiscal_html);
+    $('#all_fiscal_yrs').selectpicker('refresh');
+}
+
+function resetHeaderVariable() {
+    sys_hrs = 0.0;
+    pd_request_hrs = 0.0;
+    flex_hrs = 0.0;
+
+    pd_limit = 0.0;
+    amount_convert = 0.0;
+    available_amount = 0.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function getLoginUserPDRequestList() {
-    var login_email = sessionStorage.getItem("m_loginEmail");
-    var login = new Array();
-    login = db_getLogin(login_email);
-    if (login.length === 1) {
-        LoginID = login[0][0];
-    }
-    else {
-        return false;
-    }
-
-    $('#pd_request_header').html("Pending Professional Development List");
-    
+function getLoginUserPDRequestList(fiscal_yrs) {    
     var result = new Array(); 
-    result = db_getPDRequestListActive(LoginID);
+    result = db_getPDRequestListByFiscalYrs(LoginID, fiscal_yrs);
     
-    pd_request_hrs = 0.0;
-    amount_convert = 0.0;
-    
-    $("#pd_request_list").empty();    
+    $("#pd_body_tr").empty();   
+    var pd_list_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            setPDRequestListHTML(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
+            pd_list_html += setPDRequestListHTML(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
             getPDReqHours(result[i]['PDRequestID']);
         }
     }
+    $("#pd_body_tr").append(pd_list_html);
 }
 
 function setPDRequestListHTML(PDRequestID, act_title, create_date, resource_type, step, status) {    
-    var tbody = "<div class='row'>";
-    tbody += "<div class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></div>"; 
-    tbody += "<div class='span1'>" + create_date + "</div>";
-    tbody += "<div class='span3'>" + resource_type + "</div>"; 
-    tbody += "<div class='span2' id='pd_request_step_" + PDRequestID + "'>" + step + "</div>";  
-    tbody += "<div class='span2' id='pd_request_status_" + PDRequestID + "'>" + status + "</div>";
+    var tbody = "<tr>";
+    tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
+    tbody += "<td class='span1'>" + create_date + "</td>";
+    tbody += "<td class='span3'>" + resource_type + "</td>"; 
+    tbody += "<td class='span2' id='pd_request_step_" + PDRequestID + "'>" + step + "</td>";  
+    tbody += "<td class='span2' id='pd_request_status_" + PDRequestID + "'>" + status + "</td>";
     if (status === "Draft") {
-        tbody += "<div class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></div>";
+        tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
     }
     else {
-        tbody += "<div class='span1 text-center'></div>";
+        tbody += "<td class='span1 text-center'></td>";
     }
-    tbody += "</div>";
+    tbody += "</tr>";
     
-    $("#pd_request_list").append(tbody);
+    return tbody;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -364,53 +360,57 @@ function getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs) {
     result = db_getFlexWeekListByFiscalYrs(LoginID, fiscal_yrs);
     
     $("#fw_body_tr").empty();
-    flex_hrs = 0.0;
+    var fw_list_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
             var start_date = result[i]['StartDate'] + " " + result[i]['StartTime'];
             var end_date = result[i]['EndDate'] + " " + result[i]['EndTime'];
-            setFlexWeekListHTML(result[i]['FlexWeekID'], result[i]['ActTitle'], result[i]['ActPresenter'], start_date, end_date);
-            setFlexWeekEnableFields(result[i]['FlexWeekID'], result[i]['FWHours'], result[i]['Confirmed'], end_date);
+            fw_list_html += setFlexWeekListHTML(result[i]['FlexWeekID'], result[i]['ActTitle'], result[i]['ActPresenter'], start_date, end_date, result[i]['FWHours']);
+            flex_hrs += Number(result[i]['FWHours']);
             
-            if (result[i]['Confirmed'] === "1") {
-                flex_hrs += Number(result[i]['FWHours']);
-            } 
+//            setFlexWeekEnableFields(result[i]['FlexWeekID'], result[i]['FWHours'], result[i]['Confirmed'], end_date);
+//            
+//            if (result[i]['Confirmed'] === "1") {
+//                flex_hrs += Number(result[i]['FWHours']);
+//            } 
         }
     }
+    $("#fw_body_tr").append(fw_list_html);
 }
 
-function setFlexWeekListHTML(FlexWeekID, act_title, act_presenter, start_date, end_date) {    
+function setFlexWeekListHTML(FlexWeekID, act_title, act_presenter, start_date, end_date, fw_hrs) {    
     var tbody = "<tr class='row_tr form-horizontal' id='flex_week_ID_" + FlexWeekID + "'>";
-    tbody += "<td class='span3'><a href=# id='flex_week_ID_" + FlexWeekID +  "'>" + act_title + "</a></td>"; 
-    tbody += "<td class='span2'>" + act_presenter + "</td>"; 
+    tbody += "<td class='span4'><a href=# id='flex_week_ID_" + FlexWeekID +  "'>" + act_title + "</a></td>"; 
+    tbody += "<td class='span3'>" + act_presenter + "</td>"; 
     tbody += "<td class='span2'>" + start_date + "</td>";  
     tbody += "<td class='span2'>" + end_date + "</td>";
-    tbody += "<td class='span1'><input class='span12' type='text' style='text-align: center;' id='flex_hrs_" + FlexWeekID + "'/></td>";
-    tbody += "<td class='span1 text-center' style='padding-bottom: 7px;'><input type='checkbox' id='ckb_flex_week_confirmed_" + FlexWeekID + "'></td>"; 
-    tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_flex_week_ID_" + FlexWeekID + "'><i class='icon-trash icon-black'></i></button></td>";
+    tbody += "<td class='span1' style='text-align: center;'>" + fw_hrs + "</td>";
+//    tbody += "<td class='span1'><input class='span12' type='text' style='text-align: center;' id='flex_hrs_" + FlexWeekID + "'/></td>";
+//    tbody += "<td class='span1 text-center' style='padding-bottom: 7px;'><input type='checkbox' id='ckb_flex_week_confirmed_" + FlexWeekID + "'></td>"; 
+//    tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_flex_week_ID_" + FlexWeekID + "'><i class='icon-trash icon-black'></i></button></td>";
     tbody += "</tr>";
     
-    $("#fw_body_tr").append(tbody);
+    return tbody;
 }
 
-function setFlexWeekEnableFields(FlexWeekID, fw_hrs, confirmed, end_date) {
-    var dt_end_date = new Date(end_date);
-    var dt_cur_date = new Date();
-    
-    $('#flex_hrs_' + FlexWeekID).val(fw_hrs);
-    $('#flex_hrs_' + FlexWeekID).prop('disabled', true);
-    
-    if (dt_cur_date > dt_end_date) {
-        if (confirmed === "1") {
-            $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('checked', true);
-            $('#flex_hrs_' + FlexWeekID).prop('disabled', false);
-        }
-        $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('disabled', false);
-    }
-    else {
-        $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('disabled', true);
-    }
-}
+//function setFlexWeekEnableFields(FlexWeekID, fw_hrs, confirmed, end_date) {
+//    var dt_end_date = new Date(end_date);
+//    var dt_cur_date = new Date();
+//    
+//    $('#flex_hrs_' + FlexWeekID).val(fw_hrs);
+//    $('#flex_hrs_' + FlexWeekID).prop('disabled', true);
+//    
+//    if (dt_cur_date > dt_end_date) {
+//        if (confirmed === "1") {
+//            $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('checked', true);
+//            $('#flex_hrs_' + FlexWeekID).prop('disabled', false);
+//        }
+//        $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('disabled', false);
+//    }
+//    else {
+//        $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('disabled', true);
+//    }
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 function setTotalFlexHrsRequired() {
@@ -456,8 +456,8 @@ function getPDReqHours(PDRequestID) {
     }
 }
 
-function setPDAmountSummary() {
-    calculateEncumberedAmt();
+function setPDAmountSummary(fiscal_yrs) {
+    calculateEncumberedAmt(fiscal_yrs);
     
     if (login_etype === "Staff") {
         $('#pd_amount_summary').hide();
@@ -494,9 +494,9 @@ function getSystemPDAmount(pd_system) {
     }
 }
 
-function calculateEncumberedAmt() {
+function calculateEncumberedAmt(fiscal_yrs) {   
     var result = new Array(new Array()); 
-    result = db_getPDReqReimbByLogin(LoginID);
+    result = db_getPDReqReimbByLoginFiscalYrs(LoginID, fiscal_yrs);
     
     for(var i = 0; i < result.length; i++) {
         if (result[i]['PDReqStepID'] === "1") {
