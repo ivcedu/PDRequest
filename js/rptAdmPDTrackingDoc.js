@@ -154,7 +154,7 @@ function getFiscalYrs() {
     }
     
     $("#fiscal_yrs").append(fiscal_html);
-    $('#fiscal_yrs').val(getCurrentFiscalYrs());
+    $("#fiscal_yrs").val(sessionStorage.getItem('m_defaultFiscalYrs'));
     $('#fiscal_yrs').selectpicker('refresh');
 }
 

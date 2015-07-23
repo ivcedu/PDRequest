@@ -82,6 +82,7 @@ function loginInfo() {
         }
 
         localData_login(name, email, depart, phone, division, emptype);
+        sessionStorage.setItem('m_defaultFiscalYrs', getCurrentFiscalYrs());
         return true;
     }
 }

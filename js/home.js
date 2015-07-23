@@ -241,7 +241,7 @@ $(document).ready(function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function userProfilePage() {
-    var login_email = sessionStorage.getItem("m_loginEmail");
+    var login_email = sessionStorage.getItem('m_loginEmail');
     var result = new Array();
     result = db_getLogin(login_email);
     if (result.length === 0) {
@@ -250,13 +250,15 @@ function userProfilePage() {
     else {
         login_etype = result[0]['LoginEType'];
         LoginID = result[0]['LoginID'];
+        //testing ...
+        LoginID = "12";
         return "";
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 function setAdminOption() {        
-    var login_email = sessionStorage.getItem("m_loginEmail");
+    var login_email = sessionStorage.getItem('m_loginEmail');
     var admin_list = new Array();
     admin_list = db_getAdministrator(login_email);
     
@@ -272,11 +274,10 @@ function setAllFiscalYrs() {
     
     var fiscal_html = "";
     for(var i = result.length - 1; i >= 0; i--) {
-        var tmp = result[i];
         fiscal_html += "<option value='" + result[i] + "'>" + result[i] + "</option>";
     }
-    
     $("#all_fiscal_yrs").append(fiscal_html);
+    $("#all_fiscal_yrs").val(sessionStorage.getItem('m_defaultFiscalYrs'));
     $('#all_fiscal_yrs').selectpicker('refresh');
 }
 

@@ -102,6 +102,7 @@ function setFlexWeekFiscalYrs() {
     }
     
     $("#fw_fiscal_yrs").append(fiscal_html);
+    $("#fw_fiscal_yrs").val(sessionStorage.getItem('m_defaultFiscalYrs'));
     $('#fw_fiscal_yrs').selectpicker('refresh');
 }
 

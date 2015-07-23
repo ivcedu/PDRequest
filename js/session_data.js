@@ -137,19 +137,6 @@ function convertDBDateTimeToString(date_time) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function getFiscalYear() {
-    var today = new Date();
-    var mon = today.getMonth()+1;
-    var yr = today.getFullYear();
-    
-    if (mon > 6) {
-        return (yr + 1) + "-" + (yr + 2);
-    }
-    else {
-        return yr + "-" + (yr + 1);
-    }
-}
-
 function getAllFiscalYrs() {
     var today = new Date();
     var start_yr = 2014;
