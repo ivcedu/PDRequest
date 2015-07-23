@@ -83,6 +83,14 @@ function loginInfo() {
 
         localData_login(name, email, depart, phone, division, emptype);
         sessionStorage.setItem('m_defaultFiscalYrs', getCurrentFiscalYrs());
+        
+        if (location.href.indexOf("ireport.ivc.edu") >= 0) {
+            sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
+        }
+        else {
+            sessionStorage.setItem('m_parentSite', 'https://services.ivc.edu');
+        }
+        
         return true;
     }
 }
