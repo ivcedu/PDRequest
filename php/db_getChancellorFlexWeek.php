@@ -59,7 +59,13 @@
             $str2_where = $str2_where."AND ".$str2_etype."";
         }
     }
-    $str2_where = $str2_where." AND flwk.FiscalYrs = '".$FiscalYrs."'";
+    
+    if ($str2_where === "") {
+        $str2_where = "WHERE flwk.FiscalYrs = '".$FiscalYrs."' ";
+    }
+    else {
+        $str2_where = $str2_where." AND flwk.FiscalYrs = '".$FiscalYrs."' ";
+    }
     
     if ($str3_start_date !== "") {
         $str3_where = "WHERE ".$str3_start_date."";
@@ -80,7 +86,13 @@
             $str3_where = $str3_where."AND ".$str3_etype."";
         }
     }
-    $str3_where = $str3_where." AND pdrq.FiscalYrs = '".$FiscalYrs."'";
+    
+    if ($str3_where === "") {
+        $str3_where = "WHERE pdrq.FiscalYrs = '".$FiscalYrs."' ";
+    }
+    else {
+        $str3_where = $str3_where." AND pdrq.FiscalYrs = '".$FiscalYrs."' ";
+    }
 
     $dbConn->setAttribute(constant('PDO::SQLSRV_ATTR_DIRECT_QUERY'), true);
     
@@ -88,15 +100,13 @@
     
     $query2 = "INSERT INTO #RESULT SELECT logn.LoginName, logn.LoginEType, SUM(flwk.FWHours), SUM(CASE WHEN flwk.Confirmed = 1 THEN flwk.FWHours ELSE 0 END), 0.00, 0.00 "
                 ."FROM [IVCPD].[dbo].[FlexWeek] AS flwk LEFT JOIN [IVCPD].[dbo].[Login] AS logn ON flwk.LoginID = logn.LoginID "
-                .$str2_where.""
-                ."GROUP BY logn.LoginName, logn.LoginEType";
+                .$str2_where."GROUP BY logn.LoginName, logn.LoginEType";
     
     $query3 = "INSERT INTO #RESULT SELECT logn.LoginName, logn.LoginEType, ISNULL(SUM(pdrh.PostTotalHr), 0), ISNULL(SUM(pdrh.PostAppHr), 0), ISNULL(SUM(pdrr.PostTotalAmtRequest), 0), ISNULL(SUM(pdrr.PostTotalAmtApproved), 0) "
                 ."FROM [IVCPD].[dbo].[PDRequest] AS pdrq LEFT JOIN [IVCPD].[dbo].[Login] AS logn ON pdrq.LoginID = logn.LoginID "
                 ."LEFT JOIN [IVCPD].[dbo].[PDReqHours] AS pdrh ON pdrq.PDRequestID = pdrh.PDRequestID "
                 ."LEFT JOIN [IVCPD].[dbo].[PDReqReimb] AS pdrr ON pdrq.PDRequestID = pdrr.PDRequestID "
-                .$str3_where.""
-                ."GROUP BY logn.LoginName, logn.LoginEType ";
+                .$str3_where."GROUP BY logn.LoginName, logn.LoginEType";
     
     // tardis current active full time facluty list
     $query4 = "INSERT INTO #RESULT SELECT empy.FirstName + ' ' + empy.LastName AS FullName, 'Full Time Faculty', 0.00, 0.00, 0.00, 0.00 "
