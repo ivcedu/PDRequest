@@ -52,16 +52,16 @@ $(document).ready(function() {
     });
     
     // report all pd request ///////////////////////////////////////////////////
-    $('#nav_report_usr_pd_request').click(function() {
-        sessionStorage.setItem('m_LoginID', LoginID);
-        window.open('rptUsrPDRequest.html', '_self');
-    });
+//    $('#nav_report_usr_pd_request').click(function() {
+//        sessionStorage.setItem('m_LoginID', LoginID);
+//        window.open('rptUsrPDRequest.html', '_self');
+//    });
     
     // report all flex week ////////////////////////////////////////////////////
-    $('#nav_report_usr_flex_week').click(function() {
-        sessionStorage.setItem('m_LoginID', LoginID);
-        window.open('rptUsrFlexWeek.html', '_self');
-    });
+//    $('#nav_report_usr_flex_week').click(function() {
+//        sessionStorage.setItem('m_LoginID', LoginID);
+//        window.open('rptUsrFlexWeek.html', '_self');
+//    });
     
     // new pd request click ////////////////////////////////////////////////////
     $('#new_pd_request').click(function() {
