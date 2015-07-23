@@ -1,8 +1,7 @@
 <?php
     require("class.phpmailer.php");
 
-    if (isset($_POST['Email']))
-    {
+    if (isset($_POST['Email'])) {
         $Email = $_POST['Email'];
         $Name = $_POST['Name'];
         $Subject = $_POST['Subject']; 
@@ -23,5 +22,3 @@
         else
             echo "false";
     }
-?>
-
