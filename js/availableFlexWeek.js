@@ -198,7 +198,7 @@ function insertFlexWeekUserInfo(flex_week_ID, avail_flex_week_ID) {
     return db_insertFlexWeekUserInfo(flex_week_ID, avail_flex_week_ID, requestor, email, depart, phone, division);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 function updateSelectedFlexWeek() {
     var rowCount = $('#avail_flex_week_tbl tr').length;
     for (var i = 1; i < rowCount; i++) {

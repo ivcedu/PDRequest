@@ -250,8 +250,6 @@ function userProfilePage() {
     else {
         login_etype = result[0]['LoginEType'];
         LoginID = result[0]['LoginID'];
-        //testing ...
-        LoginID = "12";
         return "";
     }
 }
