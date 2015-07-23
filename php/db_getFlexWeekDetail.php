@@ -40,15 +40,20 @@
             $str_where = $str_where." AND ".$str_fw_just_id;
         }
     }
-    $str_where = $str_where." AND flwk.FiscalYrs = '".$FiscalYrs."'";
+    
+    if ($str_where === "") {
+        $str_where = "WHERE flwk.FiscalYrs = '".$FiscalYrs."' ";
+    }
+    else {
+        $str_where = $str_where." AND flwk.FiscalYrs = '".$FiscalYrs."' ";
+    }
     
     
     $query = "SELECT flwk.FlexWeekID, logn.LoginName, flwk.ActTitle, flwk.FWHours, flwk.StartDate, flwk.EndDate, flwk.Confirmed, "
                 ."fwja.FWJust1, fwja.FWJust2, fwja.FWJust3, fwja.FWJust4, fwja.FWJust5, fwja.FWJust5, fwja.FWJust7, fwja.FWJust8, fwja.FWJust9 "
                 ."FROM [IVCPD].[dbo].[FlexWeek] AS flwk LEFT JOIN [IVCPD].[dbo].[Login] AS logn ON flwk.LoginID = logn.LoginID "
                 ."LEFT JOIN [IVCPD].[dbo].[FWJustArea] AS fwja ON flwk.FlexWeekID = fwja.FlexWeekID "
-                ."".$str_where.""
-                ."ORDER BY logn.LoginName ASC";
+                .$str_where."ORDER BY logn.LoginName ASC";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute();
