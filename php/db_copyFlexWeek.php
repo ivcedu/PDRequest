@@ -6,8 +6,8 @@
     $curDate = filter_input(INPUT_POST, 'curDate');
     $FWHours = filter_input(INPUT_POST, 'FWHours');
 
-    $query = "INSERT INTO [IVCPD].[dbo].[FlexWeek] (AvailFlexWeekID, LoginID, curDate, ActTitle, FiscalYrs, ActPresenter, Location, ActCity, ActStateID, ActDescrip, ActLink, StartDate, StartTime, EndDate, EndTime, FWHours) "
-                ."SELECT ".$AvailFlexWeekID.", ".$LoginID.", '".$curDate."', ActTitle, FiscalYrs, ActPresenter, Location, ActCity, ActStateID, ActDescrip, ActLink, StartDate, StartTime, EndDate, EndTime, ".$FWHours." "
+    $query = "INSERT INTO [IVCPD].[dbo].[FlexWeek] (AvailFlexWeekID, LoginID, curDate, ActTitle, FiscalYrs, ActPresenter, Location, ActCity, ActStateID, ActDescrip, ActLink, StartDate, StartTime, EndDate, EndTime, FWHours, Confirmed) "
+                ."SELECT ".$AvailFlexWeekID.", ".$LoginID.", '".$curDate."', ActTitle, FiscalYrs, ActPresenter, Location, ActCity, ActStateID, ActDescrip, ActLink, StartDate, StartTime, EndDate, EndTime, ".$FWHours.", 'True' "
                 ."FROM [IVCPD].[dbo].[AvailFlexWeek] "
                 ."WHERE AvailFlexWeekID = '".$AvailFlexWeekID."'";
     
