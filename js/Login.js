@@ -1,5 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-window.onload = function() {   
+window.onload = function() {
+    $('#logn_error').hide();
     var curBrowser = bowser.name;
     var curVersion = Number(bowser.version);
     
@@ -22,9 +23,7 @@ window.onload = function() {
             break;
         default:     
             break;
-    }
-    
-    $('#logn_error').hide();
+    }  
 };
 
 ////////////////////////////////////////////////////////////////////////////////
