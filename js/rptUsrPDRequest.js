@@ -40,9 +40,11 @@ function getLoginUserPDRequestListHistory() {
 
     $("#rpt_usr_pd_request_list_history").empty();    
     if (result.length !== 0) {
+        var str_html = "";
         for(var i = 0; i < result.length; i++) { 
-            setPDRequestListHistoryHTML(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
+            str_html += setPDRequestListHistoryHTML(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
         }
+        $("#rpt_usr_pd_request_list_history").append(str_html);
     }
 }
 
@@ -54,6 +56,5 @@ function setPDRequestListHistoryHTML(PDRequestID, act_title, start_date, resourc
     tbody += "<div class='span2' id='pd_request_step_" + PDRequestID + "'>" + step + "</div>";  
     tbody += "<div class='span2' id='pd_request_status_" + PDRequestID + "'>" + status + "</div>";
     tbody += "</div>";
-    
-    $("#rpt_usr_pd_request_list_history").append(tbody);
+    return tbody;
 }

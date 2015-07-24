@@ -77,13 +77,15 @@ function getChancellorFlexWeekList(start_date, end_date, etype, fiscal_yrs) {
     
     $("#body_tr").empty();
     if (result.length !== 0) {
+        var str_html = "";
         for(var i = 0; i < result.length; i++) { 
             var request_hrs = Number(result[i]['RequestHrs']).toFixed(2);
             var approved_hrs = Number(result[i]['ApprovedHrs']).toFixed(2);
             var request_amount = formatDollar(Number(result[i]['RequestAmount']), 2);
             var approved_amount = formatDollar(Number(result[i]['ApprovedAmount']), 2);
-            setChancellorFlexWeekListHTML(result[i]['FacultyName'], result[i]['Employee'], request_hrs, approved_hrs, request_amount, approved_amount);
+            str_html += setChancellorFlexWeekListHTML(result[i]['FacultyName'], result[i]['Employee'], request_hrs, approved_hrs, request_amount, approved_amount);
         }
+        $("#body_tr").append(str_html);
     }
     
     $("#chancellor_flex_week_tbl").trigger("update");
@@ -98,6 +100,5 @@ function setChancellorFlexWeekListHTML(faculty_name, employee, request_hrs, appr
     tbl_html += "<td class='span2'>" + request_amount + "</td>";
     tbl_html += "<td class='span2'>" + approved_amount + "</td>";
     tbl_html += "</tr>";
-    
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }

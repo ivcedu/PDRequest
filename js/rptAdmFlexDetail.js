@@ -76,12 +76,14 @@ function getFlexDetailList(start_date, end_date, fw_just_id, fiscal_yrs) {
     result = db_getFlexWeekDetail(start_date, end_date, fw_just_id, fiscal_yrs);
     
     $("#body_tr").empty();
+    var str_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
             var fw_hrs = Number(result[i]['FWHours']).toFixed(2);
             var confirm = (result[i]['Confirmed'] ===  "1") ? "Yes" : "No";
-            setFlexDetailListHTML(result[i]['LoginName'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['EndDate'], fw_hrs, confirm);
+            str_html += setFlexDetailListHTML(result[i]['LoginName'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['EndDate'], fw_hrs, confirm);
         }
+        $("#body_tr").append(str_html);
     }
     
     $("#flex_detail_tbl").trigger("update");
@@ -96,6 +98,5 @@ function setFlexDetailListHTML(faculty_name, activity_title, start_date, end_dat
     tbl_html += "<td class='span1'>" + fw_hrs + "</td>";
     tbl_html += "<td class='span1'>" + confirm + "</td>";
     tbl_html += "</tr>";
-    
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }

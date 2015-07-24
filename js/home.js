@@ -174,40 +174,40 @@ $(document).ready(function() {
     });
     
     // flex week activity hours fields change //////////////////////////////////
-    $(document).on('change', 'input[id^="flex_hrs_"]', function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);
-        if (input_val <= 0) {
-            $(this).val('');
-        }
-        else {          
-            $(this).val(input_val);
-        }
-    });
+//    $(document).on('change', 'input[id^="flex_hrs_"]', function() {      
+//        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);
+//        if (input_val <= 0) {
+//            $(this).val('');
+//        }
+//        else {          
+//            $(this).val(input_val);
+//        }
+//    });
     
     // flex week confirmed checkbox click //////////////////////////////////////
-    $('table').on('change', 'input[type=checkbox]', function(e) {
-        e.preventDefault();
-        var currentId = $(this).attr('id');
-        var flex_week_ID = currentId.replace("ckb_flex_week_confirmed_", "");
-        
-        var ckb = ($(this).is(':checked') ? true : false);
-        if (ckb) {
-            $('#flex_hrs_' + flex_week_ID).prop('disabled', false);
-        }
-        else {
-            $('#flex_hrs_' + flex_week_ID).prop('disabled', true);
-        }
-    });
+//    $('table').on('change', 'input[type=checkbox]', function(e) {
+//        e.preventDefault();
+//        var currentId = $(this).attr('id');
+//        var flex_week_ID = currentId.replace("ckb_flex_week_confirmed_", "");
+//        
+//        var ckb = ($(this).is(':checked') ? true : false);
+//        if (ckb) {
+//            $('#flex_hrs_' + flex_week_ID).prop('disabled', false);
+//        }
+//        else {
+//            $('#flex_hrs_' + flex_week_ID).prop('disabled', true);
+//        }
+//    });
     
     // update confirmed selected flex week click ///////////////////////////////
-    $('#btn_flex_week_confirmed').click(function() {        
-        updateConfirmedFlexWeek();      
-        alert("Confirmed flex week has been updated successfully");
-        
-        var fiscal_yrs = $('#all_fiscal_yrs').val();
-        getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
-        setTotalFlexHrsRequired();
-    });
+//    $('#btn_flex_week_confirmed').click(function() {        
+//        updateConfirmedFlexWeek();      
+//        alert("Confirmed flex week has been updated successfully");
+//        
+//        var fiscal_yrs = $('#all_fiscal_yrs').val();
+//        getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
+//        setTotalFlexHrsRequired();
+//    });
     
     // mouseover popover ///////////////////////////////////////////////////////
     $('#logn_name').on('mouseover', function() {        

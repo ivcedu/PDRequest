@@ -313,11 +313,13 @@ function getAdminPDRequestList() {
     result = db_getPDRequestAdminList();
     
     $("#pd_request_body_tr").empty();
+    var str_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            setPDRequestAdminList(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['CreateDate'], result[i]['Name'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
+            str_html += setPDRequestAdminList(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['CreateDate'], result[i]['Name'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
         }
     }
+    $("#pd_request_body_tr").append(str_html);
 }
 
 function setPDRequestAdminList(PDRequestID, act_title, create_date, requestor, resource_type, step, status) {    
@@ -329,8 +331,7 @@ function setPDRequestAdminList(PDRequestID, act_title, create_date, requestor, r
     tbody += "<td class='span2' id='pd_request_step_" + PDRequestID + "'>" + step + "</td>";  
     tbody += "<td class='span2' id='pd_request_status_" + PDRequestID + "'>" + status + "</td>";
     tbody += "</tr>";
-    
-    $("#pd_request_body_tr").append(tbody);
+    return tbody;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -347,20 +348,6 @@ function getAvailFlexWeekListByFiscalYrs(fiscal_yrs) {
     }
     $("#flex_week_body_tr").append(html_list);
 }
-
-//function getAvailFlexWeekList() {
-//    var result = new Array(); 
-//    result = db_getAvailFlexWeekListAdmin(getTermStart(), getTermEnd());
-//    
-//    $("#flex_week_body_tr").empty();
-//    var html_list = "";
-//    if (result.length !== 0) {
-//        for(var i = 0; i < result.length; i++) { 
-//            html_list += setAvailFlexWeekListHTML(result[i]['AvailFlexWeekID'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['ActPresenter'], result[i]['Location'], result[i]['AdminName']);
-//        }
-//    }
-//    $("#flex_week_body_tr").append(html_list);
-//}
 
 function setAvailFlexWeekListHTML(AvailFlexWeekID, act_title, start_date, act_presenter, location, admin_name) {
     var tbody = "<tr>";

@@ -161,7 +161,7 @@ function getFiscalYrs() {
 ////////////////////////////////////////////////////////////////////////////////
 function formFilterValidation(start_date, end_date) {    
     if (start_date !== "" && end_date === "") {
-        return"End date is a required field";
+        return "End date is a required field";
     }
     else if (start_date === "" && end_date !== "") {
         return "Start date is a required field";
@@ -178,6 +178,7 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
     
     $("#body_tr").empty();
     if (result.length !== 0) {
+        var str_html = "";
         for(var i = 0; i < result.length; i++) { 
             var pre_sub_date = convertDBDateTimeToString(result[i]['PreSubmissionDate']);
             var pre_app_date = convertDBDateTimeToString(result[i]['PreApprovedDate']);
@@ -194,9 +195,10 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
             var start_date = result[i]['StartDate'];
             var end_date = result[i]['EndDate'];
             var dist_alloc = formatDollar(Number(result[i]['DistPaid']), 2);
-            setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['FacultyName'], start_date, end_date, pre_sub_date, pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
-                                        post_sub_date, post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
+            str_html += setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['FacultyName'], start_date, end_date, pre_sub_date, pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
+                                                 post_sub_date, post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
         }
+        $("#body_tr").append(str_html);
     }
     
     $("#pd_tracking_doc_tbl").trigger("update");
@@ -225,8 +227,7 @@ function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, faculty_name, star
     tbl_html += "<td class='col_150'>" + dist_alloc + "</td>";
     tbl_html += "<td class='col_200'>" + comments + "</td>";
     tbl_html += "</tr>";
-    
-    $("#body_tr").append(tbl_html);
+    return  tbl_html;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

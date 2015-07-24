@@ -28,9 +28,11 @@ function getPDDeletedList() {
     
     $("#body_tr").empty();
     if (result.length !== 0) {
+        var str_html = "";
         for(var i = 0; i < result.length; i++) { 
-            setPDDeletedListHTML(result[i]['PDRequestID'], result[i]['LoginName'], result[i]['ActTitle']);
+            str_html += setPDDeletedListHTML(result[i]['PDRequestID'], result[i]['LoginName'], result[i]['ActTitle']);
         }
+        $("#body_tr").append(str_html);
     }
 }
 
@@ -40,6 +42,5 @@ function setPDDeletedListHTML(pd_request_id, faculty_name, activity_title) {
     tbl_html += "<td class='span8'>" + activity_title + "</td>";
     tbl_html += "<td class='span3'>" + faculty_name + "</td>";
     tbl_html += "</tr>";
-    
-    $("#body_tr").append(tbl_html);
+    return tbl_html; 
 }

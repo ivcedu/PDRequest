@@ -40,11 +40,13 @@ function getLoginUserFlexWeekListHistory() {
     
     $("#rpt_usr_flex_week_history").empty();
     if (result.length !== 0) {
+        var str_html = "";
         for(var i = 0; i < result.length; i++) { 
             var start_date = result[i]['StartDate'] + " " + result[i]['StartTime'];
             var end_date = result[i]['EndDate'] + " " + result[i]['EndTime'];
-            setFlexWeekListHistoryHTML(result[i]['FlexWeekID'], result[i]['ActTitle'], result[i]['ActPresenter'], start_date, end_date, result[i]['FWHours']);
+            str_html += setFlexWeekListHistoryHTML(result[i]['FlexWeekID'], result[i]['ActTitle'], result[i]['ActPresenter'], start_date, end_date, result[i]['FWHours']);
         }
+        $("#rpt_usr_flex_week_history").append(str_html);
     }
 }
 
@@ -56,6 +58,5 @@ function setFlexWeekListHistoryHTML(FlexWeekID, act_title, act_presenter, start_
     tbody += "<div class='span2'>" + end_date + "</div>";
     tbody += "<div class='span1'>" + hrs + "</div>";
     tbody += "</div>";
-    
-    $("#rpt_usr_flex_week_history").append(tbody);
+    return tbody;
 }

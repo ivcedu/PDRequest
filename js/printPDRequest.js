@@ -16,7 +16,6 @@ var available_amount = 0.0;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) { 
-//        PDRequestID = sessionStorage.getItem('m_PDRequestID');
         getURLParameters();
         if (sessionStorage.getItem('m_PDRequestStep') === "Post-activity") {
             PDReqStepID = "2";
@@ -746,15 +745,16 @@ function getSelectStepStatus() {
 function getSelectTransaction() {
     var transaction = new Array();
     transaction = db_getTransaction(PDRequestID);
+    var str_comments = "";
     if (transaction.length > 0) {
         for (var i = 0; i < transaction.length; i++) {
             var dt_stamp = convertDBDateTimeToString(transaction[i]['DTStamp']);
             var login_name = transaction[i]['LoginName'];
             var note = transaction[i]['Note'];
             
-            var html = login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
-            $("#comments_history").append(html);
+            str_comments += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
         }
+        $("#comments_history").append(str_comments);
     }
 }
 
@@ -1074,14 +1074,15 @@ function getTransactionHistory() {
     var result = new Array();
     result = db_getLogHistory(PDRequestID);
     
+    var str_log = "";
     for (var i = 0; i < result.length; i++) {
         var dt_stamp = convertDBDateTimeToString(result[i]['DTStamp']);
         var login_name = result[i]['LoginName'];
         var note = result[i]['LogMsg'];
 
-        var html = login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
-        $("#transaction_history").append(html);
+        str_log += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
     }
+    $("#transaction_history").append(str_log);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
