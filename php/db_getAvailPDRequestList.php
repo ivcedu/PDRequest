@@ -1,8 +1,8 @@
 <?php
     require("config.php");
     
-    $TermStart = $_POST['TermStart'];
-    $TermEnd = $_POST['TermEnd'];
+    $TermStart = filter_input(INPUT_POST, 'TermStart');
+    $TermEnd = filter_input(INPUT_POST, 'TermEnd');
 
     $query = "SELECT pdrt.PDRequestID, "
             . "pdrt.ActTitle, "
@@ -21,4 +21,3 @@
     $data = $cmd->fetchAll();
 
     echo json_encode($data);
-?>

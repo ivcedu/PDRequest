@@ -1,23 +1,20 @@
 <?php
     require("config.php");
 
-    $ResultID = "";
-    $LoginID = $_POST['LoginID'];
-    $curDate = $_POST['curDate'];
-    $ActTitle = $_POST['ActTitle'];
-    $ActPresenter = $_POST['ActPresenter'];
-    $Location = $_POST['Location'];
-    $ActCity = $_POST['ActCity'];
-    $ActStateID = $_POST['ActStateID'];
-    $ActDescrip = $_POST['ActDescrip'];
-    $ActLink = $_POST['ActLink'];
-    $StartDate = $_POST['StartDate'];
-    $StartTime = $_POST['StartTime'];
-
-    $EndDate = $_POST['EndDate'];
-    $EndTime = $_POST['EndTime'];
-
-    $FWHours = $_POST['FWHours'];
+    $LoginID = filter_input(INPUT_POST, 'LoginID');
+    $curDate = filter_input(INPUT_POST, 'curDate');
+    $ActTitle = filter_input(INPUT_POST, 'ActTitle');
+    $ActPresenter = filter_input(INPUT_POST, 'ActPresenter');
+    $Location = filter_input(INPUT_POST, 'Location');
+    $ActCity = filter_input(INPUT_POST, 'ActCity');
+    $ActStateID = filter_input(INPUT_POST, 'ActStateID');
+    $ActDescrip = filter_input(INPUT_POST, 'ActDescrip');
+    $ActLink = filter_input(INPUT_POST, 'ActLink');
+    $StartDate = filter_input(INPUT_POST, 'StartDate');
+    $StartTime = filter_input(INPUT_POST, 'StartTime');
+    $EndDate = filter_input(INPUT_POST, 'EndDate');
+    $EndTime = filter_input(INPUT_POST, 'EndTime');
+    $FWHours = filter_input(INPUT_POST, 'FWHours');
 
     $query = "INSERT INTO [IVCPD].[dbo].[FlexWeek] "
                 ."(LoginID, curDate, ActTitle, ActPresenter, Location, ActCity, ActStateID, ActDescrip, ActLink, StartDate, StartTime, EndDate, EndTime, FWHours) "
@@ -29,4 +26,3 @@
     $ResultID = $dbConn->lastInsertId();
 
     echo json_encode($ResultID);
-?>

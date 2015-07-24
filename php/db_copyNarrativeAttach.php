@@ -1,11 +1,10 @@
 <?php
     require("config.php");
     
-    $ResultID = "";
-    $SourceFileLinkName = $_POST['SourceFileLinkName'];
-    $PDRequestID = $_POST['PDRequestID'];
-    $FileLinkName = $_POST['FileLinkName'];
-    $FileName = $_POST['FileName'];
+    $SourceFileLinkName = filter_input(INPUT_POST, 'SourceFileLinkName');
+    $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
+    $FileLinkName = filter_input(INPUT_POST, 'FileLinkName');
+    $FileName = filter_input(INPUT_POST, 'FileName');
 
     $query = "INSERT INTO [IVCPD].[dbo].[NarrativeAttach] "
                 ."(PDRequestID, FileLinkName, FileName) "
@@ -23,4 +22,3 @@
     }
 
     echo json_encode($result);
-?>

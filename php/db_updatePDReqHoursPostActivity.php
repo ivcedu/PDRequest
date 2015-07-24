@@ -1,21 +1,17 @@
 <?php
     require("config.php");
-    
-    if (isset($_POST['PDRequestID']))
-    {
-        $PDRequestID = $_POST['PDRequestID'];
-        $PostInputHr = $_POST['PostInputHr'];
-        $PostPresHr= $_POST['PostPresHr'];
-        $PostPartHr = $_POST['PostPartHr'];
-        $PostTotalHr = $_POST['PostTotalHr'];
-        
-        $query = "UPDATE [IVCPD].[dbo].[PDReqHours] "
-                    ."SET PostInputHr = '".$PostInputHr."', PostPresHr = '".$PostPresHr."', PostPartHr = '".$PostPartHr."', PostTotalHr = '".$PostTotalHr."' "
-                    ."WHERE PDRequestID = '".$PDRequestID."'";
-        
-        $cmd = $dbConn->prepare($query);
-        $result = $cmd->execute(); 
-        
-        echo json_encode($result);
-    }
-?>
+
+    $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
+    $PostInputHr = filter_input(INPUT_POST, 'PostInputHr');
+    $PostPresHr= filter_input(INPUT_POST, 'PostPresHr');
+    $PostPartHr = filter_input(INPUT_POST, 'PostPartHr');
+    $PostTotalHr = filter_input(INPUT_POST, 'PostTotalHr');
+
+    $query = "UPDATE [IVCPD].[dbo].[PDReqHours] "
+                ."SET PostInputHr = '".$PostInputHr."', PostPresHr = '".$PostPresHr."', PostPartHr = '".$PostPartHr."', PostTotalHr = '".$PostTotalHr."' "
+                ."WHERE PDRequestID = '".$PDRequestID."'";
+
+    $cmd = $dbConn->prepare($query);
+    $result = $cmd->execute(); 
+
+    echo json_encode($result);

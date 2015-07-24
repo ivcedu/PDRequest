@@ -13,4 +13,3 @@
     $data = $cmd->fetchAll();
 
     echo json_encode($data);
-?>

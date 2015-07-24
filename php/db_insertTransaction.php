@@ -1,10 +1,9 @@
 <?php
     require("config.php");
     
-    $ResultID = "";
-    $PDRequestID = $_POST['PDRequestID'];
-    $LoginName = $_POST['LoginName'];
-    $Note = $_POST['Note'];
+    $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
+    $LoginName = filter_input(INPUT_POST, 'LoginName');
+    $Note = filter_input(INPUT_POST, 'Note');
 
     $query = "INSERT INTO [IVCPD].[dbo].[Transaction] (PDRequestID, LoginName, Note) VALUES ('$PDRequestID', '$LoginName', '$Note')";  
     
@@ -13,4 +12,3 @@
     $ResultID = $dbConn->lastInsertId();
 
     echo json_encode($ResultID);
-?>

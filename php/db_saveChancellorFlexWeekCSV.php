@@ -1,10 +1,10 @@
 <?php
     require("config.php");
 
-    $StartDate = $_GET['StartDate'];
-    $EndDate = $_GET['EndDate'];
-    $EType = $_GET['EType'];
-    $FiscalYrs = $_GET['FiscalYrs'];
+    $StartDate = filter_input(INPUT_GET, 'StartDate');
+    $EndDate = filter_input(INPUT_GET, 'EndDate');
+    $EType = filter_input(INPUT_GET, 'EType');
+    $FiscalYrs = filter_input(INPUT_GET, 'FiscalYrs');
     
     $str2_where = "";
     $str2_start_date = "";

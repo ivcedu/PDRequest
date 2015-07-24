@@ -1,13 +1,12 @@
 <?php
     require("config.php");
     
-    $ResultID = "";
-    $LoginName = $_POST['LoginName'];
-    $LoginEmail = $_POST['LoginEmail'];
-    $LoginDepart = $_POST['LoginDepart'];
-    $LoginPhone = $_POST['LoginPhone'];
-    $LoginDiv = $_POST['LoginDiv'];
-    $LoginEType = $_POST['LoginEType'];
+    $LoginName = filter_input(INPUT_POST, 'LoginName');
+    $LoginEmail = filter_input(INPUT_POST, 'LoginEmail');
+    $LoginDepart = filter_input(INPUT_POST, 'LoginDepart');
+    $LoginPhone = filter_input(INPUT_POST, 'LoginPhone');
+    $LoginDiv = filter_input(INPUT_POST, 'LoginDiv');
+    $LoginEType = filter_input(INPUT_POST, 'LoginEType');
 
     $query = "INSERT INTO [IVCPD].[dbo].[Login] (LoginName, LoginEmail, LoginDepart, LoginPhone, LoginDiv, LoginEType) "
                 ."VALUES ('$LoginName', '$LoginEmail', '$LoginDepart', '$LoginPhone', '$LoginDiv', '$LoginEType')";  
@@ -17,4 +16,3 @@
     $ResultID = $dbConn->lastInsertId();
 
     echo json_encode($ResultID);
-?>

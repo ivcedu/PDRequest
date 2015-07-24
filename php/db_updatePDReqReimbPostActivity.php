@@ -1,40 +1,36 @@
 <?php
     require("config.php");
-    
-    if (isset($_POST['PDRequestID']))
-    {
-        $PDRequestID = $_POST['PDRequestID'];
-        $PostReqFee = $_POST['PostReqFee'];
-        $PostTravel = $_POST['PostTravel'];
-        $PostMileage = $_POST['PostMileage'];
-        $PostMilCost = $_POST['PostMilCost'];
-        $PostLodging = $_POST['PostLodging'];
-        $PostNumBrk = $_POST['PostNumBrk'];
-        $PostBrkCost = $_POST['PostBrkCost'];
-        $PostNumLun = $_POST['PostNumLun'];
-        $PostLunCost = $_POST['PostLunCost'];
-        $PostNumDin = $_POST['PostNumDin'];
-        $PostDinCost = $_POST['PostDinCost'];
-        $OtherSource = $_POST['OtherSource'];
-        $PostOthCost = $_POST['PostOthCost'];
-        $PostSubTotal = $_POST['PostSubTotal'];
-        $FundingSource = $_POST['FundingSource'];
-        $FSApproved = $_POST['FSApproved'];
-        $FSComments = $_POST['FSComments'];
-        $PostFunCost = $_POST['PostFunCost'];
-        $PostTotalCost = $_POST['PostTotalCost'];
-        $PostTotalAmtRequest = $_POST['PostTotalAmtRequest'];
-        
-        $query = "UPDATE [IVCPD].[dbo].[PDReqReimb] "
-                    ."SET PostReqFee = '".$PostReqFee."', PostTravel = '".$PostTravel."', PostMileage = '".$PostMileage."', PostMilCost = '".$PostMilCost."', PostLodging = '".$PostLodging."', "
-                    ."PostNumBrk = '".$PostNumBrk."', PostBrkCost = '".$PostBrkCost."', PostNumLun = '".$PostNumLun."', PostLunCost = '".$PostLunCost."', PostNumDin = '".$PostNumDin."', PostDinCost = '".$PostDinCost."', "
-                    ."OtherSource = '".$OtherSource."', PostOthCost = '".$PostOthCost."', PostSubTotal = '".$PostSubTotal."', FundingSource = '".$FundingSource."', FSApproved = '".$FSApproved."', FSComments = '".$FSComments."', "
-                    ."PostFunCost = '".$PostFunCost."', PostTotalCost = '".$PostTotalCost."', PostTotalAmtRequest = '".$PostTotalAmtRequest."' "
-                    ."WHERE PDRequestID = '".$PDRequestID."'";
-        
-        $cmd = $dbConn->prepare($query);
-        $result = $cmd->execute(); 
-        
-        echo json_encode($result);
-    }
-?>
+
+    $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
+    $PostReqFee = filter_input(INPUT_POST, 'PostReqFee');
+    $PostTravel = filter_input(INPUT_POST, 'PostTravel');
+    $PostMileage = filter_input(INPUT_POST, 'PostMileage');
+    $PostMilCost = filter_input(INPUT_POST, 'PostMilCost');
+    $PostLodging = filter_input(INPUT_POST, 'PostLodging');
+    $PostNumBrk = filter_input(INPUT_POST, 'PostNumBrk');
+    $PostBrkCost = filter_input(INPUT_POST, 'PostBrkCost');
+    $PostNumLun = filter_input(INPUT_POST, 'PostNumLun');
+    $PostLunCost = filter_input(INPUT_POST, 'PostLunCost');
+    $PostNumDin = filter_input(INPUT_POST, 'PostNumDin');
+    $PostDinCost = filter_input(INPUT_POST, 'PostDinCost');
+    $OtherSource = filter_input(INPUT_POST, 'OtherSource');
+    $PostOthCost = filter_input(INPUT_POST, 'PostOthCost');
+    $PostSubTotal = filter_input(INPUT_POST, 'PostSubTotal');
+    $FundingSource = filter_input(INPUT_POST, 'FundingSource');
+    $FSApproved = filter_input(INPUT_POST, 'FSApproved');
+    $FSComments = filter_input(INPUT_POST, 'FSComments');
+    $PostFunCost = filter_input(INPUT_POST, 'PostFunCost');
+    $PostTotalCost = filter_input(INPUT_POST, 'PostTotalCost');
+    $PostTotalAmtRequest = filter_input(INPUT_POST, 'PostTotalAmtRequest');
+
+    $query = "UPDATE [IVCPD].[dbo].[PDReqReimb] "
+                ."SET PostReqFee = '".$PostReqFee."', PostTravel = '".$PostTravel."', PostMileage = '".$PostMileage."', PostMilCost = '".$PostMilCost."', PostLodging = '".$PostLodging."', "
+                ."PostNumBrk = '".$PostNumBrk."', PostBrkCost = '".$PostBrkCost."', PostNumLun = '".$PostNumLun."', PostLunCost = '".$PostLunCost."', PostNumDin = '".$PostNumDin."', PostDinCost = '".$PostDinCost."', "
+                ."OtherSource = '".$OtherSource."', PostOthCost = '".$PostOthCost."', PostSubTotal = '".$PostSubTotal."', FundingSource = '".$FundingSource."', FSApproved = '".$FSApproved."', FSComments = '".$FSComments."', "
+                ."PostFunCost = '".$PostFunCost."', PostTotalCost = '".$PostTotalCost."', PostTotalAmtRequest = '".$PostTotalAmtRequest."' "
+                ."WHERE PDRequestID = '".$PDRequestID."'";
+
+    $cmd = $dbConn->prepare($query);
+    $result = $cmd->execute(); 
+
+    echo json_encode($result);

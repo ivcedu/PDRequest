@@ -1,16 +1,12 @@
 <?php
     require("config.php");
-      
-    if (isset($_POST['State']))
-    {
-        $State = $_POST['State'];
-        
-        $query = "SELECT * FROM [IVCPD].[dbo].[ActState] WHERE State = '".$State."'";
+    
+    $State = filter_input(INPUT_POST, 'State');
 
-        $cmd = $dbConn->prepare($query);
-        $cmd->execute(); 
-        $data = $cmd->fetchAll();
+    $query = "SELECT * FROM [IVCPD].[dbo].[ActState] WHERE State = '".$State."'";
 
-        echo json_encode($data);
-    }
-?>
+    $cmd = $dbConn->prepare($query);
+    $cmd->execute(); 
+    $data = $cmd->fetchAll();
+
+    echo json_encode($data);

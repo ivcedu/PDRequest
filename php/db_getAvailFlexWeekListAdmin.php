@@ -1,8 +1,8 @@
 <?php
     require("config.php");
     
-    $TermStart = $_POST['TermStart'];
-    $TermEnd = $_POST['TermEnd'];
+    $TermStart = filter_input(INPUT_POST, 'TermStart');
+    $TermEnd = filter_input(INPUT_POST, 'TermEnd');
         
     $query = "SELECT avfw.*, admn.* "
                 ."FROM [IVCPD].[dbo].[AvailFlexWeek] AS avfw LEFT JOIN [IVCPD].[dbo].[Administrator] AS admn ON avfw.AdministratorID = admn.AdministratorID "
@@ -13,4 +13,3 @@
     $data = $cmd->fetchAll();
 
     echo json_encode($data);
-?>

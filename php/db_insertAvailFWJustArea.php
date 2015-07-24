@@ -1,17 +1,16 @@
 <?php
     require("config.php");
 
-    $ResultID = "";
-    $AvailFlexWeekID = $_POST['AvailFlexWeekID'];
-    $FWJust1 = $_POST['FWJust1'];
-    $FWJust2 = $_POST['FWJust2'];
-    $FWJust3 = $_POST['FWJust3'];
-    $FWJust4 = $_POST['FWJust4'];
-    $FWJust5 = $_POST['FWJust5'];
-    $FWJust6 = $_POST['FWJust6'];
-    $FWJust7 = $_POST['FWJust7'];
-    $FWJust8 = $_POST['FWJust8'];
-    $FWJust9 = $_POST['FWJust9'];
+    $AvailFlexWeekID = filter_input(INPUT_POST, 'AvailFlexWeekID');
+    $FWJust1 = filter_input(INPUT_POST, 'FWJust1');
+    $FWJust2 = filter_input(INPUT_POST, 'FWJust2');
+    $FWJust3 = filter_input(INPUT_POST, 'FWJust3');
+    $FWJust4 = filter_input(INPUT_POST, 'FWJust4');
+    $FWJust5 = filter_input(INPUT_POST, 'FWJust5');
+    $FWJust6 = filter_input(INPUT_POST, 'FWJust6');
+    $FWJust7 = filter_input(INPUT_POST, 'FWJust7');
+    $FWJust8 = filter_input(INPUT_POST, 'FWJust8');
+    $FWJust9 = filter_input(INPUT_POST, 'FWJust9');
 
     $query = "INSERT INTO [IVCPD].[dbo].[AvailFWJustArea] "
                 ."(AvailFlexWeekID, FWJust1, FWJust2, FWJust3, FWJust4, FWJust5, FWJust6, FWJust7, FWJust8, FWJust9) "
@@ -22,4 +21,3 @@
     $ResultID = $dbConn->lastInsertId();
 
     echo json_encode($ResultID);
-?>

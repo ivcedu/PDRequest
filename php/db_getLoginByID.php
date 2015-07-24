@@ -1,7 +1,7 @@
 <?php
     require("config.php");
     
-    $LoginID = $_POST['LoginID'];
+    $LoginID = filter_input(INPUT_POST, 'LoginID');
 
     $query = "SELECT * FROM [IVCPD].[dbo].[Login] WHERE LoginID = '".$LoginID."'";
 
@@ -10,4 +10,3 @@
     $data = $cmd->fetchAll();
 
     echo json_encode($data);
-?>

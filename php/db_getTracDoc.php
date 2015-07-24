@@ -1,7 +1,7 @@
 <?php
     require("config.php");
 
-    $TracDocID = $_POST['TracDocID'];
+    $TracDocID = filter_input(INPUT_POST, 'TracDocID');
 
     $query = "SELECT * FROM [IVCPD].[dbo].[TracDoc] WHERE TracDocID = '".$TracDocID."'";
 

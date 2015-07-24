@@ -1,9 +1,8 @@
 <?php
     require("config.php");
     
-    $ResultID = "";
-    $PDRequestID = $_POST['PDRequestID'];
-    $NewPDRequestID = $_POST['NewPDRequestID'];
+    $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
+    $NewPDRequestID = filter_input(INPUT_POST, 'NewPDRequestID');
 
     $query = "INSERT INTO [IVCPD].[dbo].[Narrative] (PDRequestID, Narrative) "
                 ."SELECT ".$NewPDRequestID.", Narrative "
@@ -15,4 +14,3 @@
     $ResultID = $dbConn->lastInsertId();
 
     echo json_encode($ResultID);
-?>

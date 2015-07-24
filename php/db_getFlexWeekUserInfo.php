@@ -1,16 +1,12 @@
 <?php
     require("config.php");
-      
-    if (isset($_POST['FlexWeekID']))
-    {
-        $FlexWeekID = $_POST['FlexWeekID'];
-        
-        $query = "SELECT * FROM [IVCPD].[dbo].[FlexWeekUserInfo] WHERE FlexWeekID = '".$FlexWeekID."'";
 
-        $cmd = $dbConn->prepare($query);
-        $cmd->execute(); 
-        $data = $cmd->fetchAll();
+    $FlexWeekID = filter_input(INPUT_POST, 'FlexWeekID');
 
-        echo json_encode($data);
-    }
-?>
+    $query = "SELECT * FROM [IVCPD].[dbo].[FlexWeekUserInfo] WHERE FlexWeekID = '".$FlexWeekID."'";
+
+    $cmd = $dbConn->prepare($query);
+    $cmd->execute(); 
+    $data = $cmd->fetchAll();
+
+    echo json_encode($data);

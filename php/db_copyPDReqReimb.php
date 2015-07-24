@@ -1,9 +1,8 @@
 <?php
     require("config.php");
     
-    $ResultID = "";
-    $PDRequestID = $_POST['PDRequestID'];
-    $NewPDRequestID = $_POST['NewPDRequestID'];
+    $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
+    $NewPDRequestID = filter_input(INPUT_POST, 'NewPDRequestID');
 
     $query = "INSERT INTO [IVCPD].[dbo].[PDReqReimb] (PDRequestID, PreReqFee, PreTravel, PreMileage, PreMilCost, PreLodging, PreNumBrk, PreBrkCost, PreNumLun, PreLunCost, PreNumDin, PreDinCost, "
                 ."OtherSource, PreOthCost, PreSubTotal, FundingSource, FSApproved, FSComments, PreFunCost, PreTotalCost, PreTotalAmtRequest) "
@@ -17,4 +16,3 @@
     $ResultID = $dbConn->lastInsertId();
 
     echo json_encode($ResultID);
-?>

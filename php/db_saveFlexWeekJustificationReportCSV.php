@@ -1,7 +1,7 @@
 <?php
     require("config.php");
     
-    $FiscalYrs = $_GET['FiscalYrs'];
+    $FiscalYrs = filter_input(INPUT_GET, 'FiscalYrs');
     
     $query_just_1 = "SELECT flwk.ActTitle "
                     ."FROM [IVCPD].[dbo].[FlexWeek] AS flwk LEFT JOIN [IVCPD].[dbo].[FWJustArea] AS fwja ON flwk.FlexWeekID = fwja.FlexWeekID "
@@ -92,7 +92,6 @@
     $cmd = $dbConn->prepare($query_just_9);
     $cmd->execute();
     $data_9 = $cmd->fetchAll();
-    
     
     // create excel file
     $filename = "export_list.csv";  

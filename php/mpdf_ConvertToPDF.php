@@ -15,6 +15,4 @@
     $mpdf->WriteHTML($html, 2);
     
     $mpdf->Output();
-    exit;
-
-?>    
+    exit; 
