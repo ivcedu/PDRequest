@@ -1,9 +1,15 @@
+var m_hrs_step = null;
+var m_reimb_step = null;
+var m_hrs_status = null;
+var m_reimb_status = null;
+
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {
     if (sessionStorage.key(0) !== null) {     
         if (sessionStorage.getItem('m_PDRequestID') !== null) {
             setDefaultSetting();
             getPDSystem();
+            getActiveFundingSrcList();
             
             PDRequestID = sessionStorage.getItem('m_PDRequestID');
             getSelectPDRequest();
@@ -22,17 +28,24 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
-    $('#logout').click(function() {
-        var parent_site = sessionStorage.getItem('m_parentSite');
-        sessionStorage.clear();
-        window.open(parent_site, '_self');
-    });
-    
-    $('#home').click(function() {
+    $('#nav_home').click(function() {
         sessionStorage.removeItem("m_PDRequestID");
         window.open('home.html', '_self');
     });
     
+    $('#nav_print').click(function() {
+        if (PDRequestID !== "") {
+            sessionStorage.setItem('m_PDRequestID', PDRequestID);
+            window.open('printPDRequest.html?pdrequest_id=' + PDRequestID, '_blank');
+        }
+    });
+    
+    $('#nav_logout').click(function() {
+        var parent_site = sessionStorage.getItem('m_parentSite');
+        sessionStorage.clear();
+        window.open(parent_site, '_self');
+    });
+
     // justification narrative add file click //////////////////////////////////
     $('#btn_just_narrative_add').click(function() {
         justNarrativeAttachFile(PDRequestID);
@@ -90,7 +103,22 @@ $(document).ready(function() {
         }
     });
     
-    // pd request hours fields change //////////////////////////////////////////    
+    // pre-activity hours fields change ////////////////////////////////////////
+    $('#pre_input_hrs').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);         
+        var new_val = input_val * 3;
+        $(this).val(input_val);
+        $('#pre_presenter_hrs').html(new_val.toFixed(2));
+        preCalculateTotalHrs();
+    }); 
+    
+    $('#pre_participant_hrs').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);       
+            $(this).val(input_val);
+        preCalculateTotalHrs();
+    });
+    
+    // post-activity hours fields change /////////////////////////////////////// 
     $('#post_input_hrs').change(function() {      
         var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);     
         var new_val = input_val * 3;
@@ -105,7 +133,99 @@ $(document).ready(function() {
         postCalculateTotalHrs();
     });
     
-    // pd request reimbursement fields change //////////////////////////////////    
+    // pre-activity reimbursement fields change //////////////////////////////////
+    $('#pre_reg_fee').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));         
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_travel_cost').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));         
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_mileage').change(function() {
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_mileage_cost').html('$0.00');
+        }
+        else {     
+            $(this).val(input_val);
+            $('#pre_mileage_cost').html(formatDollar(sys_mileage_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_lodging_cost').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));         
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_breakfast').change(function() {      
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_breakfast_cost').html('$0.00');
+        }
+        else {          
+            $(this).val(input_val);
+            $('#pre_breakfast_cost').html(formatDollar(sys_breakfast_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_lunch').change(function() {      
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_lunch_cost').html('$0.00');
+        }
+        else {         
+            $(this).val(input_val);
+            $('#pre_lunch_cost').html(formatDollar(sys_lunch_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_input_dinner').change(function() {      
+        var input_val = Math.round(Number($(this).val().replace(/[^0-9\.]/g, '')));
+        if (input_val < 1) {
+            $('#pre_dinner_cost').html('$0.00');
+        }
+        else {       
+            $(this).val(input_val);
+            $('#pre_dinner_cost').html(formatDollar(sys_dinner_amt * input_val, 2));
+        }
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_other_cost').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));       
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+    $('#pre_funding_other').change(function() {      
+        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));        
+        $(this).val(formatDollar(input_val, 2));
+        preCalculateSubTotal();
+        preCalculateTotalCost();
+    });
+    
+//    $("input[name=rdo_fs_approval]:radio").change(function () {
+//        preCalculateTotalCost();
+//    });
+    
+    // post-activity reimbursement fields change ///////////////////////////////   
     $('#post_reg_fee').change(function() {      
         var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));       
         $(this).val(formatDollar(input_val, 2));
@@ -193,9 +313,9 @@ $(document).ready(function() {
         postCalculateTotalCost();
     });
     
-    $("input[name=rdo_fs_approval]:radio").change(function () {
-        postCalculateTotalCost();
-    });
+//    $("input[name=rdo_fs_approval]:radio").change(function () {
+//        postCalculateTotalCost();
+//    });
     
     // user save as draft click ////////////////////////////////////////////////
     $('#btn_save_draft').click(function() {         
@@ -205,9 +325,9 @@ $(document).ready(function() {
         updateRequestDetail();
         updateComments(false);
         
+        // need to update
         // insert log
         db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "post-activity save as draft");
-        
         window.open('home.html', '_self');
     });
     
@@ -224,12 +344,14 @@ $(document).ready(function() {
         updatePAReqInfo2();
         updateRequestDetail();
         updateComments(true);
-        db_updatePDRequestPostSubDate(PDRequestID);
+        updatePDReqHRProcess(2, 2);
         
+        db_updatePDRequestPostSubDate(PDRequestID);
         updateStep(2);
         updateStatus(2);
-        addTransaction();
         
+        addTransaction();
+        // need to update
         sendPostActivityCreatorSubmitted();
         if (StatusID === "5") {
             sendPostActivityApproverMoreInfo();
@@ -240,7 +362,6 @@ $(document).ready(function() {
         
         // insert log
         db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "submit post-activity");
-        
         window.open('home.html', '_self');
     });
     
@@ -309,8 +430,8 @@ function formMainValidation() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function setDefaultSetting() {
-    $('#request_hours').hide();
-    $('#request_reimbursement').hide();
+    $('.hrs_sections').hide();
+    $('.reimb_sections').hide();
     $('#comments_block').hide();
 }
 
@@ -368,15 +489,53 @@ function updatePAReqInfo2() {
 
 function updateRequestDetail() {
     if (ResourceTypeID === "1") {
-        updatePDReqHoursPostActivity();
+        updatePDReqHrsSections();
     }
     else if (ResourceTypeID === "2") {
+        updatePDReqReimbSections();
+    }
+    else {
+        updatePDReqHrsSections();
+        updatePDReqReimbSections();
+    }
+}
+
+function updatePDReqHrsSections() {
+    if (m_hrs_status === "4") {
+        updatePDReqHoursPostActivity();
+    }
+    else {
+        if (m_hrs_step === "1") {
+            updatePDReqHoursPreActivity();
+        }
+        else {
+            updatePDReqHoursPostActivity();
+        }
+    }
+}
+
+function updatePDReqReimbSections() {
+    if (m_reimb_status === "4") {
         updatePDReqReimbPostActivity();
     }
     else {
-        updatePDReqHoursPostActivity();
-        updatePDReqReimbPostActivity();
+        if (m_reimb_step === "1") {
+            updatePDReqReimbPreActivity();
+        }
+        else {
+            updatePDReqReimbPostActivity();
+        }
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function updatePDReqHoursPreActivity() {    
+    var pre_input_hrs = Number($('#pre_input_hrs').val());
+    var pre_pres_hrs = Number($('#pre_presenter_hrs').html());
+    var pre_part_hrs = Number($('#pre_participant_hrs').val());
+    var pre_total_hrs = Number($('#pre_total_hrs').html());
+    
+    db_updatePDReqHoursPreActivity(PDRequestID, pre_input_hrs, pre_pres_hrs, pre_part_hrs, pre_total_hrs);
 }
 
 function updatePDReqHoursPostActivity() {
@@ -386,6 +545,58 @@ function updatePDReqHoursPostActivity() {
     var post_total_hrs = Number($('#post_total_hrs').html());
     
     db_updatePDReqHoursPostActivity(PDRequestID, post_input_hrs, post_pres_hrs, post_part_hrs, post_total_hrs);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function updatePDReqReimbPreActivity() {    
+    var pre_reg_fee = revertDollar($('#pre_reg_fee').val());
+    var pre_travel_cost = revertDollar($('#pre_travel_cost').val());
+    var pre_input_mileage = Number($('#pre_input_mileage').val());
+    var pre_mileage_cost = revertDollar($('#pre_mileage_cost').html());
+    var pre_lodging_cost = revertDollar($('#pre_lodging_cost').val());
+    var pre_input_breakfast = Number($('#pre_input_breakfast').val());
+    var pre_breakfast_cost = revertDollar($('#pre_breakfast_cost').html());
+    var pre_input_lunch = Number($('#pre_input_lunch').val());
+    var pre_lunch_cost = revertDollar($('#pre_lunch_cost').html());
+    var pre_input_dinner = Number($('#pre_input_dinner').val());
+    var pre_dinner_cost = revertDollar($('#pre_dinner_cost').html());
+    var other_cost_description = textReplaceApostrophe($('#other_cost_description').val());
+    var pre_other_cost = revertDollar($('#pre_other_cost').val());
+    var pre_sub_total = revertDollar($('#pre_sub_total').html());
+    var funding_other_source = textReplaceApostrophe($('#funding_other_source').val());
+    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
+    var fs_comments = textReplaceApostrophe($('#fs_comments').val());
+    var pre_funding_other = revertDollar($('#pre_funding_other').val());
+    var pre_total_cost = revertDollar($('#pre_total_cost').html());
+    var pre_total_amount_request = revertDollar($('#pre_total_amount_request').html());
+    
+    db_updatePDReqReimbPreActivity(PDRequestID, pre_reg_fee, pre_travel_cost, pre_input_mileage, pre_mileage_cost, pre_lodging_cost, pre_input_breakfast, pre_breakfast_cost, 
+                                    pre_input_lunch, pre_lunch_cost, pre_input_dinner, pre_dinner_cost, other_cost_description, pre_other_cost, 
+                                    pre_sub_total, funding_other_source, fs_approved, fs_comments, pre_funding_other, pre_total_cost, pre_total_amount_request);
+                                    
+    // verified new funding src has been added to reimb
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            var result = db_getPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+            if (result === null) {
+                db_insertPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+            }
+        });        
+    });  
+    
+    // update PDReqFundSrc
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            var fs_selected = $(this).is(':checked');
+            db_updatePDReqFundSrcFSSelected(PDRequestID, PDReqReimbID, fs_id, fs_selected);
+        });        
+    });
+    
+    // update PDReqFSComments
+    var fs_comments = $('#fs_comments').val();
+    db_updatePDReqFSComments(PDRequestID, PDReqReimbID, fs_comments);
 }
 
 function updatePDReqReimbPostActivity() {
@@ -413,8 +624,33 @@ function updatePDReqReimbPostActivity() {
     db_updatePDReqReimbPostActivity(PDRequestID, post_reg_fee, post_travel_cost, post_input_mileage, post_mileage_cost, post_lodging_cost, post_input_breakfast, post_breakfast_cost, 
                                     post_input_lunch, post_lunch_cost, post_input_dinner, post_dinner_cost, other_cost_description, post_other_cost, 
                                     post_sub_total, funding_other_source, fs_approved, fs_comments, post_funding_other, post_total_cost, post_total_amount_request);
+    
+    // verified new funding src has been added to reimb
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            var result = db_getPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+            if (result === null) {
+                db_insertPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+            }
+        });        
+    });  
+    
+    // update PDReqFundSrc
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            var fs_selected = $(this).is(':checked');
+            db_updatePDReqFundSrcFSSelected(PDRequestID, PDReqReimbID, fs_id, fs_selected);
+        });        
+    });
+    
+    // update PDReqFSComments
+    var fs_comments = $('#fs_comments').val();
+    db_updatePDReqFSComments(PDRequestID, PDReqReimbID, fs_comments);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function updateStep(new_step_ID) {
     if (PDRequestID !== "") {
         db_updatePDRequestStep(PDRequestID, new_step_ID);
@@ -436,6 +672,37 @@ function updateComments(submit) {
     }
     
     db_updatePDRequestComments(PDRequestID, comments, ckb_comm);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
+    var hrs_admin_id = null;
+    var reimb_admin_id = null;
+    
+    if (ResourceTypeID === "1") {
+        hrs_admin_id = getAdministratorID();
+        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, m_hrs_step, hrs_status_id);
+        db_updatePDReqHRProcessHrsStatusDate(PDRequestID, false, false, false, true, false, false);
+    }
+    else if (ResourceTypeID === "2") {
+        reimb_admin_id = getAdministratorID();
+        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, m_reimb_step, reimb_status_id);
+        db_updatePDReqHRProcessReimbStatusDate(PDRequestID, false, false, false, true, false, false);
+    }
+    else {
+        hrs_admin_id = getAdministratorID();
+        reimb_admin_id = getAdministratorID();
+        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, m_hrs_step, hrs_status_id);
+        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, m_reimb_step, reimb_status_id);
+        db_updatePDReqHRProcessHrsStatusDate(PDRequestID, false, false, false, true, false, false);
+        db_updatePDReqHRProcessReimbStatusDate(PDRequestID, false, false, false, true, false, false);
+    }
+}
+
+function getAdministratorID() {
+    var result = new Array();
+    result = db_getAdministrator(sessionStorage.getItem('m_loginEmail'));
+    return result[0]['AdministratorID'];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -513,22 +780,26 @@ function getSelectResourceType() {
         var ID = resource_type[i][0];
         if (ID === ResourceTypeID) {
             $('#resource_type').html(resource_type[i][1]);
+            getSelectStepStatus();
             if (ResourceTypeID === "1") {
-                $('#request_hours').show();
+                $('.hrs_sections').show();
                 getSelectPDReqHours();
+                getSelectHrsSection();
             }
             else if (ResourceTypeID === "2") {
-                $('#request_reimbursement').show();
+                $('.reimb_sections').show();
                 getSelectPDReqReimb();
+                getSelectReimbSection();
             }
             else {
-                $('#request_hours').show();
-                $('#request_reimbursement').show();
+                $('.hrs_sections').show();
+                $('.reimb_sections').show();
                 getSelectPDReqHours();
                 getSelectPDReqReimb();
+                getSelectHrsSection();
+                getSelectReimbSection();
             }
             
-            getSelectStepStatus();
             getSelectTransaction();
             break;
         }
@@ -663,19 +934,19 @@ function getSelectPDReqHours() {
         PDReqHoursID = pd_req_hours[0][0];
         // pre activity fields
         if(Number(pd_req_hours[0]['PreInputHr']) > 0) {
-            $('#pre_input_hrs').html(pd_req_hours[0]['PreInputHr']);
+            $('#pre_input_hrs').val(pd_req_hours[0]['PreInputHr']);
         }
         if(Number(pd_req_hours[0]['PrePresHr']) > 0) {
             $('#pre_presenter_hrs').html(pd_req_hours[0]['PrePresHr']);
         }
         if(Number(pd_req_hours[0]['PrePartHr']) > 0) {
-            $('#pre_participant_hrs').html(pd_req_hours[0]['PrePartHr']);
+            $('#pre_participant_hrs').val(pd_req_hours[0]['PrePartHr']);
         }
         if(Number(pd_req_hours[0]['PreTotalHr']) > 0) {
             $('#pre_total_hrs').html(pd_req_hours[0]['PreTotalHr']);
         }
         if(Number(pd_req_hours[0]['PreAppHr']) > 0) {
-            $('#pre_app_hrs_user').html(pd_req_hours[0]['PreAppHr']);
+            $('#pre_app_hrs').html(pd_req_hours[0]['PreAppHr']);
         }
         if(Number(pd_req_hours[0]['PreNotAppHr']) > 0) {
             $('#pre_not_app_hrs').html(pd_req_hours[0]['PreNotAppHr']);
@@ -693,6 +964,12 @@ function getSelectPDReqHours() {
         if(Number(pd_req_hours[0]['PostTotalHr']) > 0) {
             $('#post_total_hrs').html(pd_req_hours[0]['PostTotalHr']);
         }
+        if(Number(pd_req_hours[0]['PostAppHr']) > 0) {
+            $('#pre_app_hrs').html(pd_req_hours[0]['PostAppHr']);
+        }
+        if(Number(pd_req_hours[0]['PostNotAppHr']) > 0) {
+            $('#pre_not_app_hrs').html(pd_req_hours[0]['PostNotAppHr']);
+        }
     }
 }
 
@@ -704,15 +981,15 @@ function getSelectPDReqReimb() {
         // pre activity fields
         var pre_reg_fee = Number(pd_req_reimb[0]['PreReqFee']);
         if(pre_reg_fee > 0) {
-            $('#pre_reg_fee').html(formatDollar(pre_reg_fee, 2));
+            $('#pre_reg_fee').val(formatDollar(pre_reg_fee, 2));
         }
         var pre_travel = Number(pd_req_reimb[0]['PreTravel']);
         if(pre_travel > 0) {
-            $('#pre_travel_cost').html(formatDollar(pre_travel, 2));
+            $('#pre_travel_cost').val(formatDollar(pre_travel, 2));
         }
         var pre_mileage = Number(pd_req_reimb[0]['PreMileage']);
         if(pre_mileage > 0) {
-            $('#pre_input_mileage').html(pre_mileage);
+            $('#pre_input_mileage').val(pre_mileage);
         }
         var pre_mil_cost = Number(pd_req_reimb[0]['PreMilCost']);
         if(pre_mil_cost > 0) {
@@ -720,11 +997,11 @@ function getSelectPDReqReimb() {
         }
         var pre_lodging = Number(pd_req_reimb[0]['PreLodging']);
         if(pre_lodging > 0) {
-            $('#pre_lodging_cost').html(formatDollar(pre_lodging, 2));
+            $('#pre_lodging_cost').val(formatDollar(pre_lodging, 2));
         }
         var pre_num_brk = Number(pd_req_reimb[0]['PreNumBrk']);
         if(pre_num_brk > 0) {
-            $('#pre_input_breakfast').html(pre_num_brk);
+            $('#pre_input_breakfast').val(pre_num_brk);
         }
         var pre_brk_cost = Number(pd_req_reimb[0]['PreBrkCost']);
         if(pre_brk_cost > 0) {
@@ -732,7 +1009,7 @@ function getSelectPDReqReimb() {
         }
         var pre_num_lun = Number(pd_req_reimb[0]['PreNumLun']);
         if(pre_num_lun > 0) {
-            $('#pre_input_lunch').html(pre_num_lun);
+            $('#pre_input_lunch').val(pre_num_lun);
         }
         var pre_lun_cost = Number(pd_req_reimb[0]['PreLunCost']);
         if(pre_lun_cost > 0) {
@@ -740,7 +1017,7 @@ function getSelectPDReqReimb() {
         }
         var pre_num_din = Number(pd_req_reimb[0]['PreNumDin']);
         if(pre_num_din > 0) {
-            $('#pre_input_dinner').html(pre_num_din);
+            $('#pre_input_dinner').val(pre_num_din);
         }
         var pre_din_cost = Number(pd_req_reimb[0]['PreDinCost']);
         if(pre_din_cost > 0) {
@@ -751,26 +1028,26 @@ function getSelectPDReqReimb() {
         
         var pre_oth_cost = Number(pd_req_reimb[0]['PreOthCost']);
         if(pre_oth_cost > 0) {
-            $('#pre_other_cost').html(formatDollar(pre_oth_cost, 2));
+            $('#pre_other_cost').val(formatDollar(pre_oth_cost, 2));
         }
         var pre_sub_total = Number(pd_req_reimb[0]['PreSubTotal']);
         if(pre_sub_total > 0) {
             $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
         }
-        
         $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
-        var fs_approved = pd_req_reimb[0]['FSApproved'];
-        if (fs_approved === "1") {
-            $('#fs_approved_2').prop("checked", true);
-        }
-        else {
-            $('#fs_approved_1').prop("checked", true);
-        }
-        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
+        
+//        var fs_approved = pd_req_reimb[0]['FSApproved'];
+//        if (fs_approved === "1") {
+//            $('#fs_approved_2').prop("checked", true);
+//        }
+//        else {
+//            $('#fs_approved_1').prop("checked", true);
+//        }
+//        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
         
         var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
         if(pre_fun_cost > 0) {
-            $('#pre_funding_other').html(formatDollar(pre_fun_cost, 2));
+            $('#pre_funding_other').val(formatDollar(pre_fun_cost, 2));
         }
         var pre_total_cost = Number(pd_req_reimb[0]['PreTotalCost']);
         if(pre_total_cost > 0) {
@@ -783,6 +1060,10 @@ function getSelectPDReqReimb() {
         var pre_total_amt_approved = Number(pd_req_reimb[0]['PreTotalAmtApproved']);
         if(pre_total_amt_request > 0) {
             $('#pre_total_amount_approved').html(formatDollar(pre_total_amt_approved, 2));
+        }
+        var pre_total_amt_pending_funds = Number(pd_req_reimb[0]['PreTotalAmtPendingFunds']);
+        if(pre_total_amt_pending_funds > 0) {
+            $('#pre_total_amount_pending_funds').html(formatDollar(pre_total_amt_pending_funds, 2));
         }
         var pre_total_amt_not_approved = Number(pd_req_reimb[0]['PreTotalAmtNotApproved']);
         if(pre_total_amt_not_approved > 0) {
@@ -854,13 +1135,35 @@ function getSelectPDReqReimb() {
         if(post_total_amt_request > 0) {
             $('#post_total_amount_request').html(formatDollar(post_total_amt_request, 2));
         }
+        var post_total_amt_pending_funds = Number(pd_req_reimb[0]['PostTotalAmtPendingFunds']);
+        if(post_total_amt_pending_funds > 0) {
+            $('#post_total_amount_pending_funds').html(formatDollar(post_total_amt_pending_funds, 2));
+        }
         var post_total_amt_approved = Number(pd_req_reimb[0]['PostTotalAmtApproved']);
         if(post_total_amt_approved > 0) {
             $('#post_total_amount_approved').html(formatDollar(post_total_amt_approved, 2));
         }
     }
     
+    setPDReqFundSrc();
+    setPDReqFSComments();
     setPDLimitSummary();
+}
+
+function setPDReqFundSrc() {
+    var result = new Array();
+    result = db_getPDReqFundSrc(PDRequestID, PDReqReimbID);
+    for(var i = 0; i < result.length; i++) { 
+        var fund_sr_type_id = result[i]['FundSrcTypeID'];
+        if (result[i]['FSSelected'] === "1") {
+            $('#fs_selected_' + fund_sr_type_id).prop('checked', true);
+        }
+    }
+}
+
+function setPDReqFSComments() {
+    var fs_comments =  db_getPDReqFSComments(PDRequestID, PDReqReimbID);
+    $('#fs_comments').val(fs_comments).trigger('autosize.resize');
 }
 
 function setPDLimitSummary() {
@@ -877,21 +1180,115 @@ function setPDLimitSummary() {
 }
 
 function getSelectStepStatus() {
-    var pd_step_status = new Array();
-    pd_step_status = db_getPDRequest(PDRequestID);
-    if (pd_step_status.length === 1) {
-        PDReqStepID = pd_step_status[0]['PDReqStepID'];
-        var pd_req_step_list = new Array();
-        pd_req_step_list = db_getPDReqStep(PDReqStepID);
-        if (pd_req_step_list.length === 1) {
-            $('#current_step').html(pd_req_step_list[0][1]);
-        }
+    var result = new Array();
+    result = db_getPDReqHRProcess(PDRequestID);
+    
+    m_hrs_step = result[0]['HrsStepID'];
+    m_reimb_step = result[0]['ReimbStepID'];
+    m_hrs_status = result[0]['HrsStatusID'];
+    m_reimb_status = result[0]['ReimbStatusID'];
+    
+    if (ResourceTypeID === "1") {
+        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
+        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
+        $('#hrs_current_status').html(hrs_status[0]['Status']);
+    }
+    else if (ResourceTypeID === "2") {
+        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
+        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
+        $('#reimb_current_status').html(reimb_status[0]['Status']);
+    }
+    else {
+        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
+        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
+        $('#hrs_current_status').html(hrs_status[0]['Status']);
         
-        StatusID = pd_step_status[0]['StatusID'];
-        var status_list = new Array();
-        status_list = db_getStatus(StatusID);
-        if (status_list.length === 1) {
-            $('#current_status').html(status_list[0][1]);
+        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
+        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
+        $('#reimb_current_status').html(reimb_status[0]['Status']);
+    }
+    
+//    var pd_step_status = new Array();
+//    pd_step_status = db_getPDRequest(PDRequestID);
+//    if (pd_step_status.length === 1) {
+//        PDReqStepID = pd_step_status[0]['PDReqStepID'];
+//        var pd_req_step_list = new Array();
+//        pd_req_step_list = db_getPDReqStep(PDReqStepID);
+//        if (pd_req_step_list.length === 1) {
+//            $('#current_step').html(pd_req_step_list[0][1]);
+//        }
+//        
+//        StatusID = pd_step_status[0]['StatusID'];
+//        var status_list = new Array();
+//        status_list = db_getStatus(StatusID);
+//        if (status_list.length === 1) {
+//            $('#current_status').html(status_list[0][1]);
+//        }
+//    }
+}
+
+function getSelectHrsSection() {
+    if (m_hrs_status === "1") {
+        if (m_hrs_step === "1") {
+            $('post_hrs_class').hide();
+        }
+        else {
+            $('.pre_hrs_class').prop('readonly', true);
+        }
+    }
+    else if (m_hrs_status === "4" || m_hrs_status === "7") {
+        $('.pre_hrs_class').prop('readonly', true);
+    }
+    else if (m_hrs_status === "5") {
+        if (m_hrs_step === "1") {
+            $('post_hrs_class').hide();
+        }
+        else {
+            $('.pre_hrs_class').prop('readonly', true);
+        }
+    }
+    else {
+        if (m_hrs_step === "1") {
+            $('post_hrs_class').hide();
+        }
+        else {
+            $('.pre_hrs_class').prop('readonly', true);
+            $('.post_hrs_class').prop('readonly', true);
+        }
+    }
+}
+
+function getSelectReimbSection() {
+    if (m_reimb_status === "1") {
+        if (m_reimb_step === "1") {
+            $('post_reimb_class').hide();
+        }
+        else {
+            $('.pre_reimb_class').prop('readonly', true);
+        }
+    }
+    else if (m_reimb_status === "4" || m_reimb_status === "7") {
+        $('.pre_reimb_class').prop('readonly', true);
+    }
+    else if (m_reimb_status === "5") {
+        if (m_reimb_step === "1") {
+            $('post_reimb_class').hide();
+        }
+        else {
+            $('.pre_reimb_class').prop('readonly', true);
+        }
+    }
+    else {
+        if (m_reimb_step === "1") {
+            $('post_reimb_class').hide();
+        }
+        else {
+            $('.pre_reimb_class').prop('readonly', true);
+            $('.post_reimb_class').prop('readonly', true);
         }
     }
 }
@@ -989,6 +1386,37 @@ function getPDSystem() {
             var str_mileage_amt = formatDollar(sys_mileage_amt, 3);
             $('#mileage_text').html("Mileage ( " + str_mileage_amt + " per mile):");
         }
+    }
+}
+
+function getActiveFundingSrcList() {
+    var result = new Array();
+    result = db_getFundSrcTypeActiveList();
+    
+    $("#active_fund_src_list").empty();
+    var fs_list_html = "";
+    for(var i = 0; i < result.length; i++) {
+        fs_list_html += getActiveFundingSrcListHTML(i, result[i]['FundSrcTypeID'], result[i]['FundSrcType']);
+    }
+    $("#active_fund_src_list").append(fs_list_html);
+}
+
+function getActiveFundingSrcListHTML(index, fund_src_type_id, fund_src_type) {
+    var str_html = "";
+    var new_row_start = "<div class='row' style='padding-top: 5px;'>";
+    var new_row_end = "</div>";
+    
+    str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' id='fs_selected_" + fund_src_type_id + "'></div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='fs_name_" + fund_src_type_id + "'>" + fund_src_type + "</div>";
+    
+    if (Number(index) % 3 === 0) {
+        return new_row_start + str_html;
+    }
+    else if (Number(index) % 3 === 2) {
+        return str_html + new_row_end;
+    }
+    else {
+        return str_html;
     }
 }
 
@@ -1128,6 +1556,18 @@ function paReqInfo2AttachFileHTML(index, file_link_name, file_name) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function preCalculateTotalHrs() {
+    var pre_pres_hr = Number($('#pre_presenter_hrs').html());
+    var pre_part_hr = Number($('#pre_participant_hrs').val());
+    var pre_total_hr = pre_pres_hr + pre_part_hr;
+    if (pre_total_hr > 0) {
+        $('#pre_total_hrs').html(pre_total_hr.toFixed(2));
+    }
+    else {
+        $('#pre_total_hrs').html('');
+    }
+}
+
 function postCalculateTotalHrs() {
     var post_pres_hr = Number($('#post_presenter_hrs').html());
     var post_part_hr = Number($('#post_participant_hrs').val());
@@ -1141,6 +1581,25 @@ function postCalculateTotalHrs() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function preCalculateSubTotal() {
+    var pre_reg_fee = Number(revertDollar($('#pre_reg_fee').val()));
+    var pre_travel_cost = Number(revertDollar($('#pre_travel_cost').val()));
+    var pre_mileage_cost = Number(revertDollar($('#pre_mileage_cost').html()));
+    var pre_lodging_cost = Number(revertDollar($('#pre_lodging_cost').val()));
+    var pre_breakfast_cost = Number(revertDollar($('#pre_breakfast_cost').html()));
+    var pre_lunch_cost = Number(revertDollar($('#pre_lunch_cost').html()));
+    var pre_dinner_cost = Number(revertDollar($('#pre_dinner_cost').html()));
+    var pre_other_cost = Number(revertDollar($('#pre_other_cost').val()));
+    
+    var pre_sub_total = pre_reg_fee + pre_travel_cost + pre_mileage_cost + pre_lodging_cost + pre_breakfast_cost + pre_lunch_cost + pre_dinner_cost + pre_other_cost;
+    if (pre_sub_total > 0) {
+        $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
+    }
+    else {
+        $('#pre_sub_total').html('');
+    }
+}
+
 function postCalculateSubTotal() {
     var post_reg_fee = Number(revertDollar($('#post_reg_fee').val()));
     var post_travel_cost = Number(revertDollar($('#post_travel_cost').val()));
@@ -1160,19 +1619,45 @@ function postCalculateSubTotal() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+function preCalculateTotalCost() {
+    var pre_sub_total = Number(revertDollar($('#pre_sub_total').html()));
+    var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));
+//    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
+//    var pre_total_cost = 0;
+//    
+//    if (fs_approved === "1") {
+//        pre_total_cost = pre_sub_total - pre_funding_other;
+//    }
+//    else {
+//        pre_total_cost = pre_sub_total;
+//    }
+    
+    var pre_total_cost = pre_sub_total - pre_funding_other;
+    if (pre_total_cost === 0) {
+        $('#pre_total_cost').html('');
+        $('#pre_total_amount_request').html('');
+    }
+    else {
+        $('#pre_total_cost').html(formatDollar(pre_total_cost, 2));
+        $('#pre_total_amount_request').html(formatDollar(pre_total_cost, 2));
+    }
+}
+
 function postCalculateTotalCost() {
     var post_sub_total = Number(revertDollar($('#post_sub_total').html()));
     var post_funding_other = Number(revertDollar($('#post_funding_other').val()));
-    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
-    var post_total_cost = 0;
+//    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
+//    var post_total_cost = 0;
+//    
+//    if (fs_approved === "1") {
+//        post_total_cost = post_sub_total - post_funding_other;
+//    }
+//    else {
+//        post_total_cost = post_sub_total;
+//    }
     
-    if (fs_approved === "1") {
-        post_total_cost = post_sub_total - post_funding_other;
-    }
-    else {
-        post_total_cost = post_sub_total;
-    }
-    
+    var post_total_cost = post_sub_total - post_funding_other;
     if (post_total_cost === 0) {
         $('#post_total_cost').html('');
         $('#post_total_amount_request').html('');

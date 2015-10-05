@@ -34,16 +34,16 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {       
-    $('#print').click(function() {
-        window.print();
-    });
-    
     $('#nav_home').click(function() {
         window.open('home.html', '_self');
     });
     
     $('#nav_admin').click(function() {
         window.open('administrator.html', '_self');
+    });
+    
+    $('#nav_print').click(function() {
+        window.print();
     });
     
     $('#pre_app_hrs').change(function() {      
@@ -795,28 +795,20 @@ function updatePDReqHRProcess(hrs_approval_status_id, reimb_approval_status_id) 
 
     if (ResourceTypeID === "1") {
         hrs_admin_id = getAdministratorID();
+        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, HrsStepID, hrs_approval_status_id);
     }
     else if (ResourceTypeID === "2") {
         reimb_admin_id = getAdministratorID();
+        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, ReimbStepID, reimb_approval_status_id);
     }
     else {
         hrs_admin_id = getAdministratorID();
         reimb_admin_id = getAdministratorID();
-    }
-    
-    if (hrs_approval_status_id === "4") {
-        if (hrs_step_id === "1") {
-            new_hrs_step_id = 2;
-        }
-    }
-    
-    if (reimb_approval_status_id === "4" || reimb_approval_status_id === "7") {
-        if (reimb_step_id === "1") {
-            new_reimb_step_id = 2;
-        }
+        
+        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, HrsStepID, hrs_approval_status_id);
+        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, ReimbStepID, reimb_approval_status_id);
     }
 
-    db_updatePDReqHRProcess(PDRequestID, hrs_admin_id, new_hrs_step_id, hrs_approval_status_id, reimb_admin_id, new_reimb_step_id, reimb_approval_status_id);
     updatePDReqHRProcessStatusDate(hrs_approval_status_id, reimb_approval_status_id);
 
     if ($('input:radio[name=approval_hrs_status]').is(':checked')) {

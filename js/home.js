@@ -94,34 +94,19 @@ $(document).ready(function() {
         sessionStorage.setItem('m_amount_convert', amount_convert);
         sessionStorage.setItem('m_available_amount', available_amount);
         
-        if (hrs_status === "Draft" || reimb_status === "Draft") {
-            if (hrs_step === "Pre-activity" || reimb_step === "Pre-activity") {
-                window.open('prePDRequest.html', '_self');
-            }
-            else {
-                window.open('postPDRequest.html', '_self');
-            }
+        if ((hrs_status === "Draft" && hrs_step === "Pre-activity") || (reimb_status === "Draft" && reimb_step === "Pre-activity")) {
+            window.open('prePDRequest.html', '_self');
         }
-        else if (hrs_status === "More Information" || reimb_status === "More Information") {
-            if (hrs_step === "Pre-activity" && reimb_step === "Pre-activity") {
-                window.open('prePDRequest.html', '_self');
-            }
-            else {
-                window.open('postPDRequest.html', '_self');
-            }
-        }
-        else if (hrs_status === "Approved" || reimb_status === "Approved") {
+        else if (hrs_status === "Approved" || reimb_status === "Approved"
+                || hrs_status === "More Information" || reimb_status === "More Information"
+                || hrs_status === "Approved Pending Funds" && reimb_status === "Approved Pending Funds") {
             window.open('postPDRequest.html', '_self');
-        }
-        else if ((hrs_status === "Submitted" && reimb_status === "Submitted") 
-            || (hrs_status === "Approved Pending Funds" && reimb_status === "Approved Pending Funds")
-            || (hrs_status === "Denied" && reimb_status === "Denied")) {
-            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
-        }
-        else {
             return false;
         }
-        
+        else {
+            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+            return false;
+        }
         
 //        if (cur_status === "Submitted" || cur_status === "Approved Pending Funds" || cur_status === "Denied") {
 //            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');

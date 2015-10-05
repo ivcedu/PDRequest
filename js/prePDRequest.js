@@ -22,22 +22,22 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {     
-    $('#logout').click(function() {
-        var parent_site = sessionStorage.getItem('m_parentSite');
-        sessionStorage.clear();
-        window.open(parent_site, '_self');
-    });
-    
-    $('#home').click(function() {
+    $('#nav_home').click(function() {
         sessionStorage.removeItem("m_PDRequestID");
         window.open('home.html', '_self');
     });
     
-    $('#print_view').click(function() {
+    $('#nav_print').click(function() {
         if (PDRequestID !== "") {
             sessionStorage.setItem('m_PDRequestID', PDRequestID);
             window.open('printPDRequest.html?pdrequest_id=' + PDRequestID, '_blank');
         }
+    });
+    
+    $('#nav_logout').click(function() {
+        var parent_site = sessionStorage.getItem('m_parentSite');
+        sessionStorage.clear();
+        window.open(parent_site, '_self');
     });
     
     $('#start_date').change(function() {
@@ -198,9 +198,9 @@ $(document).ready(function() {
         preCalculateTotalCost();
     });
     
-    $("input[name=rdo_fs_approval]:radio").change(function () {
-        preCalculateTotalCost();
-    });
+//    $("input[name=rdo_fs_approval]:radio").change(function () {
+//        preCalculateTotalCost();
+//    });
     
     // user save as draft click ////////////////////////////////////////////////
     $('#btn_save_draft').click(function() {         
@@ -213,14 +213,13 @@ $(document).ready(function() {
         addPDRequest(ResourceTypeID);
         updatePDReqUserInfo();
         updatePDRequest(false);
-        updatePDReqHRProcess(1, 1);
         updateJustArea();
         updateNarrative();
         updateRequestDetail();
+        updatePDReqHRProcess(1, 1);
         
         // insert log
         db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "pre-activity save as draft");
-        
         window.open('home.html', '_self');
     });
     
@@ -236,11 +235,11 @@ $(document).ready(function() {
         addPDRequest(ResourceTypeID);
         updatePDReqUserInfo();
         updatePDRequest(true);
-        updatePDReqHRProcess(2, 2);
         updateJustArea();
         updateNarrative();
         updateRequestDetail();
         updateStatus(2);
+        updatePDReqHRProcess(2, 2);
         addTransaction();
         
         db_deleteTracDoc(PDRequestID);
@@ -812,6 +811,7 @@ function getSelectResourceType() {
         if (ID === ResourceTypeID) {
             $('#resource_type').val(resource_type[i][1]);
             $('.selectpicker').selectpicker('refresh');
+            getSelectStepStatus();
             if (ResourceTypeID === "1") {
                 setHoursSetting();
                 getSelectPDReqHours();
@@ -826,7 +826,6 @@ function getSelectResourceType() {
                 getSelectPDReqReimb();
             }
 
-            getSelectStepStatus();
             getSelectTransaction();
             break;
         }
@@ -980,13 +979,13 @@ function getSelectPDReqReimb() {
         if(pre_sub_total > 0) {
             $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
         }
-        
         $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
-        var fs_approved = pd_req_reimb[0]['FSApproved'];
-        if (fs_approved === "1") {
-            $('#fs_approved_2').prop("checked", true);
-        }
-        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
+        
+//        var fs_approved = pd_req_reimb[0]['FSApproved'];
+//        if (fs_approved === "1") {
+//            $('#fs_approved_2').prop("checked", true);
+//        }
+//        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
         
         var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
         if(pre_fun_cost > 0) {
@@ -1295,16 +1294,17 @@ function preCalculateSubTotal() {
 function preCalculateTotalCost() {
     var pre_sub_total = Number(revertDollar($('#pre_sub_total').html()));
     var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));
-    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
-    var pre_total_cost = 0;
+//    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
+//    var pre_total_cost = 0;
+//    
+//    if (fs_approved === "1") {
+//        pre_total_cost = pre_sub_total - pre_funding_other;
+//    }
+//    else {
+//        pre_total_cost = pre_sub_total;
+//    }
     
-    if (fs_approved === "1") {
-        pre_total_cost = pre_sub_total - pre_funding_other;
-    }
-    else {
-        pre_total_cost = pre_sub_total;
-    }
-    
+    var pre_total_cost = pre_sub_total - pre_funding_other;
     if (pre_total_cost === 0) {
         $('#pre_total_cost').html('');
         $('#pre_total_amount_request').html('');

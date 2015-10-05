@@ -19,21 +19,21 @@
             <div class="navbar navbar-inverse">
                 <div class="navbar-inner" id="navigation">
                     <ul class="nav">
-                        <li><a href=# id="print_view"><i class="icon-eye-open icon-white"></i> Print View</a></li>
+                        <li><a href=# id="nav_home"><i class="icon-home icon-white"></i> Home</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a href=# id="nav_print"><i class="icon-eye-open icon-white"></i> Print</a></li>
                     </ul>
                     <ul class="nav pull-right">
-                        <li><a href=# id="logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
-                    </ul>
-                    <ul class="nav pull-right">
-                        <li><a href=# id="home"><i class="icon-home icon-white"></i> Home</a></li>
+                        <li><a href=# id="nav_logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
                     </ul>
                 </div>
             </div>
-            
+            <!--
             <div class="row-fluid">
                 <div class="span12"><h3 class="span12" style="text-align: center">Pre-activity Professional Development</h3></div>
             </div>
-            
+            -->
             <div class="row text-center" style="color: blue;">
                 All blue fields are required information
             </div>
@@ -183,7 +183,7 @@
                 </div>
                 <div id="just_narrative_attached_list">
                 </div>
-                <div class="row">&nbsp;</div>
+                <br>
             </div>
             
             <!-- request for hours -->
@@ -215,7 +215,7 @@
                     <div class="span1 offset2 text-center" style="padding-top: 5px; font-weight: bold;" id="pre_total_hrs"></div>
                 </div>
             </div>
-            <div class="row">&nbsp;</div>
+            <br>
             
             <!-- request for reimbursement -->
             <div id="request_reimbursement">
@@ -273,7 +273,6 @@
                     <div class="span3"><input type="text" class="span3" id="funding_other_source"></div>
                     <div class="span2 offset1"><input type="text" class="span2 text-center" id="pre_funding_other"></div>
                 </div>
-                
                 <!-- active funding src list -->
                 <div class="row">
                     <div class="span12 text-center" style="padding-top: 5px; border-bottom: solid 1px;"><b>Reimbursement Funding Source(s) List</b></div>
@@ -284,6 +283,7 @@
                     <div class="span2" style="padding-top: 5px;">Comments (optional):</div>
                     <div class="span10"><textarea class="span10" style="resize: vertical;" id="fs_comments"></textarea></div>
                 </div>
+                <!-- end of active funding src list -->
                 <!--
                 <div class="row">
                     <div class="span4" style="padding-top: 5px;">Is funding from Other Sources approved?</div>
@@ -293,8 +293,6 @@
                     <div class="span5"><input type="text" class="span5" style="font-style: italic;" id="fs_comments"></div>
                 </div>
                 -->
-                <!-- end of active funding src list -->
-                
                 <div class="row">
                     <div class="span6" style="padding-top: 5px;">Total Costs:</div>
                     <div class="span2 offset1 text-center" style="padding-top: 5px; font-weight: bold;" id="pre_total_cost"></div>
@@ -315,7 +313,7 @@
                     <div class="span2" style="font-weight: bold; color: blue;" id="pd_available_amount"></div>
                 </div>
             </div>
-            <div class="row">&nbsp;</div>
+            <br>
 
             <!-- professional development approval request -->
             <div id="approval_section">
@@ -332,7 +330,7 @@
                     <div class="span3" style="padding-top: 5px; font-weight: bold;" id="reimb_current_step"></div>
                     <div class="span3" style="padding-top: 5px; font-weight: bold;" id="reimb_current_status"></div>
                 </div>
-                <div class="row">&nbsp;</div>
+                <br>
                 <div class="row">
                     <div class="span4"><label class="checkbox"><input type="checkbox" id="ckb_comments">Click here to add comments</label></div>
                 </div>
@@ -340,7 +338,7 @@
                     <div class="span2" style="padding-top: 5px;">Comments (optional):</div>
                     <div class="span10"><textarea class="span10" style="resize: vertical;" id="user_comments"></textarea></div>
                 </div>
-                <div class="row">&nbsp;</div>
+                <br>
                 <div class="row" id="approval_user">
                     <div class="span6">
                         <button class="btn btn-success span4 offset1" id="btn_save_draft"><i class="icon-hdd icon-white"></i> Save as Draft</button>
@@ -349,7 +347,7 @@
                         <button class="btn btn-primary span4 offset1" id="btn_submit"><i class="icon-upload icon-white"></i> Submit for Approval</button>
                     </div>
                 </div>
-                <div class="row">&nbsp;</div>
+                <br>
             </div>
             
             <!-- comments history -->
