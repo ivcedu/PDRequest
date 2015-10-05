@@ -52,18 +52,6 @@ $(document).ready(function() {
         window.open('userProfile.html', '_self');
     });
     
-    // report all pd request ///////////////////////////////////////////////////
-//    $('#nav_report_usr_pd_request').click(function() {
-//        sessionStorage.setItem('m_LoginID', LoginID);
-//        window.open('rptUsrPDRequest.html', '_self');
-//    });
-    
-    // report all flex week ////////////////////////////////////////////////////
-//    $('#nav_report_usr_flex_week').click(function() {
-//        sessionStorage.setItem('m_LoginID', LoginID);
-//        window.open('rptUsrFlexWeek.html', '_self');
-//    });
-    
     // new pd request click ////////////////////////////////////////////////////
     $('#new_pd_request').click(function() {
         sessionStorage.removeItem("m_PDRequestID");
@@ -95,35 +83,65 @@ $(document).ready(function() {
     
     // pd request click ////////////////////////////////////////////////////////
     $('#pd_request_list').on('click', 'a', function() {
-        var str_Id = $(this).attr('id');
-        var pd_request_ID = str_Id.replace("pd_request_ID_", "");
-        var cur_step = $('#pd_request_step_' + pd_request_ID).html();
-        var cur_status = $('#pd_request_status_' + pd_request_ID).html();
+        var pd_request_ID = $(this).attr('id').replace("pd_request_ID_", "");
+        var hrs_step = $('#pd_request_hrs_step_' + pd_request_ID).html();
+        var hrs_status = $('#pd_request_hrs_status_' + pd_request_ID).html();
+        var reimb_step = $('#pd_request_reimb_step_' + pd_request_ID).html();
+        var reimb_status = $('#pd_request_reimb_status_' + pd_request_ID).html();
         
         sessionStorage.setItem('m_PDRequestID', pd_request_ID);
         sessionStorage.setItem('m_pd_limit', pd_limit);
         sessionStorage.setItem('m_amount_convert', amount_convert);
         sessionStorage.setItem('m_available_amount', available_amount);
         
-        if (cur_status === "Submitted" || cur_status === "Approved Pending Funds" || cur_status === "Denied") {
-            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
-        }
-        else if (cur_status === "Approved") {
-            if (cur_step === "Pre-activity") {
-                window.open('postPDRequest.html', '_self');
-            }
-            else {
-                window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
-            }
-        }
-        else {
-            if (cur_step === "Pre-activity") {
+        if (hrs_status === "Draft" || reimb_status === "Draft") {
+            if (hrs_step === "Pre-activity" || reimb_step === "Pre-activity") {
                 window.open('prePDRequest.html', '_self');
             }
             else {
                 window.open('postPDRequest.html', '_self');
             }
         }
+        else if (hrs_status === "More Information" || reimb_status === "More Information") {
+            if (hrs_step === "Pre-activity" && reimb_step === "Pre-activity") {
+                window.open('prePDRequest.html', '_self');
+            }
+            else {
+                window.open('postPDRequest.html', '_self');
+            }
+        }
+        else if (hrs_status === "Approved" || reimb_status === "Approved") {
+            window.open('postPDRequest.html', '_self');
+        }
+        else if ((hrs_status === "Submitted" && reimb_status === "Submitted") 
+            || (hrs_status === "Approved Pending Funds" && reimb_status === "Approved Pending Funds")
+            || (hrs_status === "Denied" && reimb_status === "Denied")) {
+            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+        }
+        else {
+            return false;
+        }
+        
+        
+//        if (cur_status === "Submitted" || cur_status === "Approved Pending Funds" || cur_status === "Denied") {
+//            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+//        }
+//        else if (cur_status === "Approved") {
+//            if (cur_step === "Pre-activity") {
+//                window.open('postPDRequest.html', '_self');
+//            }
+//            else {
+//                window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+//            }
+//        }
+//        else {
+//            if (cur_step === "Pre-activity") {
+//                window.open('prePDRequest.html', '_self');
+//            }
+//            else {
+//                window.open('postPDRequest.html', '_self');
+//            }
+//        }
     });
     
     // delete pd request click /////////////////////////////////////////////////
@@ -173,42 +191,6 @@ $(document).ready(function() {
         setTotalFlexHrsRequired();
     });
     
-    // flex week activity hours fields change //////////////////////////////////
-//    $(document).on('change', 'input[id^="flex_hrs_"]', function() {      
-//        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);
-//        if (input_val <= 0) {
-//            $(this).val('');
-//        }
-//        else {          
-//            $(this).val(input_val);
-//        }
-//    });
-    
-    // flex week confirmed checkbox click //////////////////////////////////////
-//    $('table').on('change', 'input[type=checkbox]', function(e) {
-//        e.preventDefault();
-//        var currentId = $(this).attr('id');
-//        var flex_week_ID = currentId.replace("ckb_flex_week_confirmed_", "");
-//        
-//        var ckb = ($(this).is(':checked') ? true : false);
-//        if (ckb) {
-//            $('#flex_hrs_' + flex_week_ID).prop('disabled', false);
-//        }
-//        else {
-//            $('#flex_hrs_' + flex_week_ID).prop('disabled', true);
-//        }
-//    });
-    
-    // update confirmed selected flex week click ///////////////////////////////
-//    $('#btn_flex_week_confirmed').click(function() {        
-//        updateConfirmedFlexWeek();      
-//        alert("Confirmed flex week has been updated successfully");
-//        
-//        var fiscal_yrs = $('#all_fiscal_yrs').val();
-//        getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
-//        setTotalFlexHrsRequired();
-//    });
-    
     // mouseover popover ///////////////////////////////////////////////////////
     $('#logn_name').on('mouseover', function() {        
         $(this).popover({trigger:"manual", placement:"top"});
@@ -220,11 +202,11 @@ $(document).ready(function() {
         $(this).popover('hide');
     });
     
-    // refresh flex week list button ///////////////////////////////////////////
-    $('#btn_fiscal_yrs_refresh').click(function() { 
+    // fiscal year change event ////////////////////////////////////////////////    
+    $('#all_fiscal_yrs').change(function() {
         resetHeaderVariable();
         
-        var fiscal_yrs = $('#all_fiscal_yrs').val();
+        var fiscal_yrs = $(this).val();
         getLoginUserPDRequestList(fiscal_yrs);
         getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs);
         
@@ -299,27 +281,67 @@ function getLoginUserPDRequestList(fiscal_yrs) {
     var pd_list_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            pd_list_html += setPDRequestListHTML(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['StartDate'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
+            pd_list_html += setPDRequestListHTML(result[i]['PDRequestID'], result[i]['ResourceTypeID'], result[i]['ResourceType'], result[i]['ActTitle'], result[i]['StartDate'], 
+                                                result[i]['HrsStep'], result[i]['HrsStatus'], result[i]['ReimbStep'], result[i]['ReimbStatus'], i%2);
             getPDReqHours(result[i]['PDRequestID']);
         }
     }
     $("#pd_body_tr").append(pd_list_html);
 }
 
-function setPDRequestListHTML(PDRequestID, act_title, create_date, resource_type, step, status) {    
-    var tbody = "<tr>";
-    tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
-    tbody += "<td class='span1'>" + create_date + "</td>";
-    tbody += "<td class='span3'>" + resource_type + "</td>"; 
-    tbody += "<td class='span2' id='pd_request_step_" + PDRequestID + "'>" + step + "</td>";  
-    tbody += "<td class='span2' id='pd_request_status_" + PDRequestID + "'>" + status + "</td>";
-    if (status === "Draft") {
-        tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
+function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_title, create_date, hrs_step, hrs_status, reimb_step, reimb_status, index) {
+    var set_tr_color = "<tr style='background-color: #DCDCDC'>";    
+    if (index) {
+        set_tr_color = "<tr>";
+    }
+    
+    var tbody = "";
+    if (resource_type_id === "3") {
+        tbody += set_tr_color;
+        tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
+        tbody += "<td class='span1'>" + create_date + "</td>";
+        tbody += "<td class='span3'>Hours</td>"; 
+        tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
+        tbody += "<td class='span2' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        if (hrs_status === "Draft" || reimb_status === "Draft") {
+            tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
+        }
+        else {
+            tbody += "<td class='span1 text-center'></td>";
+        }
+        tbody += "</tr>";
+        
+        tbody += set_tr_color;
+        tbody += "<td class='span3'></td>";
+        tbody += "<td class='span1'></td>";
+        tbody += "<td class='span3'>Reimbursement</td>"; 
+        tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
+        tbody += "<td class='span2' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        tbody += "<td class='span1 text-center'></td>";
+        tbody += "</tr>";
     }
     else {
-        tbody += "<td class='span1 text-center'></td>";
+        tbody += set_tr_color;
+        tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
+        tbody += "<td class='span1'>" + create_date + "</td>";
+        tbody += "<td class='span3'>" + resource_type + "</td>"; 
+        if (resource_type_id === "1") {
+            tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
+            tbody += "<td class='span2' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        }
+        else {
+            tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
+            tbody += "<td class='span2' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        }
+        
+        if (hrs_status === "Draft" || reimb_status === "Draft") {
+            tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
+        }
+        else {
+            tbody += "<td class='span1 text-center'></td>";
+        }
+        tbody += "</tr>";
     }
-    tbody += "</tr>";
     
     return tbody;
 }

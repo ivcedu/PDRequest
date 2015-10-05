@@ -26,26 +26,9 @@
                     <ul class="nav">
                         <li><a href=# id="avail_flex_week"><i class="icon-folder-open icon-white"></i> Avail. Flex Week</a></li>
                     </ul>
-                    <!--
-                    <ul class="nav" id="nav_reports_section">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href=#>Reports<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href=# id="nav_report_usr_pd_request">All PD Request</a></li>
-                                <li class="divider"></li>
-                                <li><a href=# id="nav_report_usr_flex_week">All Flex Week</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    -->
                     <ul class="nav pull-right">
                         <li><a href=# id="logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
                     </ul>
-                    <!--
-                    <ul class="nav pull-right">
-                        <li><a href=# id="refresh"><i class="icon-refresh icon-white"></i> Refresh</a></li>
-                    </ul>
-                    -->
                     <ul class="nav pull-right">
                         <li id="show_admin"><a href=# id="administrator"><i class="icon-lock icon-white"></i> Admin</a></li>
                     </ul>
@@ -55,7 +38,6 @@
             <div class="row-fluid">
                 <div class="span2" style="padding-top: 5px; font-weight: bold;">Fiscal Yrs:</div>
                 <div class="span3"><select class="selectpicker span12" id="all_fiscal_yrs"></select></div>
-                <div class="span2"><button class="btn btn-inverse span12" id="btn_fiscal_yrs_refresh"><i class="icon-refresh icon-white"></i> Refresh</button></div>
             </div>
             
             <!-- professional development header -->
@@ -87,7 +69,7 @@
                     <div class="span2" style="font-weight: bold;">PD Available:</div>
                     <div class="span2 text-right" style="font-weight: bold; color: blue;" id="pd_available_amount"></div>
                 </div>
-                <div>&nbsp;</div>
+                <br>
             </div>
             
             <!-- professional development list -->
@@ -96,8 +78,8 @@
             </div>
             <div class="row-fluid">
                 <table class="table tablesorter table-condensed" id="pd_request_list">
-                    <thead style="border-bottom: solid 1px;">
-                        <tr>
+                    <thead>
+                        <tr style="border-bottom: solid 1px;">
                             <th class="span3" style="text-align: left;">Activity Title</th>
                             <th class="span1" style="text-align: left;">StartDate</th>
                             <th class="span3" style="text-align: left;">Request Type</th>
@@ -109,29 +91,21 @@
                     </tbody>
                 </table>
             </div>
-            <div>&nbsp;</div>
+            <br>
             
             <!-- flex week list  -->
             <div class="row" style="padding-bottom: 10px">
                 <div class="span12 text-center" style="background-color: gray; color: white" id="flex_week_header">Academic Year Flex Week List</div>
             </div>
-            <!--
-            <div>&nbsp;</div>
-            <div class="row-fluid">
-                <div class="span8" style="padding-top: 5px; color: blue;">Please confirm Flex Week Activity after you attended</div>
-                <div class="span4"><button class="btn btn-success span12" id="btn_flex_week_confirmed"><i class="icon-upload icon-white"></i> Update Confirmed Flex Week</button></div>
-            </div>
-            -->
             <div class="row-fluid">
                 <table class="table tablesorter table-condensed" id="flex_week_list">
-                    <thead style="border-bottom: solid 1px;">
-                        <tr>
+                    <thead>
+                        <tr style="border-bottom: solid 1px;">
                             <th class="span4" style="text-align: left;">Activity Title</th>
                             <th class="span3" style="text-align: left;">Activity Presenter</th>
                             <th class="span2" style="text-align: left;">Start Date</th>
                             <th class="span2" style="text-align: left;">End Date</th>
                             <th class="span1" style="text-align: center;">Hrs</th>
-                            <!--<th class="span1" style="text-align: center;">Confirm</th>-->
                         </tr>
                     </thead>
                     <tbody id="fw_body_tr">

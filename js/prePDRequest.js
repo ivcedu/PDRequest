@@ -1,8 +1,10 @@
+var m_hrs_step = "1";
+var m_reimb_step = "1";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) {
         setDefaultSetting();
-        getGeneralInfo();    
+        getGeneralInfo();
             
         if (sessionStorage.getItem('m_PDRequestID') !== null) {            
             PDRequestID = sessionStorage.getItem('m_PDRequestID');
@@ -45,7 +47,7 @@ $(document).ready(function() {
     
     // change resource type ////////////////////////////////////////////////////
     $('#resource_type').change(function() {      
-        var err = formActivityTitleValidation();
+        var err = formMainValidation(true);
         if (err !== "") {
             alert(err);
             $('#resource_type').val("Select...");
@@ -60,17 +62,14 @@ $(document).ready(function() {
         }
         else if (resource_type === "Hours") {
             ResourceTypeID = getResourceTypeID(resource_type);
-            addPDRequest(ResourceTypeID);
             setHoursSetting();
         }
         else if (resource_type === "Reimbursement") {
             ResourceTypeID = getResourceTypeID(resource_type); 
-            addPDRequest(ResourceTypeID);
             setReimbursementSetting();
         }
         else {
             ResourceTypeID = getResourceTypeID(resource_type);      
-            addPDRequest(ResourceTypeID);
             setHoursReimbursementSetting();
         }
         
@@ -204,8 +203,8 @@ $(document).ready(function() {
     });
     
     // user save as draft click ////////////////////////////////////////////////
-    $('#btn_save_draft').click(function() { 
-        var err = formActivityTitleValidation();
+    $('#btn_save_draft').click(function() {         
+        var err = formMainValidation(false);
         if (err !== "") {
             alert(err);
             return false;
@@ -214,6 +213,7 @@ $(document).ready(function() {
         addPDRequest(ResourceTypeID);
         updatePDReqUserInfo();
         updatePDRequest(false);
+        updatePDReqHRProcess(1, 1);
         updateJustArea();
         updateNarrative();
         updateRequestDetail();
@@ -226,7 +226,7 @@ $(document).ready(function() {
     
     // user submit click ///////////////////////////////////////////////////////
     $('#btn_submit').click(function() {
-        var err = formMainValidation();
+        var err = formMainValidation(false);
         err += formNarrativeValidation();
         if (err !== "") {
             alert(err);
@@ -236,6 +236,7 @@ $(document).ready(function() {
         addPDRequest(ResourceTypeID);
         updatePDReqUserInfo();
         updatePDRequest(true);
+        updatePDReqHRProcess(2, 2);
         updateJustArea();
         updateNarrative();
         updateRequestDetail();
@@ -261,7 +262,7 @@ $(document).ready(function() {
     });
     
     $('#ckb_comments').change(function() {      
-        var ckb_comm = ($(this).is(':checked') ? true : false);
+        var ckb_comm = $(this).is(':checked');
         if (ckb_comm) {
             $('#comments_block').show();
         }
@@ -270,10 +271,23 @@ $(document).ready(function() {
         }
     });
     
+    // funding src mouse event /////////////////////////////////////////////////
+    $('#active_fund_src_list').on('mouseover', '[id^="fs_name_"]', function() {
+        var fs_type_id = $(this).attr('id').replace("fs_name_", "");
+        var descrip = db_getFundSrcTypeDescrip(fs_type_id);
+        $(this).popover({trigger:"manual", content:descrip, placement:"top"});
+        $(this).popover('toggle');
+    });
+    
+    $('#active_fund_src_list').on('mouseleave', '[id^="fs_name_"]', function() {
+        $(this).popover('hide');
+    });
+    
     // auto size
     $('#activity_description').autosize();
     $('#just_narrative_descrip').autosize();
     $('#user_comments').autosize();
+    $('#fs_comments').autosize();
     
     // datepicker
     $('#start_date').datepicker();
@@ -316,15 +330,15 @@ function setFiscalYrs() {
 ////////////////////////////////////////////////////////////////////////////////
 function formJustificationValidation() {
     var err = "";
-    var just_area_1 = ($('#just_area_1').is(':checked') ? true : false);
-    var just_area_2 = ($('#just_area_2').is(':checked') ? true : false);
-    var just_area_3 = ($('#just_area_3').is(':checked') ? true : false);
-    var just_area_4 = ($('#just_area_4').is(':checked') ? true : false);
-    var just_area_5 = ($('#just_area_5').is(':checked') ? true : false);
-    var just_area_6 = ($('#just_area_6').is(':checked') ? true : false);
-    var just_area_7 = ($('#just_area_7').is(':checked') ? true : false);
-    var just_area_8 = ($('#just_area_8').is(':checked') ? true : false);
-    var just_area_9 = ($('#just_area_9').is(':checked') ? true : false);
+    var just_area_1 = $('#just_area_1').is(':checked');
+    var just_area_2 = $('#just_area_2').is(':checked');
+    var just_area_3 = $('#just_area_3').is(':checked');
+    var just_area_4 = $('#just_area_4').is(':checked');
+    var just_area_5 = $('#just_area_5').is(':checked');
+    var just_area_6 = $('#just_area_6').is(':checked');
+    var just_area_7 = $('#just_area_7').is(':checked');
+    var just_area_8 = $('#just_area_8').is(':checked');
+    var just_area_9 = $('#just_area_9').is(':checked');
     
     if (just_area_1 === false && just_area_2 === false && just_area_3 === false
             && just_area_4 === false && just_area_5 === false && just_area_6 === false
@@ -335,7 +349,7 @@ function formJustificationValidation() {
     return err;
 }
 
-function formMainValidation() {
+function formMainValidation(rtype_selection) {
     var err = "";
     
     if (isValidEmailAddress($('#email').val()) === false) {
@@ -374,7 +388,10 @@ function formMainValidation() {
     if ($('#end_date').val().replace(/\s+/g, '') === "") {
         err += "End Date is a required field\n";
     }
-    err += formJustificationValidation();
+    
+    if (!rtype_selection) {
+        err += formJustificationValidation();
+    }
 
     return err;
 }
@@ -384,22 +401,6 @@ function formNarrativeValidation() {
     
     if ($('#just_narrative_descrip').val().replace(/\s+/g, '') === "") {
         err += "Justification Narrative is a required field\n";
-    }
-
-    return err;
-}
-
-function formActivityTitleValidation() {
-    var err = "";
-    
-    if ($('#activity_title').val().replace(/\s+/g, '') === "") {
-        err += "Activity Title is a required field\n";
-    }
-    if ($('#start_date').val().replace(/\s+/g, '') === "") {
-        err += "Start Date is a required field\n";
-    }
-    if ($('#end_date').val().replace(/\s+/g, '') === "") {
-        err += "End Date is a required field\n";
     }
 
     return err;
@@ -415,6 +416,8 @@ function setDefaultSetting() {
     $('#just_narrative_section').hide();
     $('#just_narrative_descrip').hide();
     $('#comments_block').hide();
+    $('#hrs_step_status').hide();
+    $('#reimb_step_status').hide();
 }
 
 function setHoursSetting() {
@@ -425,6 +428,8 @@ function setHoursSetting() {
     $('#just_narrative_descrip').show();
     $('#approval_section').show();
     $('#comments_section').show();
+    $('#hrs_step_status').show();
+    $('#reimb_step_status').hide();
 }
 
 function setReimbursementSetting() {
@@ -435,6 +440,8 @@ function setReimbursementSetting() {
     $('#just_narrative_descrip').show();
     $('#approval_section').show();
     $('#comments_section').show();
+    $('#hrs_step_status').hide();
+    $('#reimb_step_status').show();
     
     setPDLimitSummary();
 }
@@ -447,6 +454,8 @@ function setHoursReimbursementSetting() {
     $('#just_narrative_descrip').show();
     $('#approval_section').show();
     $('#comments_section').show();
+    $('#hrs_step_status').show();
+    $('#reimb_step_status').show();
     
     setPDLimitSummary();
 }
@@ -471,6 +480,7 @@ function getGeneralInfo() {
     setFiscalYrs();
     getActState();
     getResourceType();
+    getActiveFundingSrcList();
 }
 
 function getLoginID() {    
@@ -500,6 +510,7 @@ function addPDRequest(ResourceTypeID) {
         if (result_ID !== "") {
             PDRequestID = result_ID;
             addPDReqUserInfo(PDRequestID);
+            PDReqHRProcessID = db_insertPDReqHRProcess(PDRequestID);
         }
     }
 }
@@ -552,14 +563,32 @@ function addPDReqReimb() {
         var result_ID = db_insertPDReqReimb(PDRequestID);
         if (result_ID !== "") {
             PDReqReimbID = result_ID;
-        }
+            addPDReqFundSrc();
+            addPDReqFSComments();
+        }      
     }
+}
+
+function addPDReqFundSrc() {
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            db_insertPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+        });        
+    });    
+}
+
+function addPDReqFSComments() {
+    var fs_comments = $('#fs_comments').val();
+    db_insertPDReqFSComments(PDRequestID, PDReqReimbID, fs_comments);
 }
 
 function setStepStatus() {
     if (PDRequestID === "") {
-        $('#current_step').val("Pre-activity");
-        $('#current_status').val("Draft");
+        $('#hrs_current_step').html("Pre-activity");
+        $('#hrs_current_status').html("Draft");
+        $('#reimb_current_step').html("Pre-activity");
+        $('#reimb_current_status').html("Draft");
     }
     else {
         getSelectStepStatus();
@@ -588,6 +617,7 @@ function updatePDReqUserInfo() {
 }
 
 function updatePDRequest(submit) {
+    var fiscal_yrs = $('#fiscal').val();
     var act_title = textReplaceApostrophe($('#activity_title').val());
     var act_organizer = textReplaceApostrophe($('#activity_organizer').val());
     var act_city = textReplaceApostrophe($('#activity_city').val());
@@ -597,29 +627,40 @@ function updatePDRequest(submit) {
     var start_date = textReplaceApostrophe($('#start_date').val());
     var end_date = textReplaceApostrophe($('#end_date').val());
     var create_date = textReplaceApostrophe($('#current_date').val());
-    var ckb_comm = false;
-    var comments = "";
-    if (submit === false) {
-        ckb_comm = ($('#ckb_comments').is(':checked') ? true : false);
-        comments = textReplaceApostrophe($('#user_comments').val());
+    var ckb_comm = $('#ckb_comments').is(':checked');
+    var comments = textReplaceApostrophe($('#user_comments').val());
+
+    db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, fiscal_yrs, act_title, act_organizer, act_city, act_state_ID, act_descrip, act_link, start_date, end_date, create_date, comments, ckb_comm);
+    if (submit) {
+        db_updatePDRequestPreSubDate(PDRequestID);
     }
-    
-    db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, act_title, act_organizer, act_city, act_state_ID, act_descrip, act_link, start_date, end_date, create_date, comments, ckb_comm);
-    db_updatePDRequestPreSubDate(PDRequestID);
+}
+
+function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
+    if (ResourceTypeID === "1") {
+        db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+    }
+    else if (ResourceTypeID === "2") {
+        db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+    }
+    else {
+        db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+        db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+    }
 }
 
 function updateJustArea() {
     addJustArea();
         
-    var just_area_1 = ($('#just_area_1').is(':checked') ? true : false);
-    var just_area_2 = ($('#just_area_2').is(':checked') ? true : false);
-    var just_area_3 = ($('#just_area_3').is(':checked') ? true : false);
-    var just_area_4 = ($('#just_area_4').is(':checked') ? true : false);
-    var just_area_5 = ($('#just_area_5').is(':checked') ? true : false);
-    var just_area_6 = ($('#just_area_6').is(':checked') ? true : false);
-    var just_area_7 = ($('#just_area_7').is(':checked') ? true : false);
-    var just_area_8 = ($('#just_area_8').is(':checked') ? true : false);
-    var just_area_9 = ($('#just_area_9').is(':checked') ? true : false);
+    var just_area_1 = $('#just_area_1').is(':checked');
+    var just_area_2 = $('#just_area_2').is(':checked');
+    var just_area_3 = $('#just_area_3').is(':checked');
+    var just_area_4 = $('#just_area_4').is(':checked');
+    var just_area_5 = $('#just_area_5').is(':checked');
+    var just_area_6 = $('#just_area_6').is(':checked');
+    var just_area_7 = $('#just_area_7').is(':checked');
+    var just_area_8 = $('#just_area_8').is(':checked');
+    var just_area_9 = $('#just_area_9').is(':checked');
 
     db_updatePDJustArea(PDRequestID, just_area_1, just_area_2, just_area_3, just_area_4, just_area_5, just_area_6, just_area_7, just_area_8, just_area_9);
 }
@@ -682,6 +723,30 @@ function updatePDReqReimbPreActivity() {
     db_updatePDReqReimbPreActivity(PDRequestID, pre_reg_fee, pre_travel_cost, pre_input_mileage, pre_mileage_cost, pre_lodging_cost, pre_input_breakfast, pre_breakfast_cost, 
                                     pre_input_lunch, pre_lunch_cost, pre_input_dinner, pre_dinner_cost, other_cost_description, pre_other_cost, 
                                     pre_sub_total, funding_other_source, fs_approved, fs_comments, pre_funding_other, pre_total_cost, pre_total_amount_request);
+                                    
+    // verified new funding src has been added to reimb
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            var result = db_getPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+            if (result === null) {
+                db_insertPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
+            }
+        });        
+    });  
+    
+    // update PDReqFundSrc
+    $('#active_fund_src_list').children().each(function() {
+        $(this).children().find("input[type='checkbox']").each(function() {
+            var fs_id = $(this).attr('id').replace("fs_selected_", "");
+            var fs_selected = $(this).is(':checked');
+            db_updatePDReqFundSrcFSSelected(PDRequestID, PDReqReimbID, fs_id, fs_selected);
+        });        
+    });
+    
+    // update PDReqFSComments
+    var fs_comments = $('#fs_comments').val();
+    db_updatePDReqFSComments(PDRequestID, PDReqReimbID, fs_comments);
 }
 
 function updateStep(new_step_ID) {
@@ -697,12 +762,12 @@ function getSelectPDRequest() {
     var pd_request = new Array();
     pd_request = db_getPDRequest(PDRequestID);
     
-    if (pd_request.length === 1) {
+    if (pd_request.length === 1) {        
         $('#activity_title').val(pd_request[0]['ActTitle']);
         $('#activity_organizer').val(pd_request[0]['ActOrganizer']);
         $('#activity_city').val(pd_request[0]['ActCity']);
         $('#activity_state').val(pd_request[0]['ActStateID']);
-        $('#activity_description').val(pd_request[0]['ActDescrip']);
+        $('#activity_description').val(pd_request[0]['ActDescrip']).trigger('autosize.resize');
         $('#activity_link').val(pd_request[0]['ActLink']);
         $('#start_date').val(pd_request[0]['StartDate']);
         $('#end_date').val(pd_request[0]['EndDate']);
@@ -811,7 +876,7 @@ function getSelectNarrative() {
     
     if (narrative.length === 1) {
         NarrativeID = narrative[0][0];
-        $('#just_narrative_descrip').val(narrative[0]['Narrative']);
+        $('#just_narrative_descrip').val(narrative[0]['Narrative']).trigger('autosize.resize');
     }
     
     getSelectNarrativeAttachment();
@@ -854,7 +919,7 @@ function getSelectPDReqHours() {
     }
 }
 
-function getSelectPDReqReimb() {
+function getSelectPDReqReimb() {  
     var pd_req_reimb = new Array();
     pd_req_reimb = db_getPDReqReimb(PDRequestID);
     if (pd_req_reimb.length === 1) {
@@ -937,7 +1002,25 @@ function getSelectPDReqReimb() {
         }
     }
     
+    setPDReqFundSrc();
+    setPDReqFSComments();
     setPDLimitSummary();
+}
+
+function setPDReqFundSrc() {
+    var result = new Array();
+    result = db_getPDReqFundSrc(PDRequestID, PDReqReimbID);
+    for(var i = 0; i < result.length; i++) { 
+        var fund_sr_type_id = result[i]['FundSrcTypeID'];
+        if (result[i]['FSSelected'] === "1") {
+            $('#fs_selected_' + fund_sr_type_id).prop('checked', true);
+        }
+    }
+}
+
+function setPDReqFSComments() {
+    var fs_comments =  db_getPDReqFSComments(PDRequestID, PDReqReimbID);
+    $('#fs_comments').val(fs_comments).trigger('autosize.resize');
 }
 
 function setPDLimitSummary() {
@@ -954,23 +1037,53 @@ function setPDLimitSummary() {
 }
 
 function getSelectStepStatus() {
-    var pd_step_status = new Array();
-    pd_step_status = db_getPDRequest(PDRequestID);
-    if (pd_step_status.length === 1) {
-        PDReqStepID = pd_step_status[0]['PDReqStepID'];
-        var pd_req_step_list = new Array();
-        pd_req_step_list = db_getPDReqStep(PDReqStepID);
-        if (pd_req_step_list.length === 1) {
-            $('#current_step').html(pd_req_step_list[0][1]);
-        }
-        
-        StatusID = pd_step_status[0]['StatusID'];
-        var status_list = new Array();
-        status_list = db_getStatus(StatusID);
-        if (status_list.length === 1) {
-            $('#current_status').html(status_list[0][1]);
-        }
+    var result = new Array();
+    result = db_getPDReqHRProcess(PDRequestID);
+    
+    m_hrs_step = result[0]['HrsStepID'];
+    m_reimb_step = result[0]['ReimbStepID'];
+    
+    if (ResourceTypeID === "1") {
+        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
+        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
+        $('#hrs_current_status').html(hrs_status[0]['Status']);
     }
+    else if (ResourceTypeID === "2") {
+        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
+        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
+        $('#reimb_current_status').html(reimb_status[0]['Status']);
+    }
+    else {
+        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
+        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
+        $('#hrs_current_status').html(hrs_status[0]['Status']);
+        
+        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
+        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
+        $('#reimb_current_status').html(reimb_status[0]['Status']);
+    }
+
+//    var pd_step_status = new Array();
+//    pd_step_status = db_getPDRequest(PDRequestID);
+//    if (pd_step_status.length === 1) {
+//        PDReqStepID = pd_step_status[0]['PDReqStepID'];
+//        var pd_req_step_list = new Array();
+//        pd_req_step_list = db_getPDReqStep(PDReqStepID);
+//        if (pd_req_step_list.length === 1) {
+//            $('#current_step').html(pd_req_step_list[0][1]);
+//        }
+//        
+//        StatusID = pd_step_status[0]['StatusID'];
+//        var status_list = new Array();
+//        status_list = db_getStatus(StatusID);
+//        if (status_list.length === 1) {
+//            $('#current_status').html(status_list[0][1]);
+//        }
+//    }
 }
 
 function getSelectTransaction() {
@@ -1067,6 +1180,37 @@ function getPDSystem() {
             var str_mileage_amt = formatDollar(sys_mileage_amt, 3);
             $('#mileage_text').html("Mileage ( " + str_mileage_amt + " per mile):");
         }
+    }
+}
+
+function getActiveFundingSrcList() {
+    var result = new Array();
+    result = db_getFundSrcTypeActiveList();
+    
+    $("#active_fund_src_list").empty();
+    var fs_list_html = "";
+    for(var i = 0; i < result.length; i++) {
+        fs_list_html += getActiveFundingSrcListHTML(i, result[i]['FundSrcTypeID'], result[i]['FundSrcType']);
+    }
+    $("#active_fund_src_list").append(fs_list_html);
+}
+
+function getActiveFundingSrcListHTML(index, fund_src_type_id, fund_src_type) {
+    var str_html = "";
+    var new_row_start = "<div class='row' style='padding-top: 5px;'>";
+    var new_row_end = "</div>";
+    
+    str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' id='fs_selected_" + fund_src_type_id + "'></div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='fs_name_" + fund_src_type_id + "'>" + fund_src_type + "</div>";
+    
+    if (Number(index) % 3 === 0) {
+        return new_row_start + str_html;
+    }
+    else if (Number(index) % 3 === 2) {
+        return str_html + new_row_end;
+    }
+    else {
+        return str_html;
     }
 }
 

@@ -4,6 +4,7 @@
     $PDRequestID = filter_input(INPUT_POST, 'PDRequestID');
     $LoginID = filter_input(INPUT_POST, 'LoginID');
     $ResourceTypeID = filter_input(INPUT_POST, 'ResourceTypeID');
+    $FiscalYrs = filter_input(INPUT_POST, 'FiscalYrs');
     $ActTitle = filter_input(INPUT_POST, 'ActTitle');
     $ActOrganizer = filter_input(INPUT_POST, 'ActOrganizer');
     $ActCity = filter_input(INPUT_POST, 'ActCity');
@@ -17,7 +18,7 @@
     $ckbCom = filter_input(INPUT_POST, 'ckbCom');
 
     $query = "UPDATE [IVCPD].[dbo].[PDRequest] "
-                ."SET LoginID = '".$LoginID."', ResourceTypeID = '".$ResourceTypeID."', ActTitle = '".$ActTitle."', ActOrganizer = '".$ActOrganizer."', ActCity = '".$ActCity."', ActStateID = '".$ActStateID."', "
+                ."SET LoginID = '".$LoginID."', ResourceTypeID = '".$ResourceTypeID."', FiscalYrs = '".$FiscalYrs."', ActTitle = '".$ActTitle."', ActOrganizer = '".$ActOrganizer."', ActCity = '".$ActCity."', ActStateID = '".$ActStateID."', "
                 ."ActDescrip = '".$ActDescrip."', ActLink = '".$ActLink."', StartDate = '".$StartDate."', EndDate = '".$EndDate."', CreateDate = '".$CreateDate."', Comments = '".$Comments."', ckbCom = '".$ckbCom."', Modified = getdate() "
                 ."WHERE PDRequestID = '".$PDRequestID."'";
 

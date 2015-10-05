@@ -109,6 +109,20 @@ function db_getResourceTypeID(ResourceType) {
     return result;
 }
 
+function db_getResourceTypeByID(ResourceTypeID) {
+    var result;
+    $.ajax({
+        type:"POST",
+        url:"php/db_getResourceTypeByID.php",
+        data:{ResourceTypeID:ResourceTypeID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 function db_getPDSystem() {
     var result = new Array();
     $.ajax({
@@ -788,6 +802,116 @@ function db_getPDReqReimbByLoginFiscalYrs(LoginID, FiscalYrs) {
     return result;
 }
 
+function db_getPDReqHRProcess(PDRequestID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqHRProcess.php",
+        data:{PDRequestID:PDRequestID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDReqHRProcessLog(PDRequestID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqHRProcessLog.php",
+        data:{PDRequestID:PDRequestID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getFundSrcTypeAll() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getFundSrcTypeAll.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getFundSrcTypeActiveList() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getFundSrcTypeActiveList.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getFundSrcTypeDescrip(FundSrcTypeID) {
+    var result;
+    $.ajax({
+        type:"POST",
+        url:"php/db_getFundSrcTypeDescrip.php",
+        data:{FundSrcTypeID:FundSrcTypeID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDReqFundSrc(PDRequestID, PDReqReimbID) {
+    var result;
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqFundSrc.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDReqFundSrcFSSelected(PDRequestID, PDReqReimbID, FundSrcTypeID) {
+    var result;
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqFundSrcFSSelected.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID, FundSrcTypeID:FundSrcTypeID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDReqFSComments(PDRequestID, PDReqReimbID) {
+    var result;
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqFSComments.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 // copy row DB /////////////////////////////////////////////////////////////////
 function db_copyPDRequest(PDRequestID, LoginID) {
     var ResultID = "";
@@ -1158,6 +1282,91 @@ function db_insertLogHistory(PDRequestID, LoginName, LogMsg) {
     return ResultID;
 }
 
+function db_insertPDReqHRProcess(PDRequestID) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDReqHRProcess.php",
+        data:{PDRequestID:PDRequestID},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertPDReqHRProcessLog(PDRequestID, HrsAdminID, HrsStepID, HrsStatusID, HrsComments, ReimbAdminID, ReimbStepID, ReimbStatusID, ReimbComments) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDReqHRProcessLog.php",
+        data:{PDRequestID:PDRequestID, HrsAdminID:HrsAdminID, HrsStepID:HrsStepID, HrsStatusID:HrsStatusID, HrsComments:HrsComments,
+                ReimbAdminID:ReimbAdminID, ReimbStepID:ReimbStepID, ReimbStatusID:ReimbStatusID, ReimbComments:ReimbComments},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertPDReqHRProcessLogHrs(PDRequestID, HrsAdminID, HrsStepID, HrsStatusID, HrsComments) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDReqHRProcessLogHrs.php",
+        data:{PDRequestID:PDRequestID, HrsAdminID:HrsAdminID, HrsStepID:HrsStepID, HrsStatusID:HrsStatusID, HrsComments:HrsComments},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertPDReqHRProcessLogReimb(PDRequestID, ReimbAdminID, ReimbStepID, ReimbStatusID, ReimbComments) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDReqHRProcessLogReimb.php",
+        data:{PDRequestID:PDRequestID, ReimbAdminID:ReimbAdminID, ReimbStepID:ReimbStepID, ReimbStatusID:ReimbStatusID, ReimbComments:ReimbComments},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertPDReqFundSrc(PDRequestID, PDReqReimbID, FundSrcTypeID) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDReqFundSrc.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID, FundSrcTypeID:FundSrcTypeID},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertPDReqFSComments(PDRequestID, PDReqReimbID, Comments) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDReqFSComments.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID, Comments:Comments},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
 // update DB ///////////////////////////////////////////////////////////////////
 function db_updateLogin(LoginID, LoginName, LoginEmail, LoginDepart, LoginPhone, LoginDiv, LoginEType) {
     var Result = false;
@@ -1173,12 +1382,12 @@ function db_updateLogin(LoginID, LoginName, LoginEmail, LoginDepart, LoginPhone,
     return Result;
 }
 
-function db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, ActTitle, ActOrganizer, ActCity, ActStateID, ActDescrip, ActLink, StartDate, EndDate, CreateDate, Comments, ckbCom) {
+function db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, FiscalYrs, ActTitle, ActOrganizer, ActCity, ActStateID, ActDescrip, ActLink, StartDate, EndDate, CreateDate, Comments, ckbCom) {
     var Result = false;
     $.ajax({
         type:"POST",
         url:"php/db_updatePDRequest.php",
-        data:{PDRequestID:PDRequestID, LoginID:LoginID, ResourceTypeID:ResourceTypeID, ActTitle:ActTitle, ActOrganizer:ActOrganizer, 
+        data:{PDRequestID:PDRequestID, LoginID:LoginID, ResourceTypeID:ResourceTypeID, FiscalYrs:FiscalYrs, ActTitle:ActTitle, ActOrganizer:ActOrganizer, 
                 ActCity:ActCity, ActStateID:ActStateID, ActDescrip:ActDescrip, ActLink:ActLink, StartDate:StartDate, EndDate:EndDate, CreateDate:CreateDate, Comments:Comments, ckbCom:ckbCom},
         async: false,  
         success:function(data) {
@@ -1580,6 +1789,120 @@ function db_updateFlexWeekConfirmed(FlexWeekID, FWHours, Confirmed) {
         type:"POST",
         url:"php/db_updateFlexWeekConfirmed.php",
         data:{FlexWeekID:FlexWeekID, FWHours:FWHours, Confirmed:Confirmed},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqHRProcess(PDRequestID, HrsAdminID, HrsStepID, HrsStatusID, ReimbAdminID, ReimbStepID, ReimbStatusID) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqHRProcess.php",
+        data:{PDRequestID:PDRequestID, HrsAdminID:HrsAdminID, HrsStepID:HrsStepID, HrsStatusID:HrsStatusID, ReimbAdminID:ReimbAdminID, ReimbStepID:ReimbStepID, ReimbStatusID:ReimbStatusID},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqHRProcessHrs(PDRequestID, HrsAdminID, HrsStepID, HrsStatusID) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqHRProcessHrs.php",
+        data:{PDRequestID:PDRequestID, HrsAdminID:HrsAdminID, HrsStepID:HrsStepID, HrsStatusID:HrsStatusID},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqHRProcessHrsStatusDate(PDRequestID, HrsPreSubDate, HrsPreAprDate, HrsPrePendingAprDate, HrsPostSubDate, HrsPostAprDate, HrsPostPendingAprDate) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqHRProcessHrsStatusDate.php",
+        data:{PDRequestID:PDRequestID, HrsPreSubDate:HrsPreSubDate, HrsPreAprDate:HrsPreAprDate, HrsPrePendingAprDate:HrsPrePendingAprDate, 
+                HrsPostSubDate:HrsPostSubDate, HrsPostAprDate:HrsPostAprDate, HrsPostPendingAprDate:HrsPostPendingAprDate},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqHRProcessReimb(PDRequestID, ReimbAdminID, ReimbStepID, ReimbStatusID) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqHRProcessReimb.php",
+        data:{PDRequestID:PDRequestID, ReimbAdminID:ReimbAdminID, ReimbStepID:ReimbStepID, ReimbStatusID:ReimbStatusID},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqHRProcessReimbStatusDate(PDRequestID, ReimbPreSubDate, ReimbPreAprDate, ReimbPrePendingAprDate, ReimbPostSubDate, ReimbPostAprDate, ReimbPostPendingAprDate) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqHRProcessReimbStatusDate.php",
+        data:{PDRequestID:PDRequestID, ReimbPreSubDate:ReimbPreSubDate, ReimbPreAprDate:ReimbPreAprDate, ReimbPrePendingAprDate:ReimbPrePendingAprDate, 
+                ReimbPostSubDate:ReimbPostSubDate, ReimbPostAprDate:ReimbPostAprDate, ReimbPostPendingAprDate:ReimbPostPendingAprDate},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updateFundSrcType(FundSrcTypeID, Active, FundSrcType, FundSrcAdmin, FundSrcEmail, FundSrcDescrip) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateFundSrcType.php",
+        data:{FundSrcTypeID:FundSrcTypeID, Active:Active, FundSrcType:FundSrcType, FundSrcAdmin:FundSrcAdmin, FundSrcEmail:FundSrcEmail, FundSrcDescrip:FundSrcDescrip},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqFundSrcFSSelected(PDRequestID, PDReqReimbID, FundSrcTypeID, FSSelected) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqFundSrcFSSelected.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID, FundSrcTypeID:FundSrcTypeID, FSSelected:FSSelected},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updatePDReqFSComments(PDRequestID, PDReqReimbID, Comments) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updatePDReqFSComments.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID, Comments:Comments},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

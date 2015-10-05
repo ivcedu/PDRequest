@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
         <!-- application css -->
         <link rel="stylesheet" href="css/home.css"/>
+        <link rel="stylesheet" href="css/fundSrcPopSize.css"/>
     </head>
     <body id="body">
         <div class="well container">
@@ -272,6 +273,18 @@
                     <div class="span3"><input type="text" class="span3" id="funding_other_source"></div>
                     <div class="span2 offset1"><input type="text" class="span2 text-center" id="pre_funding_other"></div>
                 </div>
+                
+                <!-- active funding src list -->
+                <div class="row">
+                    <div class="span12 text-center" style="padding-top: 5px; border-bottom: solid 1px;"><b>Reimbursement Funding Source(s) List</b></div>
+                </div>
+                <div id="active_fund_src_list"></div>
+                <br>
+                <div class="row">
+                    <div class="span2" style="padding-top: 5px;">Comments (optional):</div>
+                    <div class="span10"><textarea class="span10" style="resize: vertical;" id="fs_comments"></textarea></div>
+                </div>
+                <!--
                 <div class="row">
                     <div class="span4" style="padding-top: 5px;">Is funding from Other Sources approved?</div>
                     <div class="span1" style="padding-top: 5px;"><label class="radio"><input type="radio" name="rdo_fs_approval" value="0" checked = "checked" id="fs_approved_1">No</label></div>
@@ -279,6 +292,9 @@
                     <div class="span1" style="padding-top: 5px;">Comments:</div>
                     <div class="span5"><input type="text" class="span5" style="font-style: italic;" id="fs_comments"></div>
                 </div>
+                -->
+                <!-- end of active funding src list -->
+                
                 <div class="row">
                     <div class="span6" style="padding-top: 5px;">Total Costs:</div>
                     <div class="span2 offset1 text-center" style="padding-top: 5px; font-weight: bold;" id="pre_total_cost"></div>
@@ -306,11 +322,15 @@
                 <div class="row" style="padding-bottom: 10px">
                     <div class="span12 text-center" style="background-color: gray; color: white">Professional Development Approval Request</div>
                 </div>
-                <div class="row">
-                    <div class="span2" style="padding-top: 5px; font-weight: bold;">Step:</div>
-                    <div class="span4" style="padding-top: 5px; font-weight: bold;" id="current_step"></div>
-                    <div class="span2" style="padding-top: 5px; font-weight: bold;">Status:</div>
-                    <div class="span4" style="padding-top: 5px; font-weight: bold;" id="current_status"></div>
+                <div class="row" id="hrs_step_status">
+                    <div class="span3" style="padding-top: 5px; font-weight: bold;">Hours</div>
+                    <div class="span3" style="padding-top: 5px; font-weight: bold;" id="hrs_current_step"></div>
+                    <div class="span3" style="padding-top: 5px; font-weight: bold;" id="hrs_current_status"></div>
+                </div>
+                <div class="row" id="reimb_step_status">
+                    <div class="span3" style="padding-top: 5px; font-weight: bold;">Reimbursement</div>
+                    <div class="span3" style="padding-top: 5px; font-weight: bold;" id="reimb_current_step"></div>
+                    <div class="span3" style="padding-top: 5px; font-weight: bold;" id="reimb_current_status"></div>
                 </div>
                 <div class="row">&nbsp;</div>
                 <div class="row">

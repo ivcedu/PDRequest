@@ -16,6 +16,7 @@ var PDReqReimbID = "";
 var NarrativeID = "";
 var PAReqInfo1ID = "";
 var PAReqInfo2ID = "";
+var PDReqHRProcessID = "";
 
 var just_narrative_file_index = 1;
 var post_activity_info_1_file_index = 1;

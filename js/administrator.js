@@ -87,8 +87,8 @@ $(document).ready(function() {
         window.open('rptPDDeletedList.html', '_self');
     });
     
-    // system setting click ////////////////////////////////////////////////////
-    $('#nav_system_setting').click(function() {
+    // pd system setting click /////////////////////////////////////////////////
+    $('#nav_pd_setting').click(function() {
         getPDSystem();
         $('#mod_system_setting').modal('show');
     });
@@ -169,6 +169,11 @@ $(document).ready(function() {
         $(this).val(formatDollar(input_val, 2));
     });
     
+    // funding src setting click ///////////////////////////////////////////////
+    $('#nav_fund_src_setting').click(function() {
+        window.open('fundSrcTypeSetting.html', '_self');
+    });
+    
     // general nav btn click ///////////////////////////////////////////////////
     $('#home').click(function() {
         sessionStorage.removeItem("m_PDRequestID");
@@ -197,7 +202,8 @@ $(document).ready(function() {
         sessionStorage.setItem('m_PDRequestStep', cur_step);
         sessionStorage.setItem('m_admin_click', "Admin_Click");
         
-        window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+//        window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+        window.open('adminPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
     });
     
     // avail flex week click ////////////////////////////////////////////////////////
