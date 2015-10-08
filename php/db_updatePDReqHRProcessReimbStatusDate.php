@@ -8,36 +8,30 @@
     $ReimbPostSubDate = filter_input(INPUT_POST, 'ReimbPostSubDate');
     $ReimbPostAprDate = filter_input(INPUT_POST, 'ReimbPostAprDate');
     $ReimbPostPendingAprDate = filter_input(INPUT_POST, 'ReimbPostPendingAprDate');
-
-    $reimb_pre_sub_date = null;
-    $reimb_pre_apr_date = null;
-    $reimb_pre_pending_apr_date = null;
-    $reimb_post_sub_date = null;
-    $reimb_post_apr_date = null;
-    $reimb_post_pending_apr_date = null;
     
+    $update_query = "";
     if ($ReimbPreSubDate === "true") {
-        $reimb_pre_sub_date = "getdate()";
+        $update_query .= "ReimbPreSubDate = GETDATE(), ";
     }
     if ($ReimbPreAprDate === "true") {
-        $reimb_pre_apr_date = "getdate()";
+        $update_query .= "ReimbPreAprDate = GETDATE(), ";
     }
     if ($ReimbPrePendingAprDate === "true") {
-        $reimb_pre_pending_apr_date = "getdate()";
+        $update_query .= "ReimbPrePendingAprDate = GETDATE(), ";
     }
     if ($ReimbPostSubDate === "true") {
-        $reimb_post_sub_date = "getdate()";
+        $update_query .= "ReimbPostSubDate = GETDATE(), ";
     }
     if ($ReimbPostAprDate === "true") {
-        $reimb_post_apr_date = "getdate()";
+        $update_query .= "ReimbPostAprDate = GETDATE(), ";
     }
     if ($ReimbPostPendingAprDate === "true") {
-        $reimb_post_pending_apr_date = "getdate()";
+        $update_query .= "ReimbPostPendingAprDate = GETDATE(), ";
     }
+    $update_query = rtrim($update_query, ", ") . " ";
 
-    $query = "UPDATE [IVCPD].[dbo].[PDReqHRProcess] SET"
-            . "ReimbPreSubDate = '".$reimb_pre_sub_date."', ReimbPreAprDate = '".$reimb_pre_apr_date."', ReimbPrePendingAprDate = '".$reimb_pre_pending_apr_date."', "
-            . "ReimbPostSubDate = '".$reimb_post_sub_date."', ReimbPostAprDate = '".$reimb_post_apr_date."', ReimbPostPendingAprDate = '".$reimb_post_pending_apr_date."' "
+    $query = "UPDATE [IVCPD].[dbo].[PDReqHRProcess] SET "
+            . $update_query
             . "WHERE PDRequestID = '".$PDRequestID."'";
 
     $cmd = $dbConn->prepare($query);

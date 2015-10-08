@@ -240,6 +240,7 @@ $(document).ready(function() {
         updateRequestDetail();
         updateStatus(2);
         updatePDReqHRProcess(2, 2);
+        updatePDReqHRProcessSubmissionDate();
         addTransaction();
         
         db_deleteTracDoc(PDRequestID);
@@ -638,13 +639,29 @@ function updatePDRequest(submit) {
 function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
     if (ResourceTypeID === "1") {
         db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+        db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, hrs_status_id, "");
     }
     else if (ResourceTypeID === "2") {
         db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+        db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, reimb_status_id, "");
     }
     else {
         db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
         db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+        db_insertPDReqHRProcessLog(PDRequestID, null, m_hrs_step, hrs_status_id, "", null, m_reimb_step, reimb_status_id, "");
+    } 
+}
+
+function updatePDReqHRProcessSubmissionDate() {
+    if (ResourceTypeID === "1") {
+        db_updatePDReqHRProcessHrsStatusDate(PDRequestID, true, false, false, false, false, false);
+    }
+    else if (ResourceTypeID === "2") {
+        db_updatePDReqHRProcessReimbStatusDate(PDRequestID, true, false, false, false, false, false);
+    }
+    else {
+        db_updatePDReqHRProcessHrsStatusDate(PDRequestID, true, false, false, false, false, false);
+        db_updatePDReqHRProcessReimbStatusDate(PDRequestID, true, false, false, false, false, false);
     }
 }
 

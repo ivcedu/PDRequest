@@ -427,9 +427,8 @@ function addTransaction() {
 }
 
 function copyToAvailPDRequest(PDRequestID) {
-    var act_title = $('#activity_title').html();
     var result = new Array();
-    result = db_getPDRequestByActTitle(act_title);
+    result = db_getPDRequestByActTitle($('#activity_title').html(), $('#fiscal').html());
     
     if (result.length === 1) {
         db_insertAvailPDRequest(PDRequestID);

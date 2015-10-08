@@ -205,12 +205,12 @@ function db_getPDRequest(PDRequestID) {
     return result;
 }
 
-function db_getPDRequestByActTitle(ActTitle) {
+function db_getPDRequestByActTitle(ActTitle, FiscalYrs) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getPDRequestByActTitle.php",
-        data:{ActTitle:ActTitle},
+        data:{ActTitle:ActTitle, FiscalYrs:FiscalYrs},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -597,6 +597,20 @@ function db_getFWJustArea(FlexWeekID) {
     return result;
 }
 
+function db_getAvailPDRequestByID(PDRequestID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getAvailPDRequestByID.php",
+         data:{PDRequestID:PDRequestID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 function db_getAvailPDRequestList(TermStart, TermEnd) {
     var result = new Array();
     $.ajax({
@@ -875,6 +889,20 @@ function db_getPDReqFundSrc(PDRequestID, PDReqReimbID) {
     $.ajax({
         type:"POST",
         url:"php/db_getPDReqFundSrc.php",
+        data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDReqFundSrcPrintView(PDRequestID, PDReqReimbID) {
+    var result;
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDReqFundSrcPrintView.php",
         data:{PDRequestID:PDRequestID, PDReqReimbID:PDReqReimbID},
         async: false,  
         success:function(data) {

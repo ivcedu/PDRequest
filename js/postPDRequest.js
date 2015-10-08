@@ -325,9 +325,8 @@ $(document).ready(function() {
         updateRequestDetail();
         updateComments(false);
         
-        // need to update
         // insert log
-        db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "post-activity save as draft");
+        addLogHistorySaveAsDraft();
         window.open('home.html', '_self');
     });
     
@@ -351,9 +350,8 @@ $(document).ready(function() {
         updateStatus(2);
         
         addTransaction();
-        // need to update
         sendPostActivityCreatorSubmitted();
-        if (StatusID === "5") {
+        if (m_hrs_status === "5" || m_reimb_status === "5") {
             sendPostActivityApproverMoreInfo();
         }
         else {
@@ -361,7 +359,7 @@ $(document).ready(function() {
         }
         
         // insert log
-        db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "submit post-activity");
+        addLogHistorySubmitted();
         window.open('home.html', '_self');
     });
     
@@ -1691,14 +1689,55 @@ function getPA2FileIndex(fl_name, f_name) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function addLogHistorySaveAsDraft() {
+    var log_msg = "";
+    if (ResourceTypeID === "1") {
+        log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft";
+    }
+    else if (ResourceTypeID === "2") {
+        log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " save as draft";
+    }
+    else {
+        log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft\n";
+        log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " save as draft";
+    }
+    
+    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg);
+}
+
+function addLogHistorySubmitted() {    
+    var log_msg = "";
+    if (ResourceTypeID === "1") {
+        if (m_hrs_status !== "2") {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " submitted";
+        }
+    }
+    else if (ResourceTypeID === "2") {
+        if (m_reimb_status !== "2") {
+            log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " submitted";
+        }
+    }
+    else {
+        if (m_hrs_status !== "2") {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " submitted\n";
+        }
+        if (m_reimb_status !== "2") {
+            log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " submitted";
+        }
+    }
+    
+    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function sendPostActivityCreatorSubmitted() {
     var requestor_email = $('#email').html();
     var requestor_name = $('#requestor').html();
     var act_title = $('#activity_title').html();
     
-    var subject = "Post-activity Professional Development Request has been submitted";
+    var subject = "Professional Development Request has been submitted";
     var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been submitted. ";
+    message += "Your Professional Development Request, title <strong>" + act_title + "</strong> has been submitted. ";
     message += "Your request will be forwarded to the IVC Professional Development Officer and Academic Affairs Committee, ";
     message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
     message += "In some circumstances, additional processing time may be required. <br><br>";
@@ -1716,9 +1755,9 @@ function sendPostActivityApproverSubmitted() {
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').html();
     
-    var subject = "New Post-activity Professional Development Request has been assigned to you";
+    var subject = "New Professional Development Request has been assigned to you";
     var message = "Dear Brett McKim,<br><br>";
-    message += "A New Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
+    message += "A New Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
     message += "Please use the link below to start the approval process.<br><br>";
     message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
     message += "Thank you.";
@@ -1731,9 +1770,9 @@ function sendPostActivityApproverMoreInfo() {
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').html();
     
-    var subject = "More Information Post-activity Professional Development Request has been updated";
+    var subject = "More Information Professional Development Request has been updated";
     var message = "Dear Brett McKim,<br><br>";
-    message += "Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been updated and assigned to you for approval.<br>";
+    message += "Professional Development Request, title <strong>" + act_title + "</strong> has been updated and assigned to you for approval.<br>";
     message += "Please use the link below to start the approval process.<br><br>";
     message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
     message += "Thank you.";

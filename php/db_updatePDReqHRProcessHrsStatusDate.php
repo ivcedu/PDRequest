@@ -9,35 +9,29 @@
     $HrsPostAprDate = filter_input(INPUT_POST, 'HrsPostAprDate');
     $HrsPostPendingAprDate = filter_input(INPUT_POST, 'HrsPostPendingAprDate');
     
-    $hrs_pre_sub_date = null;
-    $hrs_pre_apr_date = null;
-    $hrs_pre_pending_apr_date = null;
-    $hrs_post_sub_date = null;
-    $hrs_post_apr_date = null;
-    $hrs_post_pending_apr_date = null;
-    
+    $update_query = "";
     if ($HrsPreSubDate === "true") {
-        $hrs_pre_sub_date = "getdate()";
+        $update_query .= "HrsPreSubDate = GETDATE(), ";
     }
     if ($HrsPreAprDate === "true") {
-        $hrs_pre_apr_date = "getdate()";
+        $update_query .= "HrsPreAprDate = GETDATE(), ";
     }
     if ($HrsPrePendingAprDate === "true") {
-        $hrs_pre_pending_apr_date = "getdate()";
+        $update_query .= "HrsPrePendingAprDate = GETDATE(), ";
     }
     if ($HrsPostSubDate === "true") {
-        $hrs_post_sub_date = "getdate()";
+        $update_query .= "HrsPostSubDate = GETDATE(), ";
     }
     if ($HrsPostAprDate === "true") {
-        $hrs_post_apr_date = "getdate()";
+        $update_query .= "HrsPostAprDate = GETDATE(), ";
     }
     if ($HrsPostPendingAprDate === "true") {
-        $hrs_post_pending_apr_date = "getdate()";
+        $update_query .= "HrsPostPendingAprDate = GETDATE(), ";
     }
+    $update_query = rtrim($update_query, ", ") . " ";
 
-    $query = "UPDATE [IVCPD].[dbo].[PDReqHRProcess] SET"
-            . "HrsPreSubDate = '".$hrs_pre_sub_date."', HrsPreAprDate = '".$hrs_pre_apr_date."', HrsPrePendingAprDate = '".$hrs_pre_pending_apr_date."', "
-            . "HrsPostSubDate = '".$hrs_post_sub_date."', HrsPostAprDate = '".$hrs_post_apr_date."', HrsPostPendingAprDate = '".$hrs_post_pending_apr_date."', "
+    $query = "UPDATE [IVCPD].[dbo].[PDReqHRProcess] SET "
+            . $update_query
             . "WHERE PDRequestID = '".$PDRequestID."'";
 
     $cmd = $dbConn->prepare($query);
