@@ -5,9 +5,14 @@
     $ReimbAdminID = filter_input(INPUT_POST, 'ReimbAdminID');
     $ReimbStepID = filter_input(INPUT_POST, 'ReimbStepID');
     $ReimbStatusID = filter_input(INPUT_POST, 'ReimbStatusID');
+    
+    $update_query = "";
+    if ($ReimbAdminID !== "null") {
+        $update_query = "ReimbAdminID = '".$ReimbAdminID."', ";
+    }
 
     $query = "UPDATE [IVCPD].[dbo].[PDReqHRProcess] "
-            . "SET ReimbAdminID = '".$ReimbAdminID."', ReimbStepID = '".$ReimbStepID."', ReimbStatusID = '".$ReimbStatusID."', ReimbDTStamp = getdate() "
+            . "SET ".$update_query."ReimbStepID = '".$ReimbStepID."', ReimbStatusID = '".$ReimbStatusID."', ReimbDTStamp = getdate() "
             . "WHERE PDRequestID = '".$PDRequestID."'";
 
     $cmd = $dbConn->prepare($query);

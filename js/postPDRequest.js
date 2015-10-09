@@ -318,7 +318,8 @@ $(document).ready(function() {
 //    });
     
     // user save as draft click ////////////////////////////////////////////////
-    $('#btn_save_draft').click(function() {         
+    $('#btn_save_draft').click(function() {
+        updateJustArea();
         updateNarrative();
         updatePAReqInfo1();
         updatePAReqInfo2();
@@ -338,16 +339,18 @@ $(document).ready(function() {
             return false;
         }
         
+        updateJustArea();
         updateNarrative();
         updatePAReqInfo1();
         updatePAReqInfo2();
         updateRequestDetail();
         updateComments(true);
         updatePDReqHRProcess(2, 2);
+        updatePDReqHRProcessStatusDate();
         
-        db_updatePDRequestPostSubDate(PDRequestID);
-        updateStep(2);
-        updateStatus(2);
+//        db_updatePDRequestPostSubDate(PDRequestID);
+//        updateStep(2);
+//        updateStatus(2);
         
         addTransaction();
         sendPostActivityCreatorSubmitted();
@@ -364,7 +367,7 @@ $(document).ready(function() {
     });
     
     $('#ckb_comments').change(function() {      
-        var ckb_comm = ($(this).is(':checked') ? true : false);
+        var ckb_comm = $(this).is(':checked');
         if (ckb_comm) {
             $('#comments_block').show();
         }
@@ -378,6 +381,7 @@ $(document).ready(function() {
     $('#just_narrative_descrip').autosize();
     $('#post_activity_info_1_descrip').autosize();
     $('#post_activity_info_2_descrip').autosize();
+    $('#fs_comments').autosize();
     $('#user_comments').autosize();
     
     // bootstrap filestyle
@@ -388,30 +392,35 @@ $(document).ready(function() {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function formJustificationValidation() {
-    var err = "";
-    var just_area_1 = ($('#just_area_1').is(':checked') ? true : false);
-    var just_area_2 = ($('#just_area_2').is(':checked') ? true : false);
-    var just_area_3 = ($('#just_area_3').is(':checked') ? true : false);
-    var just_area_4 = ($('#just_area_4').is(':checked') ? true : false);
-    var just_area_5 = ($('#just_area_5').is(':checked') ? true : false);
-    var just_area_6 = ($('#just_area_6').is(':checked') ? true : false);
-    var just_area_7 = ($('#just_area_7').is(':checked') ? true : false);
-    var just_area_8 = ($('#just_area_8').is(':checked') ? true : false);
-    var just_area_9 = ($('#just_area_9').is(':checked') ? true : false);
-    
-    if (just_area_1 === false && just_area_2 === false && just_area_3 === false
-            && just_area_4 === false && just_area_5 === false && just_area_6 === false
-            && just_area_7 === false && just_area_8 === false && just_area_9 === false) {
-        err = "Minimum one Justification Area is a required\n";
+function formMainValidation() {
+    if (ResourceTypeID === "1") {
+        if (m_hrs_status === "4") {
+            return postRequiredFieldsValidation();
+        }
+        else {
+            return "";
+        }
     }
-    
-    return err;
+    else if (ResourceTypeID === "2") {
+        if (m_reimb_status === "4" || m_reimb_status === "7") {
+            return postRequiredFieldsValidation();
+        }
+        else {
+            return "";
+        }
+    }
+    else {
+        if (m_hrs_status === "4" || m_reimb_status === "4" || m_reimb_status === "7") {
+            return postRequiredFieldsValidation();
+        }
+        else {
+            return "";
+        }
+    }
 }
 
-function formMainValidation() {
+function postRequiredFieldsValidation() {
     var err = "";
-    
     if ($('#just_narrative_descrip').val().replace(/\s+/g, '') === "") {
         err += "Justification Narrative is a required field\n";
     }
@@ -422,12 +431,33 @@ function formMainValidation() {
         err += "Post Activity Required Information section two is a required field\n";
     }
     err += formJustificationValidation();
+    return err;
+}
 
+function formJustificationValidation() {
+    var err = "";
+    var just_area_1 = $('#just_area_1').is(':checked');
+    var just_area_2 = $('#just_area_2').is(':checked');
+    var just_area_3 = $('#just_area_3').is(':checked');
+    var just_area_4 = $('#just_area_4').is(':checked');
+    var just_area_5 = $('#just_area_5').is(':checked');
+    var just_area_6 = $('#just_area_6').is(':checked');
+    var just_area_7 = $('#just_area_7').is(':checked');
+    var just_area_8 = $('#just_area_8').is(':checked');
+    var just_area_9 = $('#just_area_9').is(':checked');
+    
+    if (just_area_1 === false && just_area_2 === false && just_area_3 === false
+            && just_area_4 === false && just_area_5 === false && just_area_6 === false
+            && just_area_7 === false && just_area_8 === false && just_area_9 === false) {
+        err = "Minimum one Justification Area is a required\n";
+    }
+    
     return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 function setDefaultSetting() {
+    $('#post_activity_required_info').hide();
     $('.hrs_sections').hide();
     $('.reimb_sections').hide();
     $('#comments_block').hide();
@@ -465,6 +495,20 @@ function addPAReqInfo2() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function updateJustArea() {        
+    var just_area_1 = $('#just_area_1').is(':checked');
+    var just_area_2 = $('#just_area_2').is(':checked');
+    var just_area_3 = $('#just_area_3').is(':checked');
+    var just_area_4 = $('#just_area_4').is(':checked');
+    var just_area_5 = $('#just_area_5').is(':checked');
+    var just_area_6 = $('#just_area_6').is(':checked');
+    var just_area_7 = $('#just_area_7').is(':checked');
+    var just_area_8 = $('#just_area_8').is(':checked');
+    var just_area_9 = $('#just_area_9').is(':checked');
+
+    db_updatePDJustArea(PDRequestID, just_area_1, just_area_2, just_area_3, just_area_4, just_area_5, just_area_6, just_area_7, just_area_8, just_area_9);
+}
+
 function updateNarrative() {
     var narrative = textReplaceApostrophe($('#just_narrative_descrip').val());
 
@@ -649,23 +693,23 @@ function updatePDReqReimbPostActivity() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function updateStep(new_step_ID) {
-    if (PDRequestID !== "") {
-        db_updatePDRequestStep(PDRequestID, new_step_ID);
-    }
-}
+//function updateStep(new_step_ID) {
+//    if (PDRequestID !== "") {
+//        db_updatePDRequestStep(PDRequestID, new_step_ID);
+//    }
+//}
 
-function updateStatus(new_status_ID) {
-    if (PDRequestID !== "") {
-        db_updatePDRequestStatus(PDRequestID, new_status_ID);
-    }
-}
+//function updateStatus(new_status_ID) {
+//    if (PDRequestID !== "") {
+//        db_updatePDRequestStatus(PDRequestID, new_status_ID);
+//    }
+//}
 
 function updateComments(submit) {
     var ckb_comm = false;
     var comments = "";
     if (submit === false) {
-        ckb_comm = ($('#ckb_comments').is(':checked') ? true : false);
+        ckb_comm = $('#ckb_comments').is(':checked');
         comments = textReplaceApostrophe($('#user_comments').val());
     }
     
@@ -673,34 +717,60 @@ function updateComments(submit) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
-    var hrs_admin_id = null;
-    var reimb_admin_id = null;
-    
+function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {    
     if (ResourceTypeID === "1") {
-        hrs_admin_id = getAdministratorID();
-        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, m_hrs_step, hrs_status_id);
-        db_updatePDReqHRProcessHrsStatusDate(PDRequestID, false, false, false, true, false, false);
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, hrs_status_id, "");
+        }
     }
     else if (ResourceTypeID === "2") {
-        reimb_admin_id = getAdministratorID();
-        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, m_reimb_step, reimb_status_id);
-        db_updatePDReqHRProcessReimbStatusDate(PDRequestID, false, false, false, true, false, false);
+        if (m_reimb_step === "1" && m_reimb_status === "4") {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, reimb_status_id, "");
+        }
     }
     else {
-        hrs_admin_id = getAdministratorID();
-        reimb_admin_id = getAdministratorID();
-        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, m_hrs_step, hrs_status_id);
-        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, m_reimb_step, reimb_status_id);
-        db_updatePDReqHRProcessHrsStatusDate(PDRequestID, false, false, false, true, false, false);
-        db_updatePDReqHRProcessReimbStatusDate(PDRequestID, false, false, false, true, false, false);
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, hrs_status_id, "");
+        }
+        
+        if (m_reimb_step === "1" && m_reimb_status === "4") {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, reimb_status_id, "");
+        }
     }
 }
 
-function getAdministratorID() {
-    var result = new Array();
-    result = db_getAdministrator(sessionStorage.getItem('m_loginEmail'));
-    return result[0]['AdministratorID'];
+function updatePDReqHRProcessStatusDate() {
+    if (m_hrs_status === "4") {
+        if (m_hrs_step === "1") {
+            db_updatePDReqHRProcessHrsStatusDate(PDRequestID, false, false, false, true, false, false);
+        }
+    }
+    
+    if (m_reimb_status === "4") {
+        if (m_reimb_step === "1") {
+            db_updatePDReqHRProcessReimbStatusDate(PDRequestID, false, false, false, true, false, false);
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -931,43 +1001,20 @@ function getSelectPDReqHours() {
     if (pd_req_hours.length === 1) {
         PDReqHoursID = pd_req_hours[0][0];
         // pre activity fields
-        if(Number(pd_req_hours[0]['PreInputHr']) > 0) {
-            $('#pre_input_hrs').val(pd_req_hours[0]['PreInputHr']);
-        }
-        if(Number(pd_req_hours[0]['PrePresHr']) > 0) {
-            $('#pre_presenter_hrs').html(pd_req_hours[0]['PrePresHr']);
-        }
-        if(Number(pd_req_hours[0]['PrePartHr']) > 0) {
-            $('#pre_participant_hrs').val(pd_req_hours[0]['PrePartHr']);
-        }
-        if(Number(pd_req_hours[0]['PreTotalHr']) > 0) {
-            $('#pre_total_hrs').html(pd_req_hours[0]['PreTotalHr']);
-        }
-        if(Number(pd_req_hours[0]['PreAppHr']) > 0) {
-            $('#pre_app_hrs').html(pd_req_hours[0]['PreAppHr']);
-        }
-        if(Number(pd_req_hours[0]['PreNotAppHr']) > 0) {
-            $('#pre_not_app_hrs').html(pd_req_hours[0]['PreNotAppHr']);
-        }
+        $('#pre_input_hrs').val(Number(pd_req_hours[0]['PreInputHr']).toFixed(2));
+        $('#pre_presenter_hrs').html(Number(pd_req_hours[0]['PrePresHr']).toFixed(2));
+        $('#pre_participant_hrs').val(Number(pd_req_hours[0]['PrePartHr']).toFixed(2));
+        $('#pre_total_hrs').html(Number(pd_req_hours[0]['PreTotalHr']).toFixed(2));
+        $('#pre_app_hrs').html(Number(pd_req_hours[0]['PreAppHr']).toFixed(2));
+        $('#pre_not_app_hrs').html(Number(pd_req_hours[0]['PreNotAppHr']).toFixed(2));
+
         // post activity fields
-        if(Number(pd_req_hours[0]['PostInputHr']) > 0) {
-            $('#post_input_hrs').val(pd_req_hours[0]['PostInputHr']);
-        }
-        if(Number(pd_req_hours[0]['PostPresHr']) > 0) {
-            $('#post_presenter_hrs').html(pd_req_hours[0]['PostPresHr']);
-        }
-        if(Number(pd_req_hours[0]['PostPartHr']) > 0) {
-            $('#post_participant_hrs').val(pd_req_hours[0]['PostPartHr']);
-        }
-        if(Number(pd_req_hours[0]['PostTotalHr']) > 0) {
-            $('#post_total_hrs').html(pd_req_hours[0]['PostTotalHr']);
-        }
-        if(Number(pd_req_hours[0]['PostAppHr']) > 0) {
-            $('#pre_app_hrs').html(pd_req_hours[0]['PostAppHr']);
-        }
-        if(Number(pd_req_hours[0]['PostNotAppHr']) > 0) {
-            $('#pre_not_app_hrs').html(pd_req_hours[0]['PostNotAppHr']);
-        }
+        $('#post_input_hrs').val(Number(pd_req_hours[0]['PostInputHr']).toFixed(2));
+        $('#post_presenter_hrs').html(Number(pd_req_hours[0]['PostPresHr']).toFixed(2));
+        $('#post_participant_hrs').val(Number(pd_req_hours[0]['PostPartHr']).toFixed(2));
+        $('#post_total_hrs').html(Number(pd_req_hours[0]['PostTotalHr']).toFixed(2));
+        $('#pre_app_hrs').html(Number(pd_req_hours[0]['PostAppHr']).toFixed(2));
+        $('#pre_not_app_hrs').html(Number(pd_req_hours[0]['PostNotAppHr']).toFixed(2));
     }
 }
 
@@ -977,61 +1024,20 @@ function getSelectPDReqReimb() {
     if (pd_req_reimb.length === 1) {
         PDReqReimbID = pd_req_reimb[0][0];
         // pre activity fields
-        var pre_reg_fee = Number(pd_req_reimb[0]['PreReqFee']);
-        if(pre_reg_fee > 0) {
-            $('#pre_reg_fee').val(formatDollar(pre_reg_fee, 2));
-        }
-        var pre_travel = Number(pd_req_reimb[0]['PreTravel']);
-        if(pre_travel > 0) {
-            $('#pre_travel_cost').val(formatDollar(pre_travel, 2));
-        }
-        var pre_mileage = Number(pd_req_reimb[0]['PreMileage']);
-        if(pre_mileage > 0) {
-            $('#pre_input_mileage').val(pre_mileage);
-        }
-        var pre_mil_cost = Number(pd_req_reimb[0]['PreMilCost']);
-        if(pre_mil_cost > 0) {
-            $('#pre_mileage_cost').html(formatDollar(pre_mil_cost, 2));
-        }
-        var pre_lodging = Number(pd_req_reimb[0]['PreLodging']);
-        if(pre_lodging > 0) {
-            $('#pre_lodging_cost').val(formatDollar(pre_lodging, 2));
-        }
-        var pre_num_brk = Number(pd_req_reimb[0]['PreNumBrk']);
-        if(pre_num_brk > 0) {
-            $('#pre_input_breakfast').val(pre_num_brk);
-        }
-        var pre_brk_cost = Number(pd_req_reimb[0]['PreBrkCost']);
-        if(pre_brk_cost > 0) {
-            $('#pre_breakfast_cost').html(formatDollar(pre_brk_cost, 2));
-        }
-        var pre_num_lun = Number(pd_req_reimb[0]['PreNumLun']);
-        if(pre_num_lun > 0) {
-            $('#pre_input_lunch').val(pre_num_lun);
-        }
-        var pre_lun_cost = Number(pd_req_reimb[0]['PreLunCost']);
-        if(pre_lun_cost > 0) {
-            $('#pre_lunch_cost').html(formatDollar(pre_lun_cost, 2));
-        }
-        var pre_num_din = Number(pd_req_reimb[0]['PreNumDin']);
-        if(pre_num_din > 0) {
-            $('#pre_input_dinner').val(pre_num_din);
-        }
-        var pre_din_cost = Number(pd_req_reimb[0]['PreDinCost']);
-        if(pre_din_cost > 0) {
-            $('#pre_dinner_cost').html(formatDollar(pre_din_cost, 2));
-        }
-        
+        $('#pre_reg_fee').val(formatDollar(Number(pd_req_reimb[0]['PreReqFee']), 2));
+        $('#pre_travel_cost').val(formatDollar(Number(pd_req_reimb[0]['PreTravel']), 2));
+        $('#pre_input_mileage').val(Number(pd_req_reimb[0]['PreMileage']));
+        $('#pre_mileage_cost').html(formatDollar(Number(pd_req_reimb[0]['PreMilCost']), 2));
+        $('#pre_lodging_cost').val(formatDollar(Number(pd_req_reimb[0]['PreLodging']), 2));
+        $('#pre_input_breakfast').val(Number(pd_req_reimb[0]['PreNumBrk']));
+        $('#pre_breakfast_cost').html(formatDollar(Number(pd_req_reimb[0]['PreBrkCost']), 2));
+        $('#pre_input_lunch').val(Number(pd_req_reimb[0]['PreNumLun']));
+        $('#pre_lunch_cost').html(formatDollar(Number(pd_req_reimb[0]['PreLunCost']), 2));
+        $('#pre_input_dinner').val(Number(pd_req_reimb[0]['PreNumDin']));
+        $('#pre_dinner_cost').html(formatDollar(Number(pd_req_reimb[0]['PreDinCost']), 2));
         $('#other_cost_description').val(pd_req_reimb[0]['OtherSource']);
-        
-        var pre_oth_cost = Number(pd_req_reimb[0]['PreOthCost']);
-        if(pre_oth_cost > 0) {
-            $('#pre_other_cost').val(formatDollar(pre_oth_cost, 2));
-        }
-        var pre_sub_total = Number(pd_req_reimb[0]['PreSubTotal']);
-        if(pre_sub_total > 0) {
-            $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
-        }
+        $('#pre_other_cost').val(formatDollar(Number(pd_req_reimb[0]['PreOthCost']), 2));
+        $('#pre_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PreSubTotal']), 2));
         $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
         
 //        var fs_approved = pd_req_reimb[0]['FSApproved'];
@@ -1043,104 +1049,32 @@ function getSelectPDReqReimb() {
 //        }
 //        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
         
-        var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
-        if(pre_fun_cost > 0) {
-            $('#pre_funding_other').val(formatDollar(pre_fun_cost, 2));
-        }
-        var pre_total_cost = Number(pd_req_reimb[0]['PreTotalCost']);
-        if(pre_total_cost > 0) {
-            $('#pre_total_cost').html(formatDollar(pre_total_cost, 2));
-        }
-        var pre_total_amt_request = Number(pd_req_reimb[0]['PreTotalAmtRequest']);
-        if(pre_total_amt_request > 0) {
-            $('#pre_total_amount_request').html(formatDollar(pre_total_amt_request, 2));
-        }
-        var pre_total_amt_approved = Number(pd_req_reimb[0]['PreTotalAmtApproved']);
-        if(pre_total_amt_request > 0) {
-            $('#pre_total_amount_approved').html(formatDollar(pre_total_amt_approved, 2));
-        }
-        var pre_total_amt_pending_funds = Number(pd_req_reimb[0]['PreTotalAmtPendingFunds']);
-        if(pre_total_amt_pending_funds > 0) {
-            $('#pre_total_amount_pending_funds').html(formatDollar(pre_total_amt_pending_funds, 2));
-        }
-        var pre_total_amt_not_approved = Number(pd_req_reimb[0]['PreTotalAmtNotApproved']);
-        if(pre_total_amt_not_approved > 0) {
-            $('#pre_total_amount_not_approved').html(formatDollar(pre_total_amt_not_approved, 2));
-        }
+        $('#pre_funding_other').val(formatDollar(Number(pd_req_reimb[0]['PreFunCost']), 2));
+        $('#pre_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTotalCost']), 2));
+        $('#pre_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtRequest']), 2));
+        $('#pre_total_amount_approved').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtApproved']), 2));
+        $('#pre_total_amount_pending_funds').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtPendingFunds']), 2));
+        $('#pre_total_amount_not_approved').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtNotApproved']), 2));
         
         // post activity fields
-        var post_reg_fee = Number(pd_req_reimb[0]['PostReqFee']);
-        if(post_reg_fee > 0) {
-            $('#post_reg_fee').val(formatDollar(post_reg_fee, 2));
-        }
-        var post_travel = Number(pd_req_reimb[0]['PostTravel']);
-        if(post_travel > 0) {
-            $('#post_travel_cost').val(formatDollar(post_travel, 2));
-        }
-        var post_mileage = Number(pd_req_reimb[0]['PostMileage']);
-        if(post_mileage > 0) {
-            $('#post_input_mileage').val(post_mileage);
-        }
-        var post_mil_cost = Number(pd_req_reimb[0]['PostMilCost']);
-        if(post_mil_cost > 0) {
-            $('#post_mileage_cost').html(formatDollar(post_mil_cost, 2));
-        }
-        var post_lodging = Number(pd_req_reimb[0]['PostLodging']);
-        if(post_lodging > 0) {
-            $('#post_lodging_cost').val(formatDollar(post_lodging, 2));
-        }
-        var post_num_brk = Number(pd_req_reimb[0]['PostNumBrk']);
-        if(post_num_brk > 0) {
-            $('#post_input_breakfast').val(post_num_brk);
-        }
-        var post_brk_cost = Number(pd_req_reimb[0]['PostBrkCost']);
-        if(post_brk_cost > 0) {
-            $('#post_breakfast_cost').html(formatDollar(post_brk_cost, 2));
-        }
-        var post_num_lun = Number(pd_req_reimb[0]['PostNumLun']);
-        if(post_num_lun > 0) {
-            $('#post_input_lunch').val(post_num_lun);
-        }
-        var post_lun_cost = Number(pd_req_reimb[0]['PostLunCost']);
-        if(post_lun_cost > 0) {
-            $('#post_lunch_cost').html(formatDollar(post_lun_cost, 2));
-        }
-        var post_num_din = Number(pd_req_reimb[0]['PostNumDin']);
-        if(post_num_din > 0) {
-            $('#post_input_dinner').val(post_num_din);
-        }
-        var post_din_cost = Number(pd_req_reimb[0]['PostDinCost']);
-        if(post_din_cost > 0) {
-            $('#post_dinner_cost').html(formatDollar(post_din_cost, 2));
-        }
-        var post_oth_cost = Number(pd_req_reimb[0]['PostOthCost']);
-        if(post_oth_cost > 0) {
-            $('#post_other_cost').val(formatDollar(post_oth_cost, 2));
-        }
-        var post_sub_total = Number(pd_req_reimb[0]['PostSubTotal']);
-        if(post_sub_total > 0) {
-            $('#post_sub_total').html(formatDollar(post_sub_total, 2));
-        }
-        var post_fun_cost = Number(pd_req_reimb[0]['PostFunCost']);
-        if(post_fun_cost > 0) {
-            $('#post_funding_other').val(formatDollar(post_fun_cost, 2));
-        }
-        var post_total_cost = Number(pd_req_reimb[0]['PostTotalCost']);
-        if(post_total_cost > 0) {
-            $('#post_total_cost').html(formatDollar(post_total_cost, 2));
-        }
-        var post_total_amt_request = Number(pd_req_reimb[0]['PostTotalAmtRequest']);
-        if(post_total_amt_request > 0) {
-            $('#post_total_amount_request').html(formatDollar(post_total_amt_request, 2));
-        }
-        var post_total_amt_pending_funds = Number(pd_req_reimb[0]['PostTotalAmtPendingFunds']);
-        if(post_total_amt_pending_funds > 0) {
-            $('#post_total_amount_pending_funds').html(formatDollar(post_total_amt_pending_funds, 2));
-        }
-        var post_total_amt_approved = Number(pd_req_reimb[0]['PostTotalAmtApproved']);
-        if(post_total_amt_approved > 0) {
-            $('#post_total_amount_approved').html(formatDollar(post_total_amt_approved, 2));
-        }
+        $('#post_reg_fee').val(formatDollar(Number(pd_req_reimb[0]['PostReqFee']), 2));
+        $('#post_travel_cost').val(formatDollar(Number(pd_req_reimb[0]['PostTravel']), 2));
+        $('#post_input_mileage').val(Number(pd_req_reimb[0]['PostMileage']));
+        $('#post_mileage_cost').html(formatDollar(Number(pd_req_reimb[0]['PostMilCost']), 2));
+        $('#post_lodging_cost').val(formatDollar(Number(pd_req_reimb[0]['PostLodging']), 2));
+        $('#post_input_breakfast').val(Number(pd_req_reimb[0]['PostNumBrk']));
+        $('#post_breakfast_cost').html(formatDollar(Number(pd_req_reimb[0]['PostBrkCost']), 2));
+        $('#post_input_lunch').val(Number(pd_req_reimb[0]['PostNumLun']));
+        $('#post_lunch_cost').html(formatDollar(Number(pd_req_reimb[0]['PostLunCost']), 2));
+        $('#post_input_dinner').val(Number(pd_req_reimb[0]['PostNumDin']));
+        $('#post_dinner_cost').html(formatDollar(Number(pd_req_reimb[0]['PostDinCost']), 2));
+        $('#post_other_cost').val(formatDollar(Number(pd_req_reimb[0]['PostOthCost']), 2));
+        $('#post_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PostSubTotal']), 2));
+        $('#post_funding_other').val(formatDollar(Number(pd_req_reimb[0]['PostFunCost']), 2));
+        $('#post_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PostTotalCost']), 2));
+        $('#post_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtRequest']), 2));
+        $('#post_total_amount_pending_funds').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtPendingFunds']), 2));
+        $('#post_total_amount_approved').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtApproved']), 2));
     }
     
     setPDReqFundSrc();
@@ -1189,23 +1123,31 @@ function getSelectStepStatus() {
     if (ResourceTypeID === "1") {
         var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
         var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        if (m_hrs_status === "1" || m_hrs_status === "4") {
+            $('#post_activity_required_info').show();
+        }
         $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
         $('#hrs_current_status').html(hrs_status[0]['Status']);
     }
     else if (ResourceTypeID === "2") {
         var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
         var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        if (m_reimb_status === "1" || m_reimb_status === "4" || m_reimb_status === "7") {
+            $('#post_activity_required_info').show();
+        }
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
     }
     else {
         var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
         var hrs_status = db_getStatus(result[0]['HrsStatusID']);
-        $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
-        $('#hrs_current_status').html(hrs_status[0]['Status']);
-        
         var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
         var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        if (m_hrs_status === "1" || m_hrs_status === "4" || m_reimb_status === "1" || m_reimb_status === "4" || m_reimb_status === "7") {
+            $('#post_activity_required_info').show();
+        }
+        $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
+        $('#hrs_current_status').html(hrs_status[0]['Status']);
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
     }
@@ -1243,7 +1185,7 @@ function getSelectHrsSection() {
     }
     else if (m_hrs_status === "5") {
         if (m_hrs_step === "1") {
-            $('post_hrs_class').hide();
+            $('.post_hrs_class').hide();
         }
         else {
             $('.pre_hrs_class').prop('readonly', true);
@@ -1251,7 +1193,7 @@ function getSelectHrsSection() {
     }
     else {
         if (m_hrs_step === "1") {
-            $('post_hrs_class').hide();
+            $('.post_hrs_class').hide();
         }
         else {
             $('.pre_hrs_class').prop('readonly', true);
@@ -1263,7 +1205,7 @@ function getSelectHrsSection() {
 function getSelectReimbSection() {
     if (m_reimb_status === "1") {
         if (m_reimb_step === "1") {
-            $('post_reimb_class').hide();
+            $('.post_reimb_class').hide();
         }
         else {
             $('.pre_reimb_class').prop('readonly', true);
@@ -1274,7 +1216,7 @@ function getSelectReimbSection() {
     }
     else if (m_reimb_status === "5") {
         if (m_reimb_step === "1") {
-            $('post_reimb_class').hide();
+            $('.post_reimb_class').hide();
         }
         else {
             $('.pre_reimb_class').prop('readonly', true);
@@ -1282,7 +1224,7 @@ function getSelectReimbSection() {
     }
     else {
         if (m_reimb_step === "1") {
-            $('post_reimb_class').hide();
+            $('.post_reimb_class').hide();
         }
         else {
             $('.pre_reimb_class').prop('readonly', true);
@@ -1708,20 +1650,33 @@ function addLogHistorySaveAsDraft() {
 function addLogHistorySubmitted() {    
     var log_msg = "";
     if (ResourceTypeID === "1") {
-        if (m_hrs_status !== "2") {
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            log_msg += "Hours Post-activity submitted";
+        }
+        else {
             log_msg += "Hours " + $('#hrs_current_step').html() + " submitted";
         }
     }
     else if (ResourceTypeID === "2") {
-        if (m_reimb_status !== "2") {
+        if (m_reimb_step === "1" && m_reimb_status === "4") {
+            log_msg += "Reimbursement Post-activity submitted";
+        }
+        else {
             log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " submitted";
         }
     }
     else {
-        if (m_hrs_status !== "2") {
-            log_msg += "Hours " + $('#hrs_current_step').html() + " submitted\n";
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            log_msg += "Hours Post-activity submitted\n";
         }
-        if (m_reimb_status !== "2") {
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " submitted";
+        }
+        
+        if (m_reimb_step === "1" && m_reimb_status === "4") {
+            log_msg += "Reimbursement Post-activity submitted\n";
+        }
+        else {
             log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " submitted";
         }
     }
@@ -1742,7 +1697,9 @@ function sendPostActivityCreatorSubmitted() {
     message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
     message += "In some circumstances, additional processing time may be required. <br><br>";
     message += "Please use the link below to review the status of your submission at any time.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
+    
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1759,7 +1716,9 @@ function sendPostActivityApproverSubmitted() {
     var message = "Dear Brett McKim,<br><br>";
     message += "A New Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
     message += "Please use the link below to start the approval process.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
+    
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.";
     
     proc_sendEmail(approver_email, approver_name, subject, message);
@@ -1774,7 +1733,9 @@ function sendPostActivityApproverMoreInfo() {
     var message = "Dear Brett McKim,<br><br>";
     message += "Professional Development Request, title <strong>" + act_title + "</strong> has been updated and assigned to you for approval.<br>";
     message += "Please use the link below to start the approval process.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
+    
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.";
     
     proc_sendEmail(approver_email, approver_name, subject, message);

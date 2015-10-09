@@ -5,9 +5,14 @@
     $HrsAdminID = filter_input(INPUT_POST, 'HrsAdminID');
     $HrsStepID = filter_input(INPUT_POST, 'HrsStepID');
     $HrsStatusID = filter_input(INPUT_POST, 'HrsStatusID');
+    
+    $update_query = "";
+    if ($HrsAdminID !== "null") {
+        $update_query = "HrsAdminID = '".$HrsAdminID."', ";
+    }
 
     $query = "UPDATE [IVCPD].[dbo].[PDReqHRProcess] "
-            . "SET HrsAdminID = '".$HrsAdminID."', HrsStepID = '".$HrsStepID."', HrsStatusID = '".$HrsStatusID."', HrsDTStamp = getdate() "
+            . "SET ".$update_query."HrsStepID = '".$HrsStepID."', HrsStatusID = '".$HrsStatusID."', HrsDTStamp = getdate() "
             . "WHERE PDRequestID = '".$PDRequestID."'";
 
     $cmd = $dbConn->prepare($query);

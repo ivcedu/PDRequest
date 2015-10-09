@@ -73,7 +73,7 @@ $(document).ready(function() {
         var currentId = $(this).attr('id');
         var flex_week_ID = currentId.replace("ckb_flex_week_ID_", "");
         
-        var ckb = ($(this).is(':checked') ? true : false);
+        var ckb = $(this).is(':checked');
         if (ckb) {
             $('#flex_hrs_' + flex_week_ID).prop('disabled', false);
         }
@@ -206,7 +206,7 @@ function updateSelectedFlexWeek() {
         var currentId = $('#avail_flex_week_tbl tr').eq(i).attr('id');
         var fw_ID = currentId.replace("avail_flex_week_ID_", "");
         
-        var ckb = ($('#ckb_flex_week_ID_' + fw_ID).is(':checked') ? true : false);
+        var ckb = $('#ckb_flex_week_ID_' + fw_ID).is(':checked');
         var usr_fw_ID = $('#usr_flex_week_ID_' + fw_ID).html();
 
         if (ckb) {

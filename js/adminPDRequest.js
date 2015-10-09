@@ -457,15 +457,7 @@ function getSelectResourceType() {
         getSelectPDReqHours();
         getSelectPDReqReimb();
     }
-    
-    if (PDReqStepID === "1") {
-        $('.admin_pre_hrs_class').prop('readonly', false);
-        $('.admin_pre_reimb_class').prop('readonly', false);
-    }
-    else {
-        $('.admin_post_hrs_class').show();
-        $('.admin_post_reimb_class').show();
-    }
+
     getSelectTransaction();
 }
 
@@ -584,9 +576,12 @@ function getSelectPDReqReimb() {
         $('#post_total_amount_not_approved').val(formatDollar(post_total_amt_not_approved, 2));
     }
     
+    setPDReqFundSrc();
+    setPDReqFSComments();
     setSelectPDLimitSummary();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function getHrsStepStatus() {
     var result = new Array();
     result = db_getPDReqHRProcess(PDRequestID);
@@ -602,6 +597,13 @@ function getHrsStepStatus() {
     $('#cur_hrs_status').html(ar_status[0]['Status']);
     
     $('#cur_hrs_dtstamp').html(convertDBDateTimeToString(result[0]['HrsDTStamp']));
+    
+    if (hrs_step_id === "1") {
+        $('.admin_pre_hrs_class').prop('readonly', false);
+    }
+    else {
+        $('.admin_post_hrs_class').show();
+    }
 }
 
 function getReimbStepStatus() {
@@ -619,8 +621,16 @@ function getReimbStepStatus() {
     $('#cur_reimb_status').html(ar_status[0]['Status']);
     
     $('#cur_reimb_dtstamp').html(convertDBDateTimeToString(result[0]['ReimbDTStamp']));
+    
+    if (reimb_step_id === "1") {
+        $('.admin_pre_reimb_class').prop('readonly', false);
+    }
+    else {
+        $('.admin_post_reimb_class').show();
+    }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function getSelectTransaction() {
     var transaction = new Array();
     transaction = db_getTransaction(PDRequestID);
@@ -638,6 +648,49 @@ function getSelectTransaction() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+function setPDReqFundSrc() {
+    var result = new Array();
+    result = db_getPDReqFundSrcPrintView(PDRequestID, PDReqReimbID);
+    
+    $("#active_fund_src_list").empty();
+    var fs_list_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        fs_list_html += getPrintFundingSrcListHTML(i, result[i]['FSSelected'], result[i]['FundSrcType']);
+    }
+    $("#active_fund_src_list").append(fs_list_html);
+}
+
+function getPrintFundingSrcListHTML(index, fs_selected, fund_src_type) {
+    var str_html = "";
+    var new_row_start = "<div class='row' style='padding-top: 5px;'>";
+    var new_row_end = "</div>";
+    
+    if (fs_selected === "1") {
+        str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' disabled checked></div>";
+    }
+    else {
+        str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' disabled></div>";
+    }
+    str_html += "<div class='span3' style='padding-top: 5px;'>" + fund_src_type + "</div>";
+    
+    if (Number(index) % 3 === 0) {
+        return new_row_start + str_html;
+    }
+    else if (Number(index) % 3 === 2) {
+        return str_html + new_row_end;
+    }
+    else {
+        return str_html;
+    }
+}
+
+function setPDReqFSComments() {
+    var fs_comments =  db_getPDReqFSComments(PDRequestID, PDReqReimbID);
+    $('#fs_comments').html(fs_comments.replace(/\n/g, "<br>"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function setSelectPDLimitSummary() {
     getSelectPDLimit();
     calculateEncumberedAmt();
@@ -652,6 +705,7 @@ function setSelectPDLimitSummary() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function calculateEncumberedAmt() {
     var result = new Array(); 
     result = db_getPDReqReimbByLoginFiscalYrs(LoginID, $('#fiscal').html());
@@ -680,7 +734,7 @@ function calculateEncumberedAmt() {
                 }
             }
             else if (result[i]['ReimbStatusID'] === "2" || result[i]['ReimbStatusID'] === "5" || result[i]['ReimbStatusID'] === "7") {
-                amount_convert += Number(result[i]['PreTotalAmtApproved']);
+                amount_convert += Number(result[i]['PostTotalAmtApproved']);
             }
         }
     }
@@ -1042,7 +1096,7 @@ function addLogHistoryPreHrs(new_status) {
 }
 
 function addLogHistoryPreHrsApproved(new_status) {
-    var pre_approved_hrs = $('#pre_app_hrs_admin').val();
+    var pre_approved_hrs = $('#pre_app_hrs').val();
     var pre_not_approved_hrs = $('#pre_not_app_hrs').html();
     var note = "\nPre-activity total hours approved: " + pre_approved_hrs;
     note += "\nPre-activity total hours not approved: " + pre_not_approved_hrs;
@@ -1054,7 +1108,7 @@ function addLogHistoryPostHrs(new_status) {
 }
 
 function addLogHistoryPostHrsApproved(new_status) {
-    var post_approved_hrs = $('#post_app_hrs_admin').val();
+    var post_approved_hrs = $('#post_app_hrs').val();
     var post_not_approved_hrs = $('#post_not_app_hrs').html();
     var note = "\nPost-activity total hours approved: " + post_approved_hrs;
     note += "\nPost-activity total hours not approved: " + post_not_approved_hrs;
@@ -1066,9 +1120,9 @@ function addLogHistoryPreReimb(new_status) {
 }
 
 function addLogHistoryPreReimbApproved(new_status) {
-    var pre_approved_amt = $('#pre_total_amount_approved_admin').val();
-    var pre_pending_amt= $('#pre_total_amount_pending_funds_admin').val();
-    var pre_not_approved_amt = $('#pre_total_amount_not_approved_admin').val();
+    var pre_approved_amt = $('#pre_total_amount_approved').val();
+    var pre_pending_amt= $('#pre_total_amount_pending_funds').val();
+    var pre_not_approved_amt = $('#pre_total_amount_not_approved').val();
     var note = "\nPre-activity total amount approved: " + pre_approved_amt;
     note += "\nPre-activity total amount pending funds: " + pre_pending_amt;
     note += "\nPre-activity total amount not approved: " + pre_not_approved_amt;
@@ -1080,9 +1134,9 @@ function addLogHistoryPostReimb(new_status) {
 }
 
 function addLogHistoryPostReimbApproved(new_status) {
-    var post_approved_amt = $('#post_total_amount_approved_admin').val();
-    var post_pending_amt= $('#post_total_amount_pending_funds_admin').val();
-    var post_not_approved_amt = $('#post_total_amount_not_approved_admin').val();
+    var post_approved_amt = $('#post_total_amount_approved').val();
+    var post_pending_amt= $('#post_total_amount_pending_funds').val();
+    var post_not_approved_amt = $('#post_total_amount_not_approved').val();
     var note = "\nPost-activity total amount approved: " + post_approved_amt;
     note += "\nPost-activity total amount pending funds: " + post_pending_amt;
     note += "\nPost-activity total amount not approved: " + post_not_approved_amt;
@@ -1145,9 +1199,8 @@ function sendPreActivityCreatorBackToDraft(rtype) {
     var message = "Dear " + requestor_name + ", <br><br>";
     message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been set back to <strong>Draft</strong> status.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1167,9 +1220,8 @@ function sendPreActivityCreatorApproved(rtype) {
     message += "Upon conclusion of this professional development activity, Please use the link below to complete the Post-activity fields and submit for final approval ";
     message += "of funding and/or professional development credit hours.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1188,9 +1240,8 @@ function sendPreActivityCreatorPendingApproval(rtype) {
     message += "However, currently all the Professional Development funds for the year have been encumbered; we are waiting to see if there will be any funds available. ";
     message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1208,9 +1259,8 @@ function sendPreActivityCreatorMoreInfo(rtype) {
     message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> required additional information.<br>";
     message += "Please use the link below to read the comments which explain what more information is required.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1228,9 +1278,8 @@ function sendPreActivityCreatorDenied(rtype) {
     message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
     message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
     
@@ -1247,9 +1296,8 @@ function sendPostActivityCreatorBackToDraft(rtype) {
     var message = "Dear " + requestor_name + ", <br><br>";
     message += "Your " + rtype + " Post-activity Professional Development Request, title <strong>" + act_title + "</strong> rhas been set back to <strong>Draft</strong> status.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1275,9 +1323,8 @@ function sendPostActivityCreatorApproved(rtype) {
     
     message += "Please use the link below to review the approved hours and funding at anytime.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1296,9 +1343,8 @@ function sendPostActivityCreatorPendingApproval(rtype) {
     message += "However, currently all the Professional Development funds for the year have been encumbered; we are waiting to see if there will be any funds available. ";
     message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1316,9 +1362,8 @@ function sendPostActivityCreatorMoreInfo(rtype) {
     message += "Your " + rtype + " Post-activity Professional Development Request, title <strong>" + act_title + "</strong> required additional information.<br>";
     message += "Please use the link below to read the comments which explain what more information is required.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1336,9 +1381,8 @@ function sendPostActivityCreatorDenied(rtype) {
     message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
     message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
     
-    var str_url = location.href;
-    str_url = str_url.replace("adminPDRequest.html", "");
-    message += "<a href='" + str_url + "/Login.html'>Professional Development Request</a><br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
     

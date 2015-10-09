@@ -270,15 +270,15 @@ function updateAvailFlexWeek(AvailFlexWeekID, AdministratorID) {
 }
 
 function updateAvailFWJustArea(AvailFlexWeekID, update) {
-    var FWJust1 = ($('#FWJust1').is(':checked') ? true : false);
-    var FWJust2 = ($('#FWJust2').is(':checked') ? true : false);
-    var FWJust3 = ($('#FWJust3').is(':checked') ? true : false);
-    var FWJust4 = ($('#FWJust4').is(':checked') ? true : false);
-    var FWJust5 = ($('#FWJust5').is(':checked') ? true : false);
-    var FWJust6 = ($('#FWJust6').is(':checked') ? true : false);
-    var FWJust7 = ($('#FWJust7').is(':checked') ? true : false);
-    var FWJust8 = ($('#FWJust8').is(':checked') ? true : false);
-    var FWJust9 = ($('#FWJust9').is(':checked') ? true : false);
+    var FWJust1 = $('#FWJust1').is(':checked');
+    var FWJust2 = $('#FWJust2').is(':checked');
+    var FWJust3 = $('#FWJust3').is(':checked');
+    var FWJust4 = $('#FWJust4').is(':checked');
+    var FWJust5 = $('#FWJust5').is(':checked');
+    var FWJust6 = $('#FWJust6').is(':checked');
+    var FWJust7 = $('#FWJust7').is(':checked');
+    var FWJust8 = $('#FWJust8').is(':checked');
+    var FWJust9 = $('#FWJust9').is(':checked');
     
     if (update === false) {
         db_insertAvailFWJustArea(AvailFlexWeekID, FWJust1, FWJust2, FWJust3, FWJust4, FWJust5, FWJust6, FWJust7, FWJust8, FWJust9);

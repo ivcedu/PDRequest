@@ -1,5 +1,9 @@
 var m_hrs_step = "1";
 var m_reimb_step = "1";
+
+var pd_limit = 0.0;
+var amount_convert = 0.0;
+var available_amount = 0.0;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) {
@@ -248,14 +252,8 @@ $(document).ready(function() {
         
         // insert log
         db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "submit pre-activity");
-        
         sendPreActivityCreatorSubmitted();
-        if (StatusID === "5") {
-            sendPreActivityApproverMoreInfo();
-        }
-        else {
-            sendPreActivityApproverSubmitted();
-        }
+        sendPreActivityApproverSubmitted();
 
         sessionStorage.removeItem("m_PDRequestID");
         window.open('home.html', '_self');
@@ -920,18 +918,10 @@ function getSelectPDReqHours() {
     if (pd_req_hours.length === 1) {
         PDReqHoursID = pd_req_hours[0][0];
         // pre activity fields
-        if(Number(pd_req_hours[0]['PreInputHr']) > 0) {
-            $('#pre_input_hrs').val(pd_req_hours[0]['PreInputHr']);
-        }
-        if(Number(pd_req_hours[0]['PrePresHr']) > 0) {
-            $('#pre_presenter_hrs').html(pd_req_hours[0]['PrePresHr']);
-        }
-        if(Number(pd_req_hours[0]['PrePartHr']) > 0) {
-            $('#pre_participant_hrs').val(pd_req_hours[0]['PrePartHr']);
-        }
-        if(Number(pd_req_hours[0]['PreTotalHr']) > 0) {
-            $('#pre_total_hrs').html(pd_req_hours[0]['PreTotalHr']);
-        }
+        $('#pre_input_hrs').val(Number(pd_req_hours[0]['PreInputHr']).toFixed(2));
+        $('#pre_presenter_hrs').html(Number(pd_req_hours[0]['PrePresHr']).toFixed(2));
+        $('#pre_participant_hrs').val(Number(pd_req_hours[0]['PrePartHr']).toFixed(2));
+        $('#pre_total_hrs').html(Number(pd_req_hours[0]['PreTotalHr']).toFixed(2));
     }
 }
 
@@ -941,61 +931,20 @@ function getSelectPDReqReimb() {
     if (pd_req_reimb.length === 1) {
         PDReqReimbID = pd_req_reimb[0][0];
         // pre activity fields
-        var pre_reg_fee = Number(pd_req_reimb[0]['PreReqFee']);
-        if(pre_reg_fee > 0) {
-            $('#pre_reg_fee').val(formatDollar(pre_reg_fee, 2));
-        }
-        var pre_travel = Number(pd_req_reimb[0]['PreTravel']);
-        if(pre_travel > 0) {
-            $('#pre_travel_cost').val(formatDollar(pre_travel, 2));
-        }
-        var pre_mileage = Number(pd_req_reimb[0]['PreMileage']);
-        if(pre_mileage > 0) {
-            $('#pre_input_mileage').val(pre_mileage);
-        }
-        var pre_mil_cost = Number(pd_req_reimb[0]['PreMilCost']);
-        if(pre_mil_cost > 0) {
-            $('#pre_mileage_cost').html(formatDollar(pre_mil_cost, 2));
-        }
-        var pre_lodging = Number(pd_req_reimb[0]['PreLodging']);
-        if(pre_lodging > 0) {
-            $('#pre_lodging_cost').val(formatDollar(pre_lodging, 2));
-        }
-        var pre_num_brk = Number(pd_req_reimb[0]['PreNumBrk']);
-        if(pre_num_brk > 0) {
-            $('#pre_input_breakfast').val(pre_num_brk);
-        }
-        var pre_brk_cost = Number(pd_req_reimb[0]['PreBrkCost']);
-        if(pre_brk_cost > 0) {
-            $('#pre_breakfast_cost').html(formatDollar(pre_brk_cost, 2));
-        }
-        var pre_num_lun = Number(pd_req_reimb[0]['PreNumLun']);
-        if(pre_num_lun > 0) {
-            $('#pre_input_lunch').val(pre_num_lun);
-        }
-        var pre_lun_cost = Number(pd_req_reimb[0]['PreLunCost']);
-        if(pre_lun_cost > 0) {
-            $('#pre_lunch_cost').html(formatDollar(pre_lun_cost, 2));
-        }
-        var pre_num_din = Number(pd_req_reimb[0]['PreNumDin']);
-        if(pre_num_din > 0) {
-            $('#pre_input_dinner').val(pre_num_din);
-        }
-        var pre_din_cost = Number(pd_req_reimb[0]['PreDinCost']);
-        if(pre_din_cost > 0) {
-            $('#pre_dinner_cost').html(formatDollar(pre_din_cost, 2));
-        }
-        
+        $('#pre_reg_fee').val(formatDollar(Number(pd_req_reimb[0]['PreReqFee']), 2));
+        $('#pre_travel_cost').val(formatDollar(Number(pd_req_reimb[0]['PreTravel']), 2));
+        $('#pre_input_mileage').val(Number(pd_req_reimb[0]['PreMileage']));
+        $('#pre_mileage_cost').html(formatDollar(Number(pd_req_reimb[0]['PreMilCost']), 2));
+        $('#pre_lodging_cost').val(formatDollar(Number(pd_req_reimb[0]['PreLodging']), 2));
+        $('#pre_input_breakfast').val(Number(pd_req_reimb[0]['PreNumBrk']));
+        $('#pre_breakfast_cost').html(formatDollar(Number(pd_req_reimb[0]['PreBrkCost']), 2));
+        $('#pre_input_lunch').val(Number(pd_req_reimb[0]['PreNumLun']));
+        $('#pre_lunch_cost').html(formatDollar(Number(pd_req_reimb[0]['PreLunCost']), 2));
+        $('#pre_input_dinner').val(Number(pd_req_reimb[0]['PreNumDin']));
+        $('#pre_dinner_cost').html(formatDollar(Number(pd_req_reimb[0]['PreDinCost']), 2));        
         $('#other_cost_description').val(pd_req_reimb[0]['OtherSource']);
-        
-        var pre_oth_cost = Number(pd_req_reimb[0]['PreOthCost']);
-        if(pre_oth_cost > 0) {
-            $('#pre_other_cost').val(formatDollar(pre_oth_cost, 2));
-        }
-        var pre_sub_total = Number(pd_req_reimb[0]['PreSubTotal']);
-        if(pre_sub_total > 0) {
-            $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
-        }
+        $('#pre_other_cost').val(formatDollar(Number(pd_req_reimb[0]['PreOthCost']), 2));
+        $('#pre_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PreSubTotal']), 2));
         $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
         
 //        var fs_approved = pd_req_reimb[0]['FSApproved'];
@@ -1004,18 +953,9 @@ function getSelectPDReqReimb() {
 //        }
 //        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
         
-        var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
-        if(pre_fun_cost > 0) {
-            $('#pre_funding_other').val(formatDollar(pre_fun_cost, 2));
-        }
-        var pre_total_cost = Number(pd_req_reimb[0]['PreTotalCost']);
-        if(pre_total_cost > 0) {
-            $('#pre_total_cost').html(formatDollar(pre_total_cost, 2));
-        }
-        var pre_total_amt_request = Number(pd_req_reimb[0]['PreTotalAmtRequest']);
-        if(pre_total_amt_request > 0) {
-            $('#pre_total_amount_request').html(formatDollar(pre_total_amt_request, 2));
-        }
+        $('#pre_funding_other').val(formatDollar(Number(pd_req_reimb[0]['PreFunCost']), 2));
+        $('#pre_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTotalCost']), 2));
+        $('#pre_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtRequest']), 2));
     }
     
     setPDReqFundSrc();
@@ -1023,6 +963,7 @@ function getSelectPDReqReimb() {
     setPDLimitSummary();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function setPDReqFundSrc() {
     var result = new Array();
     result = db_getPDReqFundSrc(PDRequestID, PDReqReimbID);
@@ -1034,15 +975,18 @@ function setPDReqFundSrc() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function setPDReqFSComments() {
     var fs_comments =  db_getPDReqFSComments(PDRequestID, PDReqReimbID);
     $('#fs_comments').val(fs_comments).trigger('autosize.resize');
 }
 
-function setPDLimitSummary() {
+////////////////////////////////////////////////////////////////////////////////
+function setPDLimitSummary() {   
     var pd_limit = Number(sessionStorage.getItem('m_pd_limit'));
     var amount_convert = Number(sessionStorage.getItem('m_amount_convert'));
     var available_amount = Number(sessionStorage.getItem('m_available_amount'));
+    
     $('#sys_pd_limit_amount').html(formatDollar(pd_limit, 2));
     $('#pd_amount_convert').html(formatDollar(amount_convert, 2));
     $('#pd_available_amount').html(formatDollar(available_amount, 2));
@@ -1052,6 +996,7 @@ function setPDLimitSummary() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function getSelectStepStatus() {
     var result = new Array();
     result = db_getPDReqHRProcess(PDRequestID);
@@ -1102,6 +1047,7 @@ function getSelectStepStatus() {
 //    }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function getSelectTransaction() {
     var transaction = new Array();
     transaction = db_getTransaction(PDRequestID);
@@ -1353,8 +1299,9 @@ function sendPreActivityCreatorSubmitted() {
     message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
     message += "In some circumstances, additional processing time may be required.<br/><br/>";
     message += "Please use the link below to review the status of your submission at any time.<br/><br/>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
     
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br/>";
     message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
@@ -1371,22 +1318,9 @@ function sendPreActivityApproverSubmitted() {
     var message = "Dear Brett McKim,<br/><br/>";
     message += "A New Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
     message += "Please use the link below to start the approval process.<br/><br/>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
-    message += "Thank you.";
     
-    proc_sendEmail(approver_email, approver_name, subject, message);
-}
-
-function sendPreActivityApproverMoreInfo() {
-    var approver_email = "bmckim@ivc.edu";
-    var approver_name = "Brett McKim";
-    var act_title = $('#activity_title').val();
-    
-    var subject = "More Information Pre-activity Professional Development Request has been updated";
-    var message = "Dear Brett McKim,<br/><br/>";
-    message += "Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been updated and assigned to you for approval.<br/>";
-    message += "Please use the link below to start the approval process.<br/><br/>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
+    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.";
     
     proc_sendEmail(approver_email, approver_name, subject, message);

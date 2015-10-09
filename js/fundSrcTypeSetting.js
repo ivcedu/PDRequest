@@ -67,7 +67,7 @@ function formValidation(fund_src_type_id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function updateFundSrcType(fund_src_type_id) {
-    var active = ($('#active_' + fund_src_type_id).is(':checked') ? true : false);
+    var active = $('#active_' + fund_src_type_id).is(':checked');
     var fund_src_type = textReplaceApostrophe($('#fund_type_' + fund_src_type_id).val());
     var fund_src_admin = textReplaceApostrophe($('#admin_name_' + fund_src_type_id).val());
     var fund_src_email = textReplaceApostrophe($('#admin_email_' + fund_src_type_id).val());

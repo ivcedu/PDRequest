@@ -97,14 +97,16 @@ $(document).ready(function() {
         if ((hrs_status === "Draft" && hrs_step === "Pre-activity") || (reimb_status === "Draft" && reimb_step === "Pre-activity")) {
             window.open('prePDRequest.html', '_self');
         }
-        else if (hrs_status === "Approved" || reimb_status === "Approved"
-                || hrs_status === "More Information" || reimb_status === "More Information"
-                || hrs_status === "Approved Pending Funds" && reimb_status === "Approved Pending Funds") {
-            window.open('postPDRequest.html', '_self');
+        else if ((hrs_step === "Post-activity" && hrs_status === "Approved")
+                || (hrs_step === "Post-activity" && hrs_status === "Denied")
+                || (reimb_step === "Post-activity" && reimb_status === "Approved")
+                || (reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
+                || (reimb_step === "Post-activity" && reimb_status === "Denied")) {
+            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
             return false;
         }
         else {
-            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+            window.open('postPDRequest.html', '_self');
             return false;
         }
         
@@ -285,9 +287,9 @@ function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_
         tbody += set_tr_color;
         tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
         tbody += "<td class='span1'>" + create_date + "</td>";
-        tbody += "<td class='span3'>Hours</td>"; 
+        tbody += "<td class='span2'>Hours</td>"; 
         tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
-        tbody += "<td class='span2' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
         if (hrs_status === "Draft" || reimb_status === "Draft") {
             tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
         }
@@ -299,9 +301,9 @@ function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_
         tbody += set_tr_color;
         tbody += "<td class='span3'></td>";
         tbody += "<td class='span1'></td>";
-        tbody += "<td class='span3'>Reimbursement</td>"; 
+        tbody += "<td class='span2'>Reimbursement</td>"; 
         tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
-        tbody += "<td class='span2' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
         tbody += "<td class='span1 text-center'></td>";
         tbody += "</tr>";
     }
@@ -309,14 +311,14 @@ function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_
         tbody += set_tr_color;
         tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
         tbody += "<td class='span1'>" + create_date + "</td>";
-        tbody += "<td class='span3'>" + resource_type + "</td>"; 
+        tbody += "<td class='span2'>" + resource_type + "</td>"; 
         if (resource_type_id === "1") {
             tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
-            tbody += "<td class='span2' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+            tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
         }
         else {
             tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
-            tbody += "<td class='span2' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+            tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
         }
         
         if (hrs_status === "Draft" || reimb_status === "Draft") {
@@ -506,13 +508,13 @@ function calculateEncumberedAmt(fiscal_yrs) {
     result = db_getPDReqReimbByLoginFiscalYrs(LoginID, fiscal_yrs);
     
     for(var i = 0; i < result.length; i++) {
-        if (result[i]['PDReqStepID'] === "1") {
-            if (result[i]['StatusID'] === "4") {
+        if (result[i]['ReimbStepID'] === "1") {
+            if (result[i]['ReimbStatusID'] === "4") {
                 amount_convert += Number(result[i]['PreTotalAmtApproved']);
             }
         }
         else {
-            if (result[i]['StatusID'] === "4") {
+            if (result[i]['ReimbStatusID'] === "4") {
                 var dist_paid = Number(result[i]['DistPaid']);
                 if (dist_paid === 0) {
                     amount_convert += Number(result[i]['PostTotalAmtApproved']);
@@ -528,8 +530,8 @@ function calculateEncumberedAmt(fiscal_yrs) {
                     }
                 }
             }
-            else if (result[i]['StatusID'] === "2" || result[i]['StatusID'] === "5" || result[i]['StatusID'] === "7") {
-                amount_convert += Number(result[i]['PreTotalAmtApproved']);
+            else if (result[i]['ReimbStatusID'] === "2" || result[i]['ReimbStatusID'] === "5" || result[i]['ReimbStatusID'] === "7") {
+                amount_convert += Number(result[i]['PostTotalAmtApproved']);
             }
         }
     }
@@ -542,7 +544,7 @@ function updateConfirmedFlexWeek() {
         var currentId = $('#flex_week_list tr').eq(i).attr('id');
         var fw_ID = currentId.replace("flex_week_ID_", "");
         var fw_hrs = $('#flex_hrs_' + fw_ID).val();
-        var ckb_confirmed = ($('#ckb_flex_week_confirmed_' + fw_ID).is(':checked') ? true : false);
+        var ckb_confirmed = $('#ckb_flex_week_confirmed_' + fw_ID).is(':checked');
         
         if(fw_hrs === "") {
             fw_hrs = "0.00";
