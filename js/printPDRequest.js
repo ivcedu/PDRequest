@@ -602,7 +602,6 @@ function getSelectPDReqReimb() {
     
     setPDReqFundSrc();
     setPDReqFSComments();
-    setSelectPDLimitSummary();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -707,42 +706,6 @@ function setPDReqFSComments() {
     $('#fs_comments').html(fs_comments.replace(/\n/g, "<br>"));
 }
 
-////////////////////////////////////////////////////////////////////////////////
-function setSelectPDLimitSummary() {    
-    var pd_limit = Number(sessionStorage.getItem('m_pd_limit'));
-    var amount_convert = Number(sessionStorage.getItem('m_amount_convert'));
-    var available_amount = Number(sessionStorage.getItem('m_available_amount'));
-    
-    $('#sys_pd_limit_amount').html(formatDollar(pd_limit, 2));
-    $('#pd_amount_convert').html(formatDollar(amount_convert, 2));
-    $('#pd_available_amount').html(formatDollar(available_amount, 2));
-    
-    if (available_amount < 0) {
-        $('#pd_available_amount').css('color', 'red');
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function getConvertAmount(PDRequestID, PDReqStepID, StatusID) {
-    var result = new Array(new Array()); 
-    result = db_getPDReqReimb(PDRequestID);
-    
-    if (result.length === 1) {
-        if (PDReqStepID === "1") {
-            if (StatusID === "4") {
-                amount_convert += Number(result[0]['PreTotalAmtApproved']);
-            }
-        }
-        else {
-            if (StatusID === "4") {
-                amount_convert += Number(result[0]['PostTotalAmtApproved']);
-            }
-            else if (StatusID === "2" || StatusID === "5" || StatusID === "7") {
-                amount_convert += Number(result[0]['PreTotalAmtApproved']);
-            }
-        }
-    }
-}
 ////////////////////////////////////////////////////////////////////////////////
 //function updateApproverStatus(status) {
 //    db_updatePDRequestStatus(PDRequestID, status);

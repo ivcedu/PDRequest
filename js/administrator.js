@@ -202,7 +202,6 @@ $(document).ready(function() {
         sessionStorage.setItem('m_PDRequestStep', cur_step);
         sessionStorage.setItem('m_admin_click', "Admin_Click");
         
-//        window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
         window.open('adminPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
     });
     
