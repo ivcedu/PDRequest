@@ -82,8 +82,8 @@ $(document).ready(function() {
         }
     });
     
-    // refresh flex week list button ///////////////////////////////////////////
-    $('#btn_fw_list_refresh').click(function() {
+    // fiscal year change event ////////////////////////////////////////////////    
+    $('#fw_fiscal_yrs').change(function() {
         var fiscal_yrs = $('#fw_fiscal_yrs').val();
         getAvailFlexWeekList(fiscal_yrs);
     });

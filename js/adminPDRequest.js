@@ -604,6 +604,10 @@ function getHrsStepStatus() {
     else {
         $('.admin_post_hrs_class').show();
     }
+    
+    if (hrs_status_id !== "2") {
+        $('.admin_hrs_status_class').prop('disabled', true);
+    }
 }
 
 function getReimbStepStatus() {
@@ -627,6 +631,10 @@ function getReimbStepStatus() {
     }
     else {
         $('.admin_post_reimb_class').show();
+    }
+    
+    if (reimb_status_id !== "2") {
+        $('.admin_reimb_status_class').prop('disabled', true);
     }
 }
 
@@ -858,12 +866,16 @@ function updatePDReqHRProcess(hrs_approval_status_id, reimb_approval_status_id) 
         db_insertPDReqHRProcessLogReimb(PDRequestID, reimb_admin_id, reimb_step_id, reimb_approval_status_id, reimb_comments);
     }
     else {
-        hrs_admin_id = getAdministratorID();
-        reimb_admin_id = getAdministratorID();
-        
-        db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, hrs_step_id, hrs_approval_status_id);
-        db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, reimb_step_id, reimb_approval_status_id);
-        db_insertPDReqHRProcessLog(PDRequestID, hrs_admin_id, hrs_step_id, hrs_approval_status_id, hrs_comments, reimb_admin_id, reimb_step_id, reimb_approval_status_id, reimb_comments);
+        if (hrs_approval_status_id !== null) {
+            hrs_admin_id = getAdministratorID();
+            db_updatePDReqHRProcessHrs(PDRequestID, hrs_admin_id, hrs_step_id, hrs_approval_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, hrs_admin_id, hrs_step_id, hrs_approval_status_id, hrs_comments);
+        }
+        if (reimb_approval_status_id !== null) {
+            reimb_admin_id = getAdministratorID();
+            db_updatePDReqHRProcessReimb(PDRequestID, reimb_admin_id, reimb_step_id, reimb_approval_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, reimb_admin_id, reimb_step_id, reimb_approval_status_id, reimb_comments);
+        }
     }
 
     updatePDReqHRProcessStatusDate(hrs_approval_status_id, reimb_approval_status_id);
@@ -905,7 +917,7 @@ function updatePDReqHRProcessStatusDate(hrs_approval_status_id, reimb_approval_s
 
 ////////////////////////////////////////////////////////////////////////////////
 function updatePDRequestHrsStatusChange(hrs_approval_status_id) {    
-    if (hrs_step_id !== null) {
+    if (hrs_step_id !== null && hrs_approval_status_id !== null) {
         var result = new Array();
         result = db_getStatus(hrs_approval_status_id);
         var status_name = result[0][1];
@@ -960,7 +972,7 @@ function updatePDRequestHrsStatusChange(hrs_approval_status_id) {
 }
 
 function updatePDRequestReimbStatusChange(reimb_approval_status_id) {    
-    if (reimb_step_id !== null) {
+    if (reimb_step_id !== null && reimb_approval_status_id !== null) {
         var result = new Array();
         result = db_getStatus(reimb_approval_status_id);
         var status_name = result[0][1];

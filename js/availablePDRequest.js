@@ -56,15 +56,18 @@ $(document).ready(function() {
         var new_pd_request_ID = copyPDRequest(pd_request_ID, resource_type_ID);
         sessionStorage.setItem('m_PDRequestID', new_pd_request_ID);
         window.open('prePDRequest.html', '_self');
+        $('#mod_popup_option').modal('hide');
     });
     
     // modal open to print view click //////////////////////////////////////////
     $('#mod_open_print_view').click(function() {
         sessionStorage.setItem('m_PDRequestID', pd_request_ID);
         window.open('printAvailPDRequest.html', '_blank');
+        return false;
     });
     
-    $('#btn_fw_list_refresh').click(function() {
+    // fiscal year change event ////////////////////////////////////////////////    
+    $('#fw_fiscal_yrs').change(function() {
         var fiscal_yrs = $('#fw_fiscal_yrs').val();
         getAvailPDRequestList(fiscal_yrs);
     });

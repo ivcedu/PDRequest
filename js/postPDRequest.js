@@ -1174,10 +1174,10 @@ function getSelectStepStatus() {
 function getSelectHrsSection() {
     if (m_hrs_status === "1") {
         if (m_hrs_step === "1") {
-            $('post_hrs_class').hide();
+            $('.post_hrs_class').hide();
         }
         else {
-            $('.pre_hrs_class').prop('readonly', true);
+            $('.pre_hrs_class').prop('readonly', false);
         }
     }
     else if (m_hrs_status === "4" || m_hrs_status === "7") {
@@ -1192,12 +1192,11 @@ function getSelectHrsSection() {
         }
     }
     else {
+        $('.pre_hrs_class').prop('readonly', true);
+        $('.post_hrs_class').prop('readonly', true);
+        
         if (m_hrs_step === "1") {
             $('.post_hrs_class').hide();
-        }
-        else {
-            $('.pre_hrs_class').prop('readonly', true);
-            $('.post_hrs_class').prop('readonly', true);
         }
     }
 }
@@ -1208,7 +1207,7 @@ function getSelectReimbSection() {
             $('.post_reimb_class').hide();
         }
         else {
-            $('.pre_reimb_class').prop('readonly', true);
+            $('.pre_reimb_class').prop('readonly', false);
         }
     }
     else if (m_reimb_status === "4" || m_reimb_status === "7") {
@@ -1223,12 +1222,15 @@ function getSelectReimbSection() {
         }
     }
     else {
+        $('.pre_reimb_class').prop('readonly', true);
+        $('.post_reimb_class').prop('readonly', true);
+        $('.fs_list_class').prop('disabled', true);
+        $('#other_cost_description').prop('readonly', true);
+        $('#funding_other_source').prop('readonly', true);
+        $('#fs_comments').prop('readonly', true);
+            
         if (m_reimb_step === "1") {
             $('.post_reimb_class').hide();
-        }
-        else {
-            $('.pre_reimb_class').prop('readonly', true);
-            $('.post_reimb_class').prop('readonly', true);
         }
     }
 }
@@ -1346,7 +1348,7 @@ function getActiveFundingSrcListHTML(index, fund_src_type_id, fund_src_type) {
     var new_row_start = "<div class='row' style='padding-top: 5px;'>";
     var new_row_end = "</div>";
     
-    str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' id='fs_selected_" + fund_src_type_id + "'></div>";
+    str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' class='fs_list_class' id='fs_selected_" + fund_src_type_id + "'></div>";
     str_html += "<div class='span3' style='padding-top: 5px;' id='fs_name_" + fund_src_type_id + "'>" + fund_src_type + "</div>";
     
     if (Number(index) % 3 === 0) {
@@ -1644,7 +1646,7 @@ function addLogHistorySaveAsDraft() {
         log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " save as draft";
     }
     
-    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg);
+    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg.trim());
 }
 
 function addLogHistorySubmitted() {    
@@ -1681,7 +1683,7 @@ function addLogHistorySubmitted() {
         }
     }
     
-    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg);
+    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg.trim());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

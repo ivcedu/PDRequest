@@ -109,26 +109,6 @@ $(document).ready(function() {
             window.open('postPDRequest.html', '_self');
             return false;
         }
-        
-//        if (cur_status === "Submitted" || cur_status === "Approved Pending Funds" || cur_status === "Denied") {
-//            window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
-//        }
-//        else if (cur_status === "Approved") {
-//            if (cur_step === "Pre-activity") {
-//                window.open('postPDRequest.html', '_self');
-//            }
-//            else {
-//                window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
-//            }
-//        }
-//        else {
-//            if (cur_step === "Pre-activity") {
-//                window.open('prePDRequest.html', '_self');
-//            }
-//            else {
-//                window.open('postPDRequest.html', '_self');
-//            }
-//        }
     });
     
     // delete pd request click /////////////////////////////////////////////////

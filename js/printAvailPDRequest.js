@@ -309,240 +309,62 @@ function getSelectPDReqReimb() {
     pd_req_reimb = db_getPDReqReimb(PDRequestID);
     if (pd_req_reimb.length === 1) {
         PDReqReimbID = pd_req_reimb[0][0];
-        var pre_reg_fee = Number(pd_req_reimb[0]['PreReqFee']);
-        $('#pre_reg_fee').html(formatDollar(pre_reg_fee, 2));
-        var pre_travel = Number(pd_req_reimb[0]['PreTravel']);
-        $('#pre_travel_cost').html(formatDollar(pre_travel, 2));
-        var pre_mileage = Number(pd_req_reimb[0]['PreMileage']);
-        $('#pre_input_mileage').html(pre_mileage);
-        var pre_mil_cost = Number(pd_req_reimb[0]['PreMilCost']);
-        $('#pre_mileage_cost').html(formatDollar(pre_mil_cost, 2));
-        var pre_lodging = Number(pd_req_reimb[0]['PreLodging']);
-        $('#pre_lodging_cost').html(formatDollar(pre_lodging, 2));
-        var pre_num_brk = Number(pd_req_reimb[0]['PreNumBrk']);
-        $('#pre_input_breakfast').html(pre_num_brk);
-        var pre_brk_cost = Number(pd_req_reimb[0]['PreBrkCost']);
-        $('#pre_breakfast_cost').html(formatDollar(pre_brk_cost, 2));
-        var pre_num_lun = Number(pd_req_reimb[0]['PreNumLun']);
-        $('#pre_input_lunch').html(pre_num_lun);
-        var pre_lun_cost = Number(pd_req_reimb[0]['PreLunCost']);
-        $('#pre_lunch_cost').html(formatDollar(pre_lun_cost, 2));
-        var pre_num_din = Number(pd_req_reimb[0]['PreNumDin']);
-        $('#pre_input_dinner').html(pre_num_din);
-        var pre_din_cost = Number(pd_req_reimb[0]['PreDinCost']);
-        $('#pre_dinner_cost').html(formatDollar(pre_din_cost, 2));
+        $('#pre_reg_fee').html(formatDollar(Number(pd_req_reimb[0]['PreReqFee']), 2));
+        $('#pre_travel_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTravel']), 2));
+        $('#pre_input_mileage').html(Number(pd_req_reimb[0]['PreMileage']));
+        $('#pre_mileage_cost').html(formatDollar(Number(pd_req_reimb[0]['PreMilCost']), 2));
+        $('#pre_lodging_cost').html(formatDollar(Number(pd_req_reimb[0]['PreLodging']), 2));
+        $('#pre_input_breakfast').html(Number(pd_req_reimb[0]['PreNumBrk']));
+        $('#pre_breakfast_cost').html(formatDollar(Number(pd_req_reimb[0]['PreBrkCost']), 2));
+        $('#pre_input_lunch').html(Number(pd_req_reimb[0]['PreNumLun']));
+        $('#pre_lunch_cost').html(formatDollar(Number(pd_req_reimb[0]['PreLunCost']), 2));
+        $('#pre_input_dinner').html(Number(pd_req_reimb[0]['PreNumDin']));
+        $('#pre_dinner_cost').html(formatDollar(Number(pd_req_reimb[0]['PreDinCost']), 2));
         $('#other_cost_description').html(pd_req_reimb[0]['OtherSource']);
-        var pre_oth_cost = Number(pd_req_reimb[0]['PreOthCost']);
-        $('#pre_other_cost').html(formatDollar(pre_oth_cost, 2));
-        var pre_sub_total = Number(pd_req_reimb[0]['PreSubTotal']);
-        $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
+        $('#pre_other_cost').html(formatDollar(Number(pd_req_reimb[0]['PreOthCost']), 2));
+        $('#pre_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PreSubTotal']), 2));
         $('#funding_other_source').html(pd_req_reimb[0]['FundingSource']);
-        var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
-        $('#pre_funding_other').html(formatDollar(pre_fun_cost, 2));
-        var pre_total_cost = Number(pd_req_reimb[0]['PreTotalCost']);
-        $('#pre_total_cost').html(formatDollar(pre_total_cost, 2));
-        var pre_total_amt_request = Number(pd_req_reimb[0]['PreTotalAmtRequest']);
-        $('#pre_total_amount_request').html(formatDollar(pre_total_amt_request, 2));
-        var pre_total_amt_approved = Number(pd_req_reimb[0]['PreTotalAmtApproved']);
-        $('#pre_total_amount_approved_user').html(formatDollar(pre_total_amt_approved, 2));
-        $('#pre_total_amount_approved_admin').val(formatDollar(pre_total_amt_approved, 2));
+        $('#pre_funding_other').html(formatDollar(Number(pd_req_reimb[0]['PreFunCost']), 2));
+        $('#pre_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTotalCost']), 2));
+        $('#pre_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtRequest']), 2));
     }
-}
-
-function getSelectTransaction() {
-    var transaction = new Array();
-    transaction = db_getTransaction(PDRequestID);
-    var str_comments = "";
-    if (transaction.length > 0) {
-        for (var i = 0; i < transaction.length; i++) {
-            var dt_stamp = convertDBDateTimeToString(transaction[i]['DTStamp']);
-            var login_name = transaction[i]['LoginName'];
-            var note = transaction[i]['Note'];
-            
-            str_comments += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "</br>") + "<br><br>";
-        }
-        $("#comments_history").append(str_comments);
-    }
+    
+    setPDReqFundSrc();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function updatePDRequestReimbPreActivityApprovedAmount() {
-    if ($('#pre_total_amount_approved_admin').val() !== "") {
-        var pre_total_amount_approved_admin = revertDollar($('#pre_total_amount_approved_admin').val());
-        db_updatePDReqReimbPreActivityApprovedAmount(PDRequestID, pre_total_amount_approved_admin);
-    }
-}
-
-function updatePDRequestReimbPostActivityApprovedAmount() {
-    if ($('#post_total_amount_approved_admin').val() !== "") {
-        var post_total_amount_approved_admin = revertDollar($('#post_total_amount_approved_admin').val());
-        db_updatePDReqReimbPostActivityApprovedAmount(PDRequestID, post_total_amount_approved_admin);
-    }
-}
-
-function updateApproverStatus(status) {
-    switch (status) {
-        case "4":
-            db_updatePDRequestStatus(PDRequestID, status);
-            if (PDReqStepID === "1") {
-                db_updatePDRequestPreAprDate(PDRequestID);
-                sendPreActivityCreatorApproved();
-                copyToAvailPDRequest(PDRequestID);
-            }
-            else {
-                db_updatePDRequestPostAprDate(PDRequestID);
-                sendPostActivityCreatorApproved();
-            }
-            break;
-        case "5":
-            db_updatePDRequestStatus(PDRequestID, status);
-            if (PDReqStepID === "1") {
-                sendPreActivityCreatorMoreInfo();
-            }
-            else {
-                sendPostActivityCreatorMoreInfo();
-            }
-            break;
-        case "6":
-            db_updatePDRequestStatus(PDRequestID, status);
-            if (PDReqStepID === "1") {
-                sendPreActivityCreatorDenied();
-            }
-            else {
-                sendPostActivityCreatorDenied();
-            }
-            break;
-        default:
-            break;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function addTransaction() {
-    var login_name = textReplaceApostrophe(sessionStorage.getItem('m_loginName'));
-    var comments = textReplaceApostrophe($('#user_comments').val());
-    if (comments !== "") {
-        db_insertTransaction(PDRequestID, login_name, comments);
-    }
-}
-
-function copyToAvailPDRequest(PDRequestID) {
+function setPDReqFundSrc() {
     var result = new Array();
-    result = db_getPDRequestByActTitle($('#activity_title').html(), $('#fiscal').html());
+    result = db_getPDReqFundSrcPrintView(PDRequestID, PDReqReimbID);
     
-    if (result.length === 1) {
-        db_insertAvailPDRequest(PDRequestID);
+    $("#active_fund_src_list").empty();
+    var fs_list_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        fs_list_html += getPrintFundingSrcListHTML(i, result[i]['FSSelected'], result[i]['FundSrcType']);
     }
+    $("#active_fund_src_list").append(fs_list_html);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-function sendPreActivityCreatorApproved() {
-    var requestor_email = $('#email').html();
-    var requestor_name = $('#requestor').html();
-    var act_title = $('#activity_title').html();
+function getPrintFundingSrcListHTML(index, fs_selected, fund_src_type) {
+    var str_html = "";
+    var new_row_start = "<div class='row' style='padding-top: 5px;'>";
+    var new_row_end = "</div>";
     
-    var subject = "Pre-activity Professional Development Request has been Approved";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>, ";
-    message += "based on the merit of your Professional Development activity. ";
-    message += "Upon conclusion of this professional development activity, Please use the link below to complete the Post-activity fields and submit for final approval ";
-    message += "of funding and/or professional development credit hours.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
-    message += "flexofficer@ivc.edu";
+    if (fs_selected === "1") {
+        str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' disabled checked></div>";
+    }
+    else {
+        str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' disabled></div>";
+    }
+    str_html += "<div class='span3' style='padding-top: 5px;'>" + fund_src_type + "</div>";
     
-    proc_sendEmail(requestor_email, requestor_name, subject, message);
-}
-
-function sendPreActivityCreatorMoreInfo() {
-    var requestor_email = $('#email').html();
-    var requestor_name = $('#requestor').html();
-    var act_title = $('#activity_title').html();
-    
-    var subject = "Pre-activity Professional Development Request need More Information";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> required additional information.<br>";
-    message += "Please use the link below to read the comments which explain what more information is required.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
-    message += "flexofficer@ivc.edu";
-    
-    proc_sendEmail(requestor_email, requestor_name, subject, message);
-}
-
-function sendPreActivityCreatorDenied() {
-    var requestor_email = $('#email').html();
-    var requestor_name = $('#requestor').html();
-    var act_title = $('#activity_title').html();
-    
-    var subject = "Pre-activity Professional Development Request has been Denied";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
-    message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
-    message += "IVC Professional Development Officer<br>";
-    message += "flexofficer@ivc.edu";
-    
-    proc_sendEmail(requestor_email, requestor_name, subject, message);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function sendPostActivityCreatorApproved() {
-    var requestor_email = $('#email').html();
-    var requestor_name = $('#requestor').html();
-    var act_title = $('#activity_title').html();
-    
-    var subject = "Post-activity Professional Development Request has been Approved";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>.<br></br>";
-    message += "Remember, all expenses must be paid up front. To apply for reimbursement of expenses for the approved activity:<br><br>";
-    message += "1) Complete the <a href='https://sharepoint.socccd.edu/bs/acct/Lists/Accounting%20Forms/AllItems.aspx?&&p_SortBehavior=0&p_Order=6900%2e00000000000&&PageFirstRow=1&&View=\\\\\\\\\\{4E4A84AB-B879-465B-855E-C104BD533B22\\\\\\\\\\}'>FS 12008 Employee Travel Reimbursement Claim</a> ";
-    message += "form for the appropriate travel dates. Include original receipts for any approved reimbursable expenses(s). ";
-    message += "Under the field \"Employee's Supervisor Signature\", your Dean does NOT need to sign this form; the Dean who oversee faculty professional development (Dean Cathleen Greiner) will sign this form.<br><br>";
-    message += "2) Submit the completed and signed reimbursement claim form, with original receipts, <strong>within 21 calendar days</strong> after the last day of the activity to Stefanie Alvarez (<a href='mailto:salvarez@ivc.edu'>salvarez@ivc.edu</a>, phone: 949-451-5709, Location: A 304). ";
-    message += "the requisition will expire 30 days from the return date and the funds will be reallocated if receipts are not received within the allotted time. ";
-    message += "In some circumstances, the expiration may be sooner.<br><br>";
-    
-    message += "Please use the link below to review the approved hours and funding at anytime.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
-    message += "flexofficer@ivc.edu";
-    
-    proc_sendEmail(requestor_email, requestor_name, subject, message);
-}
-
-function sendPostActivityCreatorMoreInfo() {
-    var requestor_email = $('#email').html();
-    var requestor_name = $('#requestor').html();
-    var act_title = $('#activity_title').html();
-    
-    var subject = "Post-activity Professional Development Request need More Information";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> required additional information.<br>";
-    message += "Please use the link below to read the comments which explain what more information is required.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
-    message += "flexofficer@ivc.edu";
-    
-    proc_sendEmail(requestor_email, requestor_name, subject, message);
-}
-
-function sendPostActivityCreatorDenied() {
-    var requestor_email = $('#email').html();
-    var requestor_name = $('#requestor').html();
-    var act_title = $('#activity_title').html();
-    
-    var subject = "Post-activity Professional Development Request has been Denied";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
-    message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
-    message += "<a href='https://services.ivc.edu/PDRequest/Login.html'>Professional Development Request</a><br><br>";
-    message += "IVC Professional Development Officer<br>";
-    message += "flexofficer@ivc.edu";
-    
-    proc_sendEmail(requestor_email, requestor_name, subject, message);
+    if (Number(index) % 3 === 0) {
+        return new_row_start + str_html;
+    }
+    else if (Number(index) % 3 === 2) {
+        return str_html + new_row_end;
+    }
+    else {
+        return str_html;
+    }
 }

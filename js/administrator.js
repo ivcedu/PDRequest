@@ -242,8 +242,8 @@ $(document).ready(function() {
         initFlexWeekTable();
     });
     
-    // refresh flex week list button ///////////////////////////////////////////
-    $('#btn_fw_list_refresh').click(function() {
+    // fiscal year change event ////////////////////////////////////////////////    
+    $('#fw_fiscal_yrs').change(function() {
         var fiscal_yrs = $('#fw_fiscal_yrs').val();
         getAvailFlexWeekListByFiscalYrs(fiscal_yrs);
     });
@@ -321,21 +321,56 @@ function getAdminPDRequestList() {
     var str_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            str_html += setPDRequestAdminList(result[i]['PDRequestID'], result[i]['ActTitle'], result[i]['CreateDate'], result[i]['Name'], result[i]['ResourceType'], result[i]['PDReqStep'], result[i]['Status']);
+            str_html += setPDRequestAdminList(result[i]['PDRequestID'], result[i]['ResourceTypeID'], result[i]['ResourceType'], result[i]['ActTitle'], result[i]['CreateDate'], result[i]['Name'], 
+                                              result[i]['HrsStep'], result[i]['HrsStatus'], result[i]['ReimbStep'], result[i]['ReimbStatus'], i%2);
         }
     }
     $("#pd_request_body_tr").append(str_html);
 }
 
-function setPDRequestAdminList(PDRequestID, act_title, create_date, requestor, resource_type, step, status) {    
-    var tbody = "<tr>";
-    tbody += "<td class='span2'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
-    tbody += "<td class='span1'>" + create_date + "</td>";
-    tbody += "<td class='span2'>" + requestor + "</td>";
-    tbody += "<td class='span3'>" + resource_type + "</td>"; 
-    tbody += "<td class='span2' id='pd_request_step_" + PDRequestID + "'>" + step + "</td>";  
-    tbody += "<td class='span2' id='pd_request_status_" + PDRequestID + "'>" + status + "</td>";
-    tbody += "</tr>";
+function setPDRequestAdminList(PDRequestID, resource_type_id, resource_type, act_title, create_date, requestor, hrs_step, hrs_status, reimb_step, reimb_status, index) {    
+    var set_tr_color = "<tr style='background-color: #DCDCDC'>";    
+    if (index) {
+        set_tr_color = "<tr>";
+    }
+    
+    var tbody = "";
+    if (resource_type_id === "3") {
+        tbody += set_tr_color;
+        tbody += "<td class='span2'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
+        tbody += "<td class='span1'>" + create_date + "</td>";
+        tbody += "<td class='span2'>" + requestor + "</td>";
+        tbody += "<td class='span2'>Hours</td>"; 
+        tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
+        tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        tbody += "</tr>";
+        
+        tbody += set_tr_color;
+        tbody += "<td class='span2'></td>";
+        tbody += "<td class='span1'></td>";
+        tbody += "<td class='span2'></td>";
+        tbody += "<td class='span2'>Reimbursement</td>"; 
+        tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
+        tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        tbody += "</tr>";
+    }
+    else {
+        tbody += set_tr_color;
+        tbody += "<td class='span2'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
+        tbody += "<td class='span1'>" + create_date + "</td>";
+        tbody += "<td class='span2'>" + requestor + "</td>";
+        tbody += "<td class='span2'>" + resource_type + "</td>"; 
+        if (resource_type_id === "1") {
+            tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
+            tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        }
+        else {
+            tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
+            tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        }
+        tbody += "</tr>";
+    }
+    
     return tbody;
 }
 

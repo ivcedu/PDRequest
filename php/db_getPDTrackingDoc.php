@@ -64,17 +64,37 @@
         }
     }
     
-    $query = "SELECT pdrq.PDRequestID, trdc.TracDocID, logn.LoginName AS FacultyName, pdrq.PreSubDate AS PreSubmissionDate, pdrq.PreAprDate AS PreApprovedDate, ISNULL(pdrh.PreTotalHr, 0) AS PreHrsRequest, "
-                ."ISNULL(pdrh.PreAppHr, 0) AS PreHrsApproved, ISNULL(pdrr.PreTotalAmtRequest, 0) AS PreAmtRequest, ISNULL(pdrr.PreTotalAmtApproved, 0) AS PreAmtApproved, pdrq.PostSubDate AS PostSubmissionDate, "
-                ."pdrq.PostAprDate AS PostApprovedDate, ISNULL(pdrh.PostTotalHr, 0) AS PostHrsRequest, ISNULL(pdrh.PostAppHr, 0) AS PostHrsApproved, ISNULL(pdrr.PostTotalAmtRequest, 0) AS PostAmtRequest, "
-                ."ISNULL(pdrr.PostTotalAmtApproved, 0) AS PostAmtApproved, trdc.ReqNum AS ReqNum, trdc.DistPaid AS DistPaidAmt, trdc.DistCompDate AS DistCompleteDate, trdc.Comments AS Comments, "
-                ."pdrq.StartDate, pdrq.EndDate, "
-                ."trdc.DistPaid, trdc.Comments "
-                ."FROM [IVCPD].[dbo].[TracDoc] AS trdc LEFT JOIN [IVCPD].[dbo].[PDRequest] AS pdrq ON trdc.PDRequestID = pdrq.PDRequestID "
-                ."LEFT JOIN [IVCPD].[dbo].[PDReqHours] AS pdrh ON trdc.PDRequestID = pdrh.PDRequestID "
-                ."LEFT JOIN [IVCPD].[dbo].[PDReqReimb] AS pdrr ON trdc.PDRequestID = pdrr.PDRequestID "
-                ."LEFT JOIN [IVCPD].[dbo].[Login] AS logn ON pdrq.LoginID = logn.LoginID "
-                .$str_where;
+    $query = "SELECT pdrq.PDRequestID, "
+            . "trdc.TracDocID, "
+            . "logn.LoginName AS FacultyName, "
+            . "pdrq.StartDate, "
+            . "pdrq.EndDate, "
+            . "pdpr.HrsPreSubDate, "
+            . "pdpr.HrsPreAprDate, "
+            . "pdpr.ReimbPreSubDate, "
+            . "pdpr.ReimbPreAprDate, "
+            . "ISNULL(pdrh.PreTotalHr, 0) AS PreHrsRequest, "
+            . "ISNULL(pdrh.PreAppHr, 0) AS PreHrsApproved, "
+            . "ISNULL(pdrr.PreTotalAmtRequest, 0) AS PreAmtRequest, "
+            . "ISNULL(pdrr.PreTotalAmtApproved, 0) AS PreAmtApproved, "
+            . "pdpr.HrsPostSubDate, "
+            . "pdpr.HrsPostAprDate, "
+            . "pdpr.ReimbPostSubDate, "
+            . "pdpr.ReimbPostAprDate, "
+            . "ISNULL(pdrh.PostTotalHr, 0) AS PostHrsRequest, "
+            . "ISNULL(pdrh.PostAppHr, 0) AS PostHrsApproved, "
+            . "ISNULL(pdrr.PostTotalAmtRequest, 0) AS PostAmtRequest, "
+            . "ISNULL(pdrr.PostTotalAmtApproved, 0) AS PostAmtApproved, "
+            . "trdc.ReqNum, "
+            . "trdc.DistPaid, "
+            . "trdc.DistCompDate, "
+            . "trdc.Comments AS Comments "
+            . "FROM [IVCPD].[dbo].[TracDoc] AS trdc LEFT JOIN [IVCPD].[dbo].[PDRequest] AS pdrq ON trdc.PDRequestID = pdrq.PDRequestID "
+            . "LEFT JOIN [IVCPD].[dbo].[PDReqHRProcess] AS pdpr ON pdrq.PDRequestID = pdpr.PDRequestID "
+            . "LEFT JOIN [IVCPD].[dbo].[PDReqHours] AS pdrh ON trdc.PDRequestID = pdrh.PDRequestID "
+            . "LEFT JOIN [IVCPD].[dbo].[PDReqReimb] AS pdrr ON trdc.PDRequestID = pdrr.PDRequestID "
+            . "LEFT JOIN [IVCPD].[dbo].[Login] AS logn ON pdrq.LoginID = logn.LoginID "
+            . $str_where;
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute();

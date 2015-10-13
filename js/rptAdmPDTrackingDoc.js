@@ -177,48 +177,58 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
     result = db_getPDTrackingDoc(start_date, end_date, etype, fiscal_yrs);
     
     $("#body_tr").empty();
-    if (result.length !== 0) {
-        var str_html = "";
-        for(var i = 0; i < result.length; i++) { 
-            var pre_sub_date = convertDBDateTimeToString(result[i]['PreSubmissionDate']);
-            var pre_app_date = convertDBDateTimeToString(result[i]['PreApprovedDate']);
-            var pre_hr_req = Number(result[i]['PreHrsRequest']).toFixed(2);
-            var pre_hr_app = Number(result[i]['PreHrsApproved']).toFixed(2);
-            var pre_amt_req = formatDollar(Number(result[i]['PreAmtRequest']), 2);
-            var pre_amt_app = formatDollar(Number(result[i]['PreAmtApproved']), 2);
-            var post_sub_date = convertDBDateTimeToString(result[i]['PostSubmissionDate']);
-            var post_app_date = convertDBDateTimeToString(result[i]['PostApprovedDate']);
-            var post_hr_req = Number(result[i]['PostHrsRequest']).toFixed(2);
-            var post_hr_app = Number(result[i]['PostHrsApproved']).toFixed(2);
-            var post_amt_req = formatDollar(Number(result[i]['PostAmtRequest']), 2);
-            var post_amt_app = formatDollar(Number(result[i]['PostAmtApproved']), 2);
-            var start_date = result[i]['StartDate'];
-            var end_date = result[i]['EndDate'];
-            var dist_alloc = formatDollar(Number(result[i]['DistPaid']), 2);
-            str_html += setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['FacultyName'], start_date, end_date, pre_sub_date, pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
-                                                 post_sub_date, post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
-        }
-        $("#body_tr").append(str_html);
+    var str_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        var start_date = result[i]['StartDate'];
+        var end_date = result[i]['EndDate'];
+        var hrs_pre_sub_date = convertDBDateTimeToString(result[i]['HrsPreSubDate']);
+        var hrs_pre_app_date = convertDBDateTimeToString(result[i]['HrsPreAprDate']);
+        var reimb_pre_sub_date = convertDBDateTimeToString(result[i]['ReimbPreSubDate']);
+        var reimb_pre_app_date = convertDBDateTimeToString(result[i]['ReimbPreAprDate']);
+        var pre_hr_req = Number(result[i]['PreHrsRequest']).toFixed(2);
+        var pre_hr_app = Number(result[i]['PreHrsApproved']).toFixed(2);
+        var pre_amt_req = formatDollar(Number(result[i]['PreAmtRequest']), 2);
+        var pre_amt_app = formatDollar(Number(result[i]['PreAmtApproved']), 2);
+        var hrs_post_sub_date = convertDBDateTimeToString(result[i]['HrsPostSubDate']);
+        var hrs_post_app_date = convertDBDateTimeToString(result[i]['HrsPostAprDate']);
+        var reimb_post_sub_date = convertDBDateTimeToString(result[i]['ReimbPostSubDate']);
+        var reimb_post_app_date = convertDBDateTimeToString(result[i]['ReimbPostAprDate']);
+        var post_hr_req = Number(result[i]['PostHrsRequest']).toFixed(2);
+        var post_hr_app = Number(result[i]['PostHrsApproved']).toFixed(2);
+        var post_amt_req = formatDollar(Number(result[i]['PostAmtRequest']), 2);
+        var post_amt_app = formatDollar(Number(result[i]['PostAmtApproved']), 2);
+        var dist_alloc = formatDollar(Number(result[i]['DistPaid']), 2);
+
+        str_html += setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['FacultyName'], start_date, end_date, 
+                                                hrs_pre_sub_date, hrs_pre_app_date, reimb_pre_sub_date, reimb_pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
+                                                hrs_post_sub_date, hrs_post_app_date, reimb_post_sub_date, reimb_post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, 
+                                                result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
     }
-    
+    $("#body_tr").append(str_html);
     $("#pd_tracking_doc_tbl").trigger("update");
 }
 
-function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, faculty_name, start_date, end_date, pre_sub_date, pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
-                                    post_sub_date, post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, req_num, dist_alloc, comments) {    
+function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, faculty_name, start_date, end_date, 
+                                    hrs_pre_sub_date, hrs_pre_app_date, reimb_pre_sub_date, reimb_pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
+                                    hrs_post_sub_date, hrs_post_app_date, reimb_post_sub_date, reimb_post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, 
+                                    req_num, dist_alloc, comments) {    
     var tbl_html = "<tr>";
     tbl_html += "<td class='col_50'><a href=# id='trac_doc_id_" + trac_doc_id +  "'>" + pd_request_id + "</a></td>";
     tbl_html += "<td class='col_150'>" + faculty_name + "</td>";
     tbl_html += "<td class='col_100'>" + start_date + "</td>";
     tbl_html += "<td class='col_100'>" + end_date + "</td>";
-    tbl_html += "<td class='col_200'>" + pre_sub_date + "</td>";
-    tbl_html += "<td class='col_200'>" + pre_app_date + "</td>";
+    tbl_html += "<td class='col_200'>" + hrs_pre_sub_date + "</td>";
+    tbl_html += "<td class='col_200'>" + hrs_pre_app_date + "</td>";
+    tbl_html += "<td class='col_200'>" + reimb_pre_sub_date + "</td>";
+    tbl_html += "<td class='col_200'>" + reimb_pre_app_date + "</td>";
     tbl_html += "<td class='col_100'>" + pre_hr_req + "</td>";
     tbl_html += "<td class='col_100'>" + pre_hr_app + "</td>";
     tbl_html += "<td class='col_150'>" + pre_amt_req + "</td>";
     tbl_html += "<td class='col_150'>" + pre_amt_app + "</td>";
-    tbl_html += "<td class='col_200'>" + post_sub_date + "</td>";
-    tbl_html += "<td class='col_200'>" + post_app_date + "</td>";
+    tbl_html += "<td class='col_200'>" + hrs_post_sub_date + "</td>";
+    tbl_html += "<td class='col_200'>" + hrs_post_app_date + "</td>";
+    tbl_html += "<td class='col_200'>" + reimb_post_sub_date + "</td>";
+    tbl_html += "<td class='col_200'>" + reimb_post_app_date + "</td>";
     tbl_html += "<td class='col_100'>" + post_hr_req + "</td>";
     tbl_html += "<td class='col_100'>" + post_hr_app + "</td>";
     tbl_html += "<td class='col_150'>" + post_amt_req + "</td>";
