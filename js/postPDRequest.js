@@ -625,7 +625,7 @@ function updatePDReqReimbPreActivity() {
                 db_insertPDReqFundSrc(PDRequestID, PDReqReimbID, fs_id);
             }
         });        
-    });  
+    });
     
     // update PDReqFundSrc
     $('#active_fund_src_list').children().each(function() {
