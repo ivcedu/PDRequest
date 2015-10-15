@@ -7,7 +7,7 @@
     $HrsStatusID = filter_input(INPUT_POST, 'HrsStatusID');
     
     $update_query = "";
-    if ($HrsAdminID !== "null") {
+    if ($HrsAdminID !== "") {
         $update_query = "HrsAdminID = '".$HrsAdminID."', ";
     }
 

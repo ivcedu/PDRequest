@@ -7,7 +7,7 @@
     $ReimbStatusID = filter_input(INPUT_POST, 'ReimbStatusID');
     
     $update_query = "";
-    if ($ReimbAdminID !== "null") {
+    if ($ReimbAdminID !== "") {
         $update_query = "ReimbAdminID = '".$ReimbAdminID."', ";
     }
 

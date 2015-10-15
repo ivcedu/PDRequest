@@ -603,6 +603,9 @@ function getHrsStepStatus() {
     }
     else {
         $('.admin_post_hrs_class').show();
+        if (hrs_status_id !== "2") {
+            $('.admin_post_hrs_class').prop('readonly', true);
+        }
     }
     
     if (hrs_status_id !== "2") {
@@ -631,9 +634,12 @@ function getReimbStepStatus() {
     }
     else {
         $('.admin_post_reimb_class').show();
+        if (reimb_status_id !== "2") {
+            $('.admin_post_reimb_class').prop('readonly', true);
+        }
     }
     
-    if (reimb_status_id !== "2") {
+    if (reimb_status_id !== "2" && reimb_status_id !== "7") {
         $('.admin_reimb_status_class').prop('disabled', true);
     }
 }

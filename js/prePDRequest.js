@@ -628,9 +628,12 @@ function updatePDRequest(submit) {
     var ckb_comm = $('#ckb_comments').is(':checked');
     var comments = textReplaceApostrophe($('#user_comments').val());
 
-    db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, fiscal_yrs, act_title, act_organizer, act_city, act_state_ID, act_descrip, act_link, start_date, end_date, create_date, comments, ckb_comm);
     if (submit) {
+        db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, fiscal_yrs, act_title, act_organizer, act_city, act_state_ID, act_descrip, act_link, start_date, end_date, create_date, "", false);
         db_updatePDRequestPreSubDate(PDRequestID);
+    }
+    else {
+        db_updatePDRequest(PDRequestID, LoginID, ResourceTypeID, fiscal_yrs, act_title, act_organizer, act_city, act_state_ID, act_descrip, act_link, start_date, end_date, create_date, comments, ckb_comm);
     }
 }
 
