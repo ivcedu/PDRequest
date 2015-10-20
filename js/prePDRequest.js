@@ -1,3 +1,5 @@
+var pre_sub_date = "";
+
 var m_hrs_step = "1";
 var m_reimb_step = "1";
 
@@ -1119,8 +1121,14 @@ function getResourceTypeID(ResourceType) {
 }
 
 function getPDSystem() {
+    var cur_date = new Date();
+    var day = cur_date.getDate();
+    var mon = cur_date.getMonth()+1;
+    var yr = cur_date.getFullYear();
+    pre_sub_date = mon + "/" + day + "/" + yr;
+    
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

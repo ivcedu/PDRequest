@@ -123,11 +123,39 @@ function db_getResourceTypeByID(ResourceTypeID) {
     return result;
 }
 
-function db_getPDSystem() {
+function db_getPDSystem(ApplyDate) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getPDSystem.php",
+        data:{ApplyDate:ApplyDate},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDSystemApplyDateList() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDSystemApplyDateList.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getPDSystemByApplyDate(ApplyDate) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getPDSystemByApplyDate.php",
+        data:{ApplyDate:ApplyDate},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -1395,6 +1423,20 @@ function db_insertPDReqFSComments(PDRequestID, PDReqReimbID, Comments) {
     return ResultID;
 }
 
+function db_insertPDSystem(PDSystem, ApplyDate, PDAmt) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDSystem.php",
+        data:{PDSystem:PDSystem, ApplyDate:ApplyDate, PDAmt:PDAmt},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
 // update DB ///////////////////////////////////////////////////////////////////
 function db_updateLogin(LoginID, LoginName, LoginEmail, LoginDepart, LoginPhone, LoginDiv, LoginEType) {
     var Result = false;
@@ -1783,12 +1825,12 @@ function db_updateTracDoc(TracDocID, ReqNum, DistPaid, Comments) {
     return Result;
 }
 
-function db_updatePDSystem(PDSystemID, PDAmt) {
+function db_updatePDSystem(PDSystem, ApplyDateList, ApplyDate, PDAmt) {
     var Result = false;
     $.ajax({
         type:"POST",
         url:"php/db_updatePDSystem.php",
-        data:{PDSystemID:PDSystemID, PDAmt:PDAmt},
+        data:{PDSystem:PDSystem, ApplyDateList:ApplyDateList, ApplyDate:ApplyDate, PDAmt:PDAmt},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

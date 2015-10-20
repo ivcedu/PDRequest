@@ -1,6 +1,7 @@
 var pd_limit = 0.0;
 var amount_convert = 0.0;
 var available_amount = 0.0;
+var pre_sub_date = "";
 
 var hrs_step_id = null;
 var hrs_status_id = null;
@@ -16,8 +17,8 @@ window.onload = function() {
             }
             
             setDefaultSetting();
-            getPDSystem();
             getSelectPDRequest();
+            getPDSystem();
             getSelectResourceType();
             getSelectPDReqUserInfo();
             getSelectJustArea();
@@ -169,7 +170,7 @@ function setClearJustArea() {
 ////////////////////////////////////////////////////////////////////////////////
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -233,6 +234,7 @@ function getSelectPDRequest() {
     ResourceTypeID = pd_request[0]['ResourceTypeID'];
     StatusID = pd_request[0]['StatusID'];
     PDReqStepID = pd_request[0]['PDReqStepID'];
+    pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
 
     setResourceTypeStepStatus();
 }
@@ -771,7 +773,7 @@ function getSelectPDLimit() {
 
 function getSystemPDAmount(pd_system) {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

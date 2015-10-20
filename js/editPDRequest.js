@@ -1,6 +1,8 @@
 var pd_limit = 0.0;
 var amount_convert = 0.0;
 var available_amount = 0.0;
+var pre_sub_date = "";
+
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) { 
@@ -11,8 +13,8 @@ window.onload = function() {
             }
             
             setDefaultSetting();
-            getPDSystem();
             getSelectPDRequest();
+            getPDSystem();
             getSelectPDReqUserInfo();
             getSelectJustArea();
             getSelectNarrative();
@@ -167,7 +169,7 @@ function setClearJustArea() {
 ////////////////////////////////////////////////////////////////////////////////
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -235,6 +237,7 @@ function getSelectPDRequest() {
         if (PDReqStepID === "1") {
             $('#post_reim_section_13_admin').hide();
         }
+        pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
     }
 }
 
@@ -656,7 +659,7 @@ function getSelectPDLimit() {
 
 function getSystemPDAmount(pd_system) {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

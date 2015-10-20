@@ -1,4 +1,5 @@
 var login_etype = "";
+var pre_sub_date = "";
 
 var sys_hrs = 0.0;
 var pd_request_hrs = 0.0;
@@ -19,6 +20,12 @@ window.onload = function() {
         if (usr_profile === "") {
             var login_name = sessionStorage.getItem('m_loginName');
             $('#logn_name').text('Welcome ' + login_name);
+            
+            var cur_date = new Date();
+            var day = cur_date.getDate();
+            var mon = cur_date.getMonth()+1;
+            var yr = cur_date.getFullYear();
+            pre_sub_date = mon + "/" + day + "/" + yr;
 
             setAdminOption();
             setAllFiscalYrs();
@@ -130,41 +137,51 @@ $(document).ready(function() {
                 window.open('prePDRequest.html', '_self');
                 return false;
             }
-            else if ((hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved")
-                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
-                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved")
-                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
-                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved")
-                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
-                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Pre-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Submitted")
-                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Denied")
-                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Approved")
-                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")) {
-                window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+            else if ((hrs_step === "Pre-activity" && hrs_status === "Approved") 
+                    || (hrs_step === "Pre-activity" && hrs_status === "More Information")
+                    || (hrs_step === "Post-activity" && hrs_status === "More Information")
+                    || (reimb_step === "Pre-activity" && reimb_status === "Approved") 
+                    || (reimb_step === "Pre-activity" && reimb_status === "More Information")
+                    || (reimb_step === "Post-activity" && reimb_status === "More Information")) {
+                window.open('postPDRequest.html', '_self');
                 return false;
             }
+//            else if ((hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved")
+//                    || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Submitted" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Denied" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Pre-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Submitted")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Denied")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Approved")
+//                    || (hrs_step === "Post-activity" && hrs_status === "Approved" && reimb_step === "Post-activity" && reimb_status === "Approved Pending Funds")) {
+//                window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
+//                return false;
+//            }
             else {
-                window.open('postPDRequest.html', '_self');
+//                window.open('postPDRequest.html', '_self');
+                window.open('printPDRequest.html?pdrequest_id=' + pd_request_ID, '_self');
                 return false;
             }
         }
@@ -484,7 +501,7 @@ function setTotalFlexHrsRequired() {
 
 function getSystemFlexHrs() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -531,7 +548,7 @@ function setPDAmountSummary(fiscal_yrs) {
 
 function getSystemPDAmount(pd_system) {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

@@ -89,84 +89,8 @@ $(document).ready(function() {
     
     // pd system setting click /////////////////////////////////////////////////
     $('#nav_pd_setting').click(function() {
-        getPDSystem();
-        $('#mod_system_setting').modal('show');
-    });
-    
-    $('#mod_btn_sys_save').click(function() {
-        var err = systemSettingValidation();
-        if (err !== "") {
-            alert(err);
-            return false;
-        }
-        
-        updatePDSystem();
-        alert("System setting has been updated successfully");
-    });
-    
-    $('#mod_sys_mil_cost').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));
-        if (input_val <= 0) {
-            $(this).val('');
-        }
-        else {          
-            $(this).val(formatDollar(input_val, 3));
-        }
-    });
-    
-    $('#mod_sys_brk_cost').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));
-        if (input_val <= 0) {
-            $(this).val('');
-        }
-        else {          
-            $(this).val(formatDollar(input_val, 2));
-        }
-    });
-    
-    $('#mod_sys_lun_cost').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));
-        if (input_val <= 0) {
-            $(this).val('');
-        }
-        else {          
-            $(this).val(formatDollar(input_val, 2));
-        }
-    });
-    
-    $('#mod_sys_din_cost').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));
-        if (input_val <= 0) {
-            $(this).val('');
-        }
-        else {          
-            $(this).val(formatDollar(input_val, 2));
-        }
-    });
-    
-    $('#mod_sys_fh_required').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);
-        if (input_val <= 0) {
-            $(this).val('');
-        }
-        else {          
-            $(this).val(input_val);
-        }
-    });
-    
-    $('#mod_sys_ph_required').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);
-        $(this).val(input_val);
-    });
-    
-    $('#mod_sys_ffl_required').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));
-        $(this).val(formatDollar(input_val, 2));
-    });
-    
-    $('#mod_sys_pfl_required').change(function() {      
-        var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));
-        $(this).val(formatDollar(input_val, 2));
+        window.open('pdSystemSetting.html', '_self');
+        false;
     });
     
     // funding src setting click ///////////////////////////////////////////////
@@ -399,67 +323,6 @@ function setAvailFlexWeekListHTML(AvailFlexWeekID, act_title, start_date, act_pr
     tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_flex_week_" + AvailFlexWeekID + "'><i class='icon-trash icon-black'></i></button></td>";
     tbody += "</tr>";
     return tbody;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function getPDSystem() {
-    var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
-    
-    for(var i = 0; i < pdsystem.length; i++) {
-        var sys_name = pdsystem[i][1];
-        
-        if (sys_name === "Breakfast") {
-            $('#mod_sys_brk_cost').val(formatDollar(Number(pdsystem[i][2]), 2));
-        }
-        else if (sys_name === "Lunch") {
-            $('#mod_sys_lun_cost').val(formatDollar(Number(pdsystem[i][2]), 2));
-        }
-        else if (sys_name === "Dinner") {
-            $('#mod_sys_din_cost').val(formatDollar(Number(pdsystem[i][2]), 2));
-        }
-        else if (sys_name === "Mileage") {            
-            $('#mod_sys_mil_cost').val(formatDollar(Number(pdsystem[i][2]), 3));
-        }
-        else if (sys_name === "Total_FH_Required") {
-            $('#mod_sys_fh_required').val(Number(pdsystem[i][2]).toFixed(2));
-        }
-        else if (sys_name === "Total_PH_Required") {
-            $('#mod_sys_ph_required').val(Number(pdsystem[i][2]).toFixed(2));
-        }
-        else if (sys_name === "FullTimeLimit") {            
-            $('#mod_sys_ffl_required').val(formatDollar(Number(pdsystem[i][2]), 2));
-        }
-        else if (sys_name === "PartTimeLimit") {            
-            $('#mod_sys_pfl_required').val(formatDollar(Number(pdsystem[i][2]), 2));
-        }
-    }
-}
-
-function updatePDSystem() {
-    var mod_sys_brk_cost = revertDollar($('#mod_sys_brk_cost').val());
-    db_updatePDSystem(1, mod_sys_brk_cost);
-    
-    var mod_sys_lun_cost = revertDollar($('#mod_sys_lun_cost').val());
-    db_updatePDSystem(2, mod_sys_lun_cost);
-    
-    var mod_sys_din_cost = revertDollar($('#mod_sys_din_cost').val());
-    db_updatePDSystem(3, mod_sys_din_cost);
-    
-    var mod_sys_mil_cost = revertDollar($('#mod_sys_mil_cost').val());
-    db_updatePDSystem(4, mod_sys_mil_cost);
-    
-    var mod_sys_fh_required = Number($('#mod_sys_fh_required').val());
-    db_updatePDSystem(5, mod_sys_fh_required);
-    
-    var mod_sys_ph_required = Number($('#mod_sys_ph_required').val());
-    db_updatePDSystem(6, mod_sys_ph_required);
-    
-    var mod_sys_ffl_required = revertDollar($('#mod_sys_ffl_required').val());
-    db_updatePDSystem(7, mod_sys_ffl_required);
-    
-    var mod_sys_pfl_required = revertDollar($('#mod_sys_pfl_required').val());
-    db_updatePDSystem(8, mod_sys_pfl_required);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

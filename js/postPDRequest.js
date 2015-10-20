@@ -1,18 +1,19 @@
+var pre_sub_date = "";
+
 var m_hrs_step = null;
 var m_hrs_status = null;
 var m_reimb_step = null;
 var m_reimb_status = null;
-
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {
     if (sessionStorage.key(0) !== null) {     
         if (sessionStorage.getItem('m_PDRequestID') !== null) {
             setDefaultSetting();
-            getPDSystem();
             getActiveFundingSrcList();
             
             PDRequestID = sessionStorage.getItem('m_PDRequestID');
             getSelectPDRequest();
+            getPDSystem();
             getSelectPDReqUserInfo();
             getSelectJustArea();
             getSelectNarrative();
@@ -818,6 +819,7 @@ function getSelectPDRequest() {
         ResourceTypeID = pd_request[0]['ResourceTypeID'];
         StatusID = pd_request[0]['StatusID'];
         PDReqStepID = pd_request[0]['PDReqStepID'];
+        pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
     }
 }
 
@@ -1291,7 +1293,7 @@ function getResourceTypeID(ResourceType) {
 
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

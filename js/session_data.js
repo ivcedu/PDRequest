@@ -106,6 +106,24 @@ function isValidEmailAddress(emailAddress) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function convertDBDateToString(date_time) {
+    if (date_time === null || date_time === "") {
+        return "";
+    }
+    else {
+        var a = date_time.split(" ");
+        var d = a[0].split("-");
+        var t = a[1].split(":");
+        var sel_date_time = new Date(d[0],(d[1]-1),d[2],t[0],t[1],t[2]);
+
+        var day = sel_date_time.getDate();
+        var mon = sel_date_time.getMonth()+1;
+        var yrs = sel_date_time.getFullYear();
+
+        return mon + "/" + day + "/" + yrs;
+    }
+}
+
 function convertDBDateTimeToString(date_time) {
     if (date_time === null || date_time === "") {
         return "";

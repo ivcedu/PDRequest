@@ -1,12 +1,14 @@
+var pre_sub_date = "";
+
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) { 
         if (sessionStorage.getItem('m_PDRequestID') !== null) {
             setDefaultSetting();
-            getPDSystem();
 
             PDRequestID = sessionStorage.getItem('m_PDRequestID');
             getSelectPDRequest();
+            getPDSystem();
             getSelectJustArea();
             getSelectNarrative();
             getSelectPAReqInfo1();
@@ -52,7 +54,7 @@ function setClearJustArea() {
 ////////////////////////////////////////////////////////////////////////////////
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem();
+    pdsystem = db_getPDSystem(pre_sub_date);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -114,6 +116,7 @@ function getSelectPDRequest() {
         ResourceTypeID = pd_request[0]['ResourceTypeID'];
         StatusID = pd_request[0]['StatusID'];
         PDReqStepID = pd_request[0]['PDReqStepID'];
+        pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
     }
 }
 
