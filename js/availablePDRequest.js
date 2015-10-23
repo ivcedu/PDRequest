@@ -57,12 +57,14 @@ $(document).ready(function() {
         sessionStorage.setItem('m_PDRequestID', new_pd_request_ID);
         window.open('prePDRequest.html', '_self');
         $('#mod_popup_option').modal('hide');
+        return false;
     });
     
     // modal open to print view click //////////////////////////////////////////
     $('#mod_open_print_view').click(function() {
         sessionStorage.setItem('m_PDRequestID', pd_request_ID);
         window.open('printAvailPDRequest.html', '_blank');
+        $('#mod_popup_option').modal('hide');
         return false;
     });
     

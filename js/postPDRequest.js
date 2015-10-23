@@ -554,7 +554,7 @@ function updatePDReqHrsSections() {
 }
 
 function updatePDReqReimbSections() {
-    if (m_reimb_status === "4") {
+    if (m_reimb_status === "4" || m_reimb_status === "7") {
         updatePDReqReimbPostActivity();
     }
     else {
@@ -716,42 +716,42 @@ function updateComments(submit) {
 ////////////////////////////////////////////////////////////////////////////////
 function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {    
     if (ResourceTypeID === "1") {
-        if ((m_hrs_step === "1" && m_hrs_status === "4") || (m_hrs_step === "2" && m_hrs_status === "5")) {
-            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
-            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
-        }
-        else if (m_hrs_step === "1" && m_hrs_status === "5") {
+        if (m_hrs_step === "1" && m_hrs_status === "5") {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 1, hrs_status_id);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 1, hrs_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
         }
     }
     else if (ResourceTypeID === "2") {
-        if ((m_reimb_step === "1" && m_reimb_status === "4") || (m_reimb_step === "1" && m_reimb_status === "7") || (m_reimb_step === "2" && m_reimb_status === "5")) {
-            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
-            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
-        }
-        else if (m_reimb_step === "1" && m_reimb_status === "5") {
+        if (m_reimb_step === "1" && m_reimb_status === "5") {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 1, reimb_status_id);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 1, reimb_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
         }
     }
     else {
-        if ((m_hrs_step === "1" && m_hrs_status === "4") || (m_hrs_step === "2" && m_hrs_status === "5")) {
-            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
-            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
-        }
-        else if (m_hrs_step === "1" && m_hrs_status === "5") {
+        if (m_hrs_step === "1" && m_hrs_status === "5") {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 1, hrs_status_id);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 1, hrs_status_id, "");
         }
-        
-        if ((m_reimb_step === "1" && m_reimb_status === "4") || (m_reimb_step === "1" && m_reimb_status === "7") || (m_reimb_step === "2" && m_reimb_status === "5")) {
-            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
-            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
+        else {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
         }
-        else if (m_reimb_step === "1" && m_reimb_status === "5") {
+        
+        if (m_reimb_step === "1" && m_reimb_status === "5") {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 1, reimb_status_id);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 1, reimb_status_id, "");
+        }
+        else {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
         }
     }
 }
@@ -763,7 +763,7 @@ function updatePDReqHRProcessStatusDate() {
         }
     }
     
-    if (m_reimb_status === "4") {
+    if (m_reimb_status === "4" || m_reimb_status === "7") {
         if (m_reimb_step === "1") {
             db_updatePDReqHRProcessReimbStatusDate(PDRequestID, false, false, false, true, false, false);
         }
@@ -1073,6 +1073,7 @@ function getSelectPDReqReimb() {
         $('#post_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtRequest']), 2));
         $('#post_total_amount_pending_funds').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtPendingFunds']), 2));
         $('#post_total_amount_approved').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtApproved']), 2));
+        $('#post_total_amount_not_approved').html(formatDollar(Number(pd_req_reimb[0]['PostTotalAmtNotApproved']), 2));
     }
     
     setPDReqFundSrc();
@@ -1626,14 +1627,35 @@ function getPA2FileIndex(fl_name, f_name) {
 function addLogHistorySaveAsDraft() {
     var log_msg = "";
     if (ResourceTypeID === "1") {
-        log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft";
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            log_msg += "Hours Post-activity save as draft";
+        }
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft";
+        }
     }
     else if (ResourceTypeID === "2") {
-        log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " save as draft";
+        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+            log_msg += "Reimbursement Post-activity save as draft";
+        }
+        else {
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " save as draft";
+        }
     }
     else {
-        log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft\n";
-        log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " save as draft";
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            log_msg += "Hours Post-activity save as draft\n";
+        }
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft\n";
+        }
+        
+        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+            log_msg += "Reimbursement Post-activity save as draft\n";
+        }
+        else {
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " save as draft\n";
+        }
     }
     
     db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg.trim());
@@ -1650,11 +1672,11 @@ function addLogHistorySubmitted() {
         }
     }
     else if (ResourceTypeID === "2") {
-        if (m_reimb_step === "1" && m_reimb_status === "4") {
+        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
             log_msg += "Reimbursement Post-activity submitted";
         }
         else {
-            log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " submitted";
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
         }
     }
     else {
@@ -1665,11 +1687,11 @@ function addLogHistorySubmitted() {
             log_msg += "Hours " + $('#hrs_current_step').html() + " submitted\n";
         }
         
-        if (m_reimb_step === "1" && m_reimb_status === "4") {
+        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
             log_msg += "Reimbursement Post-activity submitted";
         }
         else {
-            log_msg += "Reimbursement  " + $('#reimb_current_step').html() + " submitted";
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
         }
     }
     
@@ -1701,6 +1723,8 @@ function sendPostActivityCreatorSubmitted() {
 
 function sendPostActivityApproverSubmitted() {
     var approver_email = "bmckim@ivc.edu";
+    // testing
+    approver_email = "presidenttest@ivc.edu";
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').html();
     
@@ -1718,6 +1742,8 @@ function sendPostActivityApproverSubmitted() {
 
 function sendPostActivityApproverMoreInfo() {
     var approver_email = "bmckim@ivc.edu";
+    // testing
+    approver_email = "presidenttest@ivc.edu";
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').html();
     

@@ -17,7 +17,8 @@ $(document).ready(function() {
     });
     
     $('#nav_close').click(function() {
-        window.close();
+        window.open('availableFlexWeek.html', '_self');
+        return false;
     });
 });
 

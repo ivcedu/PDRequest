@@ -1437,6 +1437,20 @@ function db_insertPDSystem(PDSystem, ApplyDate, PDAmt) {
     return ResultID;
 }
 
+function db_insertPDSystemLog(LoginName, Note) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertPDSystemLog.php",
+        data:{LoginName:LoginName, Note:Note},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
 // update DB ///////////////////////////////////////////////////////////////////
 function db_updateLogin(LoginID, LoginName, LoginEmail, LoginDepart, LoginPhone, LoginDiv, LoginEType) {
     var Result = false;

@@ -78,9 +78,11 @@ $(document).ready(function() {
         var system_app_date_list = $('#system_app_date_list').val();
         if (system_app_date_list === "New System Setting") {
             addPDSystemValues();
+            alert("New PD System Setting has been entered successfully");
         }
         else {
             updatePDSystemValues();
+            alert(system_app_date_list + " PD System Setting has been updated successfully");
         }
         
         setPDSettingApplyDate();
@@ -188,6 +190,8 @@ function addPDSystemValues() {
     db_insertPDSystem("FullTimeLimit", sel_apply_date, sel_ft_limit);
     var sel_pt_limit = revertDollar($('#sel_pt_limit').val());
     db_insertPDSystem("PartTimeLimit", sel_apply_date, sel_pt_limit);
+    
+    addPDSystemLog(" add " + sel_apply_date + " new system setting");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,4 +215,24 @@ function updatePDSystemValues() {
     db_updatePDSystem("FullTimeLimit", apply_date, sel_apply_date, sel_ft_limit);
     var sel_pt_limit = revertDollar($('#sel_pt_limit').val());
     db_updatePDSystem("PartTimeLimit", apply_date, sel_apply_date, sel_pt_limit);
+    
+    addPDSystemLog(" update " + apply_date + " new system setting");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function addPDSystemLog(str_log_status) {
+    var login_name = sessionStorage.getItem('m_loginName');
+    var note = login_name + str_log_status + "\n";
+    
+    note += "PD System Apply Date: " + $('#sel_apply_date').val() + "\n";
+    note += "Breakfast: " + $('#sel_breakfast').val() + "\n";
+    note += "Lunch: " + $('#sel_lunch').val() + "\n";
+    note += "Dinner: " + $('#sel_dinner').val() + "\n";
+    note += "Mileage: " + $('#sel_mileage').val() + "\n";
+    note += "Total FH Required: " + $('#sel_fh_required').val() + "\n";
+    note += "Total PH Required: " + $('#sel_ph_required').val() + "\n";
+    note += "Full Time Limit: " + $('#sel_ft_limit').val() + "\n";
+    note += "Part Time Limit: " + $('#sel_pt_limit').val() + "\n";
+    
+    db_insertPDSystemLog(login_name, note);
 }
