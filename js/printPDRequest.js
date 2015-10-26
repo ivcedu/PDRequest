@@ -15,7 +15,7 @@ var hrs_status_id = null;
 var reimb_step_id = null;
 var reimb_status_id = null;
 
-var pre_sub_date = "";
+var fiscal_yrs = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) { 
@@ -131,7 +131,7 @@ function setClearJustArea() {
 ////////////////////////////////////////////////////////////////////////////////
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -195,7 +195,7 @@ function getSelectPDRequest() {
     ResourceTypeID = pd_request[0]['ResourceTypeID'];
     StatusID = pd_request[0]['StatusID'];
     PDReqStepID = pd_request[0]['PDReqStepID'];
-    pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
+    fiscal_yrs = pd_request[0]['FiscalYrs'];
 
     setResourceTypeStepStatus();
 }

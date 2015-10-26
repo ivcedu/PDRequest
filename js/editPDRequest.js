@@ -1,8 +1,12 @@
 var pd_limit = 0.0;
 var amount_convert = 0.0;
 var available_amount = 0.0;
-var pre_sub_date = "";
+var fiscal_yrs = "";
 
+var hrs_step_id = null;
+var hrs_status_id = null;
+var reimb_step_id = null;
+var reimb_status_id = null;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {    
     if (sessionStorage.key(0) !== null) { 
@@ -15,12 +19,12 @@ window.onload = function() {
             setDefaultSetting();
             getSelectPDRequest();
             getPDSystem();
+            getSelectResourceType();
             getSelectPDReqUserInfo();
             getSelectJustArea();
             getSelectNarrative();
             getSelectPAReqInfo1();
             getSelectPAReqInfo2();
-            getSelectResourceType();
             getTransactionHistory();
         }
     }
@@ -31,16 +35,16 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {       
-    $('#print').click(function() {
-        window.print();
-    });
-    
     $('#nav_home').click(function() {
         window.open('home.html', '_self');
     });
     
     $('#nav_admin').click(function() {
         window.open('administrator.html', '_self');
+    });
+    
+    $('#nav_print').click(function() {
+        window.print();
     });
     
     $('#pre_app_hrs').change(function() {      
@@ -169,7 +173,7 @@ function setClearJustArea() {
 ////////////////////////////////////////////////////////////////////////////////
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -214,33 +218,65 @@ function getSelectPDRequest() {
     var pd_request = new Array();
     pd_request = db_getPDRequest(PDRequestID);
     
-    if (pd_request.length === 1) {
-        $('#print_title').html(pd_request[0]['ActTitle']);
-        
-        $('#activity_title').html(pd_request[0]['ActTitle']);
-        if (pd_request[0]['FiscalYrs'] !== null) {
-            $('#fiscal').html(pd_request[0]['FiscalYrs']);
-        }
-        $('#activity_organizer').html(pd_request[0]['ActOrganizer']);
-        $('#activity_city').html(pd_request[0]['ActCity']);
-        $('#activity_state').html(getActStateByID(pd_request[0]['ActStateID']));
-        $('#activity_description').html(pd_request[0]['ActDescrip'].replace(/\n/g, "<br>"));
-        $('#activity_link').html(pd_request[0]['ActLink']);
-        $('#start_date').html(pd_request[0]['StartDate']);
-        $('#end_date').html(pd_request[0]['EndDate']);
-        $('#current_date').html(pd_request[0]['CreateDate']);
-        
-        LoginID = pd_request[0]['LoginID'];
-        ResourceTypeID = pd_request[0]['ResourceTypeID'];
-        StatusID = pd_request[0]['StatusID'];
-        PDReqStepID = pd_request[0]['PDReqStepID'];
-        if (PDReqStepID === "1") {
-            $('#post_reim_section_13_admin').hide();
-        }
-        pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
-    }
+    $('#pdrequest_id').html(PDRequestID);
+    $('#req_num').html(pd_request[0]['ReqNum']);
+    
+    $('#activity_title').html(pd_request[0]['ActTitle']);
+    $('#fiscal').html(pd_request[0]['FiscalYrs']);
+    $('#activity_organizer').html(pd_request[0]['ActOrganizer']);
+    $('#activity_city').html(pd_request[0]['ActCity']);
+    $('#activity_state').html(getActStateByID(pd_request[0]['ActStateID']));
+    $('#activity_description').html(pd_request[0]['ActDescrip'].replace(/\n/g, "<br>"));
+    $('#activity_link').html(pd_request[0]['ActLink']);
+    $('#start_date').html(pd_request[0]['StartDate']);
+    $('#end_date').html(pd_request[0]['EndDate']);
+    $('#current_date').html(pd_request[0]['CreateDate']);
+
+    LoginID = pd_request[0]['LoginID'];
+    ResourceTypeID = pd_request[0]['ResourceTypeID'];
+    StatusID = pd_request[0]['StatusID'];
+    PDReqStepID = pd_request[0]['PDReqStepID'];
+    fiscal_yrs = pd_request[0]['FiscalYrs'];
+    
+    setResourceTypeStepStatus();
 }
 
+function setResourceTypeStepStatus() {
+    var str_html = "";
+    if (ResourceTypeID === "1") {
+        str_html += hrsStepStatusHTML();
+    }
+    else if (ResourceTypeID === "2") {
+        str_html += reimbStepStatusHTML();
+    }
+    else {
+        str_html += hrsStepStatusHTML();
+        str_html += reimbStepStatusHTML();
+    }
+    $('#pd_req_status').append(str_html);
+}
+
+function hrsStepStatusHTML() {
+    var str_html = "<div class='row-fluid'>";
+    str_html += "<div class='span3' style='padding-top: 5px;'>Hours</div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='cur_hrs_step'></div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='cur_hrs_status'></div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='cur_hrs_dtstamp'></div>";
+    str_html += "</div>";
+    return str_html;
+}
+
+function reimbStepStatusHTML() {
+    var str_html = "<div class='row-fluid'>";
+    str_html += "<div class='span3' style='padding-top: 5px;'>Reimbursement</div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='cur_reimb_step'></div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='cur_reimb_status'></div>";
+    str_html += "<div class='span3' style='padding-top: 5px;' id='cur_reimb_dtstamp'></div>";
+    str_html += "</div>";
+    return str_html;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function getSelectPDReqUserInfo() {
     var pd_req_user_info = new Array();
     pd_req_user_info = db_getPDReqUserInfo(PDRequestID);
@@ -405,33 +441,29 @@ function paReqInfo2AttachFileHTML(index, file_link_name, file_name) {
 }
 
 function getSelectResourceType() {
-    var resource_type = new Array();
-    resource_type = db_getResourceType();
+    var resource_type = db_getResourceTypeByID(ResourceTypeID);
+    $('#resource_type').html(resource_type);
     
-    for(var i = 0; i < resource_type.length; i++) { 
-        var ID = resource_type[i][0];
-        if (ID === ResourceTypeID) {
-            $('#resource_type').html(resource_type[i][1]);
-            if (ResourceTypeID === "1") {
-                $('#request_hours').show();
-                getSelectPDReqHours();
-            }
-            else if (ResourceTypeID === "2") {
-                $('#request_reimbursement').show();
-                getSelectPDReqReimb();
-            }
-            else {
-                $('#request_hours').show();
-                $('#request_reimbursement').show();
-                getSelectPDReqHours();
-                getSelectPDReqReimb();
-            }
-            
-            getSelectStepStatus();
-            getSelectTransaction();
-            break;
-        }
+    if (ResourceTypeID === "1") {
+        getHrsStepStatus();
+        $('#request_hours').show();
+        getSelectPDReqHours();
     }
+    else if (ResourceTypeID === "2") {
+        getReimbStepStatus();
+        $('#request_reimbursement').show();
+        getSelectPDReqReimb();
+    }
+    else {
+        getHrsStepStatus();
+        getReimbStepStatus();
+        $('#request_hours').show();
+        $('#request_reimbursement').show();
+        getSelectPDReqHours();
+        getSelectPDReqReimb();
+    }
+    
+    getSelectTransaction();
 }
 
 function getSelectPDReqHours() {
@@ -549,34 +581,47 @@ function getSelectPDReqReimb() {
         $('#post_total_amount_not_approved').val(formatDollar(post_total_amt_not_approved, 2));
     }
     
+    setPDReqFundSrc();
+    setPDReqFSComments();
     setSelectPDLimitSummary();
 }
 
-function getSelectStepStatus() {
-    var pd_step_status = new Array();
-    pd_step_status = db_getPDRequest(PDRequestID);
-    if (pd_step_status.length === 1) {
-        PDReqStepID = pd_step_status[0]['PDReqStepID'];
-        var pd_req_step_list = new Array();
-        pd_req_step_list = db_getPDReqStep(PDReqStepID);
-        if (pd_req_step_list.length === 1) {
-            $('#current_step').html(pd_req_step_list[0][1]);
-        }
-        
-        StatusID = pd_step_status[0]['StatusID'];
-        var status_list = new Array();
-        status_list = db_getStatus(StatusID);
-        if (status_list.length === 1) {
-            $('#current_status').html(status_list[0][1]);
-        }
-        
-        $('#pdrequest_id').html(PDRequestID);
-        $('#pre_submission_date').html(convertDBDateTimeToString(pd_step_status[0]['PreSubDate']));
-        $('#post_submission_date').html(convertDBDateTimeToString(pd_step_status[0]['PostSubDate']));
-        $('#req_num').html(pd_step_status[0]['ReqNum']);
-    }
+////////////////////////////////////////////////////////////////////////////////
+function getHrsStepStatus() {
+    var result = new Array();
+    result = db_getPDReqHRProcess(PDRequestID);
+    hrs_step_id = result[0]['HrsStepID'];
+    hrs_status_id = result[0]['HrsStatusID'];
+    
+    var ar_step = new Array();
+    ar_step = db_getPDReqStep(hrs_step_id);
+    $('#cur_hrs_step').html(ar_step[0]['PDReqStep']);
+    
+    var ar_status = new Array();
+    ar_status = db_getStatus(hrs_status_id);
+    $('#cur_hrs_status').html(ar_status[0]['Status']);
+    
+    $('#cur_hrs_dtstamp').html(convertDBDateTimeToString(result[0]['HrsDTStamp']));
 }
 
+function getReimbStepStatus() {
+    var result = new Array();
+    result = db_getPDReqHRProcess(PDRequestID);
+    reimb_step_id = result[0]['ReimbStepID'];
+    reimb_status_id = result[0]['ReimbStatusID'];
+    
+    var ar_step = new Array();
+    ar_step = db_getPDReqStep(reimb_step_id);
+    $('#cur_reimb_step').html(ar_step[0]['PDReqStep']);
+    
+    var ar_status = new Array();
+    ar_status = db_getStatus(reimb_status_id);
+    $('#cur_reimb_status').html(ar_status[0]['Status']);
+    
+    $('#cur_reimb_dtstamp').html(convertDBDateTimeToString(result[0]['ReimbDTStamp']));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function getSelectTransaction() {
     var transaction = new Array();
     transaction = db_getTransaction(PDRequestID);
@@ -594,6 +639,49 @@ function getSelectTransaction() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+function setPDReqFundSrc() {
+    var result = new Array();
+    result = db_getPDReqFundSrcPrintView(PDRequestID, PDReqReimbID);
+    
+    $("#active_fund_src_list").empty();
+    var fs_list_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        fs_list_html += getPrintFundingSrcListHTML(i, result[i]['FSSelected'], result[i]['FundSrcType']);
+    }
+    $("#active_fund_src_list").append(fs_list_html);
+}
+
+function getPrintFundingSrcListHTML(index, fs_selected, fund_src_type) {
+    var str_html = "";
+    var new_row_start = "<div class='row' style='padding-top: 5px;'>";
+    var new_row_end = "</div>";
+    
+    if (fs_selected === "1") {
+        str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' disabled checked></div>";
+    }
+    else {
+        str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' disabled></div>";
+    }
+    str_html += "<div class='span3' style='padding-top: 5px;'>" + fund_src_type + "</div>";
+    
+    if (Number(index) % 3 === 0) {
+        return new_row_start + str_html;
+    }
+    else if (Number(index) % 3 === 2) {
+        return str_html + new_row_end;
+    }
+    else {
+        return str_html;
+    }
+}
+
+function setPDReqFSComments() {
+    var fs_comments =  db_getPDReqFSComments(PDRequestID, PDReqReimbID);
+    $('#fs_comments').html(fs_comments.replace(/\n/g, "<br>"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function setSelectPDLimitSummary() {
     getSelectPDLimit();
     calculateEncumberedAmt();
@@ -609,17 +697,17 @@ function setSelectPDLimitSummary() {
 }
 
 function calculateEncumberedAmt() {
-    var result = new Array(new Array()); 
-    result = db_getPDReqReimbByLogin(LoginID);
+    var result = new Array(); 
+    result = db_getPDReqReimbByLoginFiscalYrs(LoginID, $('#fiscal').html());
     
     for(var i = 0; i < result.length; i++) {
-        if (result[i]['PDReqStepID'] === "1") {
-            if (result[i]['StatusID'] === "4") {
+        if (result[i]['ReimbStepID'] === "1") {
+            if (result[i]['ReimbStatusID'] === "4") {
                 amount_convert += Number(result[i]['PreTotalAmtApproved']);
             }
         }
         else {
-            if (result[i]['StatusID'] === "4") {
+            if (result[i]['ReimbStatusID'] === "4") {
                 var dist_paid = Number(result[i]['DistPaid']);
                 if (dist_paid === 0) {
                     amount_convert += Number(result[i]['PostTotalAmtApproved']);
@@ -635,8 +723,8 @@ function calculateEncumberedAmt() {
                     }
                 }
             }
-            else if (result[i]['StatusID'] === "2" || result[i]['StatusID'] === "5" || result[i]['StatusID'] === "7") {
-                amount_convert += Number(result[i]['PreTotalAmtApproved']);
+            else if (result[i]['ReimbStatusID'] === "2" || result[i]['ReimbStatusID'] === "5" || result[i]['ReimbStatusID'] === "7") {
+                amount_convert += Number(result[i]['PostTotalAmtApproved']);
             }
         }
     }
@@ -659,7 +747,7 @@ function getSelectPDLimit() {
 
 function getSystemPDAmount(pd_system) {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

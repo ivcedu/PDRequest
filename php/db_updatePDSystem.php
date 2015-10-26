@@ -2,13 +2,13 @@
     require("config.php");
 
     $PDSystem = filter_input(INPUT_POST, 'PDSystem');
-    $ApplyDateList = filter_input(INPUT_POST, 'ApplyDateList');
-    $ApplyDate = filter_input(INPUT_POST, 'ApplyDate');
+    $FiscalYrs = filter_input(INPUT_POST, 'FiscalYrs');
+    $SelFiscalYrs = filter_input(INPUT_POST, 'SelFiscalYrs');
     $PDAmt = filter_input(INPUT_POST, 'PDAmt');
 
     $query = "UPDATE [IVCPD].[dbo].[PDSystem] "
-                ."SET PDAmt = '".$PDAmt."', ApplyDate = '".$ApplyDate."' "
-                ."WHERE PDSystem = '".$PDSystem."' AND ApplyDate = '".$ApplyDateList."'";
+                ."SET PDAmt = '".$PDAmt."', FiscalYrs = '".$SelFiscalYrs."' "
+                ."WHERE PDSystem = '".$PDSystem."' AND FiscalYrs = '".$FiscalYrs."'";
 
     $cmd = $dbConn->prepare($query);
     $result = $cmd->execute(); 

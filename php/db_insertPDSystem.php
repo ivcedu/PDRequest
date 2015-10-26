@@ -2,11 +2,11 @@
     require("config.php");
     
     $PDSystem = filter_input(INPUT_POST, 'PDSystem');
-    $ApplyDate = filter_input(INPUT_POST, 'ApplyDate');
+    $FiscalYrs = filter_input(INPUT_POST, 'FiscalYrs');
     $PDAmt = filter_input(INPUT_POST, 'PDAmt');
 
-    $query = "INSERT INTO [IVCPD].[dbo].[PDSystem] (PDSystem, ApplyDate, PDAmt) "
-                ."VALUES ('$PDSystem', '$ApplyDate', '$PDAmt')";  
+    $query = "INSERT INTO [IVCPD].[dbo].[PDSystem] (PDSystem, FiscalYrs, PDAmt) "
+                ."VALUES ('$PDSystem', '$FiscalYrs', '$PDAmt')";  
     
     $cmd = $dbConn->prepare($query);
     $cmd->execute();

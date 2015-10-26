@@ -1,4 +1,4 @@
-var pre_sub_date = "";
+var fiscal_yrs = "";
 
 var m_hrs_step = null;
 var m_hrs_status = null;
@@ -796,31 +796,27 @@ function getSelectPDRequest() {
     var pd_request = new Array();
     pd_request = db_getPDRequest(PDRequestID);
     
-    if (pd_request.length === 1) {
-        $('#activity_title').html(pd_request[0]['ActTitle']);
-        if (pd_request[0]['FiscalYrs'] !== null) {
-            $('#fiscal').html(pd_request[0]['FiscalYrs']);
-        }
-        $('#activity_organizer').html(pd_request[0]['ActOrganizer']);
-        $('#activity_city').html(pd_request[0]['ActCity']);
-        $('#activity_state').html(getActStateByID(pd_request[0]['ActStateID']));
-        $('#activity_description').html(pd_request[0]['ActDescrip'].replace(/\n/g, "<br>"));
-        $('#activity_link').html(pd_request[0]['ActLink']);
-        $('#start_date').html(pd_request[0]['StartDate']);
-        $('#end_date').html(pd_request[0]['EndDate']);
-        $('#current_date').html(pd_request[0]['CreateDate']);
-        $('#user_comments').val(pd_request[0]['Comments']);
-        if (pd_request[0]['ckbCom'] === "1") {
-            $("#ckb_comments").prop('checked', true);
-            $('#comments_block').show();
-        }
-        
-        LoginID = pd_request[0]['LoginID'];
-        ResourceTypeID = pd_request[0]['ResourceTypeID'];
-        StatusID = pd_request[0]['StatusID'];
-        PDReqStepID = pd_request[0]['PDReqStepID'];
-        pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
+    $('#activity_title').html(pd_request[0]['ActTitle']);
+    $('#fiscal').html(pd_request[0]['FiscalYrs']);
+    $('#activity_organizer').html(pd_request[0]['ActOrganizer']);
+    $('#activity_city').html(pd_request[0]['ActCity']);
+    $('#activity_state').html(getActStateByID(pd_request[0]['ActStateID']));
+    $('#activity_description').html(pd_request[0]['ActDescrip'].replace(/\n/g, "<br>"));
+    $('#activity_link').html(pd_request[0]['ActLink']);
+    $('#start_date').html(pd_request[0]['StartDate']);
+    $('#end_date').html(pd_request[0]['EndDate']);
+    $('#current_date').html(pd_request[0]['CreateDate']);
+    $('#user_comments').val(pd_request[0]['Comments']);
+    if (pd_request[0]['ckbCom'] === "1") {
+        $("#ckb_comments").prop('checked', true);
+        $('#comments_block').show();
     }
+
+    LoginID = pd_request[0]['LoginID'];
+    ResourceTypeID = pd_request[0]['ResourceTypeID'];
+    StatusID = pd_request[0]['StatusID'];
+    PDReqStepID = pd_request[0]['PDReqStepID'];
+    fiscal_yrs = pd_request[0]['FiscalYrs'];
 }
 
 function getSelectPDReqUserInfo() {
@@ -1294,7 +1290,7 @@ function getResourceTypeID(ResourceType) {
 
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

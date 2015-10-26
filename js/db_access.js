@@ -123,12 +123,12 @@ function db_getResourceTypeByID(ResourceTypeID) {
     return result;
 }
 
-function db_getPDSystem(ApplyDate) {
+function db_getPDSystem(FiscalYrs) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getPDSystem.php",
-        data:{ApplyDate:ApplyDate},
+        data:{FiscalYrs:FiscalYrs},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -137,11 +137,11 @@ function db_getPDSystem(ApplyDate) {
     return result;
 }
 
-function db_getPDSystemApplyDateList() {
+function db_getPDSystemFiscalYrsList() {
     var result = new Array();
     $.ajax({
         type:"POST",
-        url:"php/db_getPDSystemApplyDateList.php",
+        url:"php/db_getPDSystemFiscalYrsList.php",
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -150,12 +150,12 @@ function db_getPDSystemApplyDateList() {
     return result;
 }
 
-function db_getPDSystemByApplyDate(ApplyDate) {
+function db_getPDSystemByFiscalYrs(FiscalYrs) {
     var result = new Array();
     $.ajax({
         type:"POST",
-        url:"php/db_getPDSystemByApplyDate.php",
-        data:{ApplyDate:ApplyDate},
+        url:"php/db_getPDSystemByFiscalYrs.php",
+        data:{FiscalYrs:FiscalYrs},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -1423,12 +1423,12 @@ function db_insertPDReqFSComments(PDRequestID, PDReqReimbID, Comments) {
     return ResultID;
 }
 
-function db_insertPDSystem(PDSystem, ApplyDate, PDAmt) {
+function db_insertPDSystem(PDSystem, FiscalYrs, PDAmt) {
     var ResultID = "";
     $.ajax({
         type:"POST",
         url:"php/db_insertPDSystem.php",
-        data:{PDSystem:PDSystem, ApplyDate:ApplyDate, PDAmt:PDAmt},
+        data:{PDSystem:PDSystem, FiscalYrs:FiscalYrs, PDAmt:PDAmt},
         async: false,  
         success:function(data) {
             ResultID = JSON.parse(data);
@@ -1839,12 +1839,12 @@ function db_updateTracDoc(TracDocID, ReqNum, DistPaid, Comments) {
     return Result;
 }
 
-function db_updatePDSystem(PDSystem, ApplyDateList, ApplyDate, PDAmt) {
+function db_updatePDSystem(PDSystem, FiscalYrs, SelFiscalYrs, PDAmt) {
     var Result = false;
     $.ajax({
         type:"POST",
         url:"php/db_updatePDSystem.php",
-        data:{PDSystem:PDSystem, ApplyDateList:ApplyDateList, ApplyDate:ApplyDate, PDAmt:PDAmt},
+        data:{PDSystem:PDSystem, FiscalYrs:FiscalYrs, SelFiscalYrs:SelFiscalYrs, PDAmt:PDAmt},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

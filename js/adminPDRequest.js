@@ -1,7 +1,7 @@
 var pd_limit = 0.0;
 var amount_convert = 0.0;
 var available_amount = 0.0;
-var pre_sub_date = "";
+var fiscal_yrs = "";
 
 var hrs_step_id = null;
 var hrs_status_id = null;
@@ -170,7 +170,7 @@ function setClearJustArea() {
 ////////////////////////////////////////////////////////////////////////////////
 function getPDSystem() {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -217,7 +217,6 @@ function getSelectPDRequest() {
     
     $('#pdrequest_id').html(PDRequestID);
     $('#req_num').html(pd_request[0]['ReqNum']);
-    $('#print_title').html(pd_request[0]['ActTitle']);
 
     $('#activity_title').html(pd_request[0]['ActTitle']);
     $('#fiscal').html(pd_request[0]['FiscalYrs']);
@@ -234,7 +233,7 @@ function getSelectPDRequest() {
     ResourceTypeID = pd_request[0]['ResourceTypeID'];
     StatusID = pd_request[0]['StatusID'];
     PDReqStepID = pd_request[0]['PDReqStepID'];
-    pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
+    fiscal_yrs = pd_request[0]['FiscalYrs'];
 
     setResourceTypeStepStatus();
 }
@@ -274,6 +273,7 @@ function reimbStepStatusHTML() {
     return str_html;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 function getSelectPDReqUserInfo() {
     var pd_req_user_info = new Array();
     pd_req_user_info = db_getPDReqUserInfo(PDRequestID);
@@ -636,7 +636,7 @@ function getReimbStepStatus() {
     }
     else {
         $('.admin_post_reimb_class').show();
-        if (reimb_status_id !== "2") {
+        if (reimb_status_id !== "2" && reimb_status_id !== "7") {
             $('.admin_post_reimb_class').prop('readonly', true);
         }
     }
@@ -773,7 +773,7 @@ function getSelectPDLimit() {
 
 function getSystemPDAmount(pd_system) {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

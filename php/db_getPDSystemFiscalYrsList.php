@@ -1,9 +1,7 @@
 <?php
     require("config.php");
       
-    $ApplyDate = filter_input(INPUT_POST, 'ApplyDate');
-    
-    $query = "SELECT * FROM [IVCPD].[dbo].[PDSystem] WHERE ApplyDate = '".$ApplyDate."'";
+    $query = "SELECT FiscalYrs FROM [IVCPD].[dbo].[PDSystem] GROUP BY FiscalYrs ORDER BY FiscalYrs DESC";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 

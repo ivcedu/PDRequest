@@ -6,7 +6,7 @@ var pd_limit = 0.0;
 var amount_convert = 0.0;
 var available_amount = 0.0;
 
-var pre_sub_date = "";
+var fiscal_yrs = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {
     if (sessionStorage.key(0) !== null) {
@@ -129,7 +129,7 @@ function setPDAmountSummary() {
     
     var pd_request = new Array();
     pd_request = db_getPDRequest(url_pd_request_id);
-    pre_sub_date = convertDBDateToString(pd_request[0]['PreSubDate']);
+    fiscal_yrs = pd_request[0]['FiscalYrs'];
     
     if (login_etype === "Full Time Faculty") {
         getSystemPDAmount("FullTimeLimit");
@@ -143,7 +143,7 @@ function setPDAmountSummary() {
 
 function getSystemPDAmount(pd_system) {
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];

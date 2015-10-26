@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         <meta http-equiv="Cache-Control" content="no-cache"/>
-        <title id="print_title"></title>
+        <title>Administrator PD Request</title>
         <!-- include css -->
         <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
         <!-- application css -->
@@ -17,40 +17,36 @@
             <div class="navbar navbar-inverse hidden-print">
                 <div class="navbar-inner" id="navigation">
                     <ul class="nav">
-                        <li><a href=# id="print"><i class="icon-print icon-white"></i> Print</a></li>
-                    </ul>
-                    <ul class="nav pull-right">
                         <li><a href=# id="nav_home"><i class="icon-home icon-white"></i> Home</a></li>
                     </ul>
-                    <ul class="nav pull-right">
-                        <li id="show_admin"><a href=# id="nav_admin"><i class="icon-lock icon-white"></i> Admin</a></li>
+                    <ul class="nav">
+                        <li><a href=# id="nav_admin"><i class="icon-lock icon-white"></i> Admin</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a href=# id="nav_print"><i class="icon-print icon-white"></i> Print</a></li>
                     </ul>
                 </div>
             </div>            
-
+            
             <!-- status -->
-            <div class="row" style="padding-bottom: 10px">
-                <div class="span12 text-center print-color-box" style="background-color: gray; color: white">Professional Development Request Status</div>
+            <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="print-color-box text-center" style="background-color: gray; color: white; height: 20px;">Professional Development Request Status</div>
             </div>
-            <div class="row">
-                <div class="span2" style="padding-top: 5px;">ID:</div>
+            <div class="row-fluid">
+                <div class="span1" style="padding-top: 5px;">ID:</div>
                 <div class="span2" style="padding-top: 5px; font-weight: bold;" id="pdrequest_id"></div>
-                <div class="span2" style="padding-top: 5px;">Step:</div>
-                <div class="span2" style="padding-top: 5px; font-weight: bold;" id="current_step"></div>
-                <div class="span2" style="padding-top: 5px;">Status:</div>
-                <div class="span2" style="padding-top: 5px; font-weight: bold;" id="current_status"></div>
-            </div>
-            <div class="row">
-                <div class="span3" style="padding-top: 5px;">Pre-activity submission date:</div>
-                <div class="span3" style="padding-top: 5px; font-weight: bold;" id="pre_submission_date"></div>
-                <div class="span3" style="padding-top: 5px;">Post-activity submission date:</div>
-                <div class="span3" style="padding-top: 5px; font-weight: bold;" id="post_submission_date"></div>
-            </div>
-            <div class="row">
-                <div class="span3" style="padding-top: 5px;">Requisition Number:</div>
+                <div class="span3 offset3" style="padding-top: 5px;">Requisition Number:</div>
                 <div class="span3" style="padding-top: 5px; font-weight: bold;" id="req_num"></div>
             </div>
-            <div class="row">&nbsp;</div>
+            <div class="row-fluid" style="border-bottom: solid 2px; font-weight: bold;">
+                <div class="span3" style="padding-top: 5px;">Resource Type</div>
+                <div class="span3" style="padding-top: 5px;">Step</div>
+                <div class="span3" style="padding-top: 5px;">Status</div>
+                <div class="span3" style="padding-top: 5px;">DateTime Stamp</div>
+            </div>
+            <div id="pd_req_status">
+            </div>
+            <br>
 
             <!-- user information -->
             <div class="row" style="padding-bottom: 10px">
@@ -219,7 +215,7 @@
             <!-- request for hours -->
             <div id="request_hours">
                 <div class="row" style="padding-bottom: 10px">
-                    <div class="span12 text-center print-color-box" style="background-color: gray; color: white">Request for Hours</div>
+                    <div class="span12 text-center print-color-box" style="background-color: #0000FF; color: white">Request for Hours</div>
                 </div>
                 <div class="row text-center" style="font-weight: bold">No more than 19 hours per activity will be approved</div>
                 <div class="row" style="height: 35px;">
@@ -265,7 +261,7 @@
             <!-- request for reimbursement -->
             <div id="request_reimbursement">
                 <div class="row" style="padding-bottom: 10px">
-                    <div class="span12 text-center print-color-box" style="background-color: gray; color: white">Request for Reimbursement</div>
+                    <div class="span12 text-center print-color-box" style="background-color: #CC0000; color: white">Request for Reimbursement</div>
                 </div>
                 <div class="row" style="height: 35px;">
                     <div class="span6 text-center" style="font-weight: bold; border-bottom: 1px solid;">Description</div>
@@ -332,13 +328,17 @@
                     <div class="span2 offset1 text-center" style="padding-top: 5px;" id="pre_funding_other"></div>
                     <div class="span2 offset1 text-center" style="padding-top: 5px;" id="post_funding_other"></div>
                 </div>
-                <div class="row">
-                    <div class="span4" style="padding-top: 5px;">Is funding from Other Sources approved?</div>
-                    <div class="span1" style="padding-top: 5px;"><label class="radio"><input type="radio" name="rdo_fs_approval" disabled = "disabled" value="0" id="fs_approved_1">No</label></div>
-                    <div class="span1" style="padding-top: 5px;"><label class="radio"><input type="radio" name="rdo_fs_approval" disabled = "disabled" value="1" id="fs_approved_2">Yes</label></div>
-                    <div class="span1" style="padding-top: 5px;">Comments:</div>
-                    <div class="span5" style="padding-top: 5px; font-style: italic;" id="fs_comments"></div>
+                <!-- active funding src list -->
+                <div class="row-fluid">
+                    <div class="span12 text-center" style="padding-top: 5px; border-bottom: solid 1px;"><b>Reimbursement Funding Source(s) List</b></div>
                 </div>
+                <div id="active_fund_src_list"></div>
+                <br>
+                <div class="row-fluid">
+                    <div class="span2" style="padding-top: 5px;">Comments (optional):</div>
+                    <div class="span10" id="fs_comments"></div>
+                </div>
+                <!-- end of active funding src list -->               
                 <div class="row">
                     <div class="span6" style="padding-top: 5px;">Total Costs:</div>
                     <div class="span2 offset1 text-center" style="padding-top: 5px; font-weight: bold;" id="pre_total_cost"></div>

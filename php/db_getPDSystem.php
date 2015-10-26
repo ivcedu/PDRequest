@@ -1,9 +1,9 @@
 <?php
     require("config.php");
     
-    $ApplyDate = filter_input(INPUT_POST, 'ApplyDate');
+    $FiscalYrs = filter_input(INPUT_POST, 'FiscalYrs');
       
-    $query = "SELECT TOP 8 * FROM [IVCPD].[dbo].[PDSystem] WHERE ApplyDate <= '".$ApplyDate."' ORDER BY ApplyDate DESC";
+    $query = "SELECT TOP 8 * FROM [IVCPD].[dbo].[PDSystem] WHERE FiscalYrs <= '".$FiscalYrs."' ORDER BY FiscalYrs DESC, PDSystemID ASC";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 

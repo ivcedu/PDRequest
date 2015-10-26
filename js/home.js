@@ -1,5 +1,4 @@
 var login_etype = "";
-var pre_sub_date = "";
 
 var sys_hrs = 0.0;
 var pd_request_hrs = 0.0;
@@ -20,12 +19,6 @@ window.onload = function() {
         if (usr_profile === "") {
             var login_name = sessionStorage.getItem('m_loginName');
             $('#logn_name').text('Welcome ' + login_name);
-            
-            var cur_date = new Date();
-            var day = cur_date.getDate();
-            var mon = cur_date.getMonth()+1;
-            var yr = cur_date.getFullYear();
-            pre_sub_date = mon + "/" + day + "/" + yr;
 
             setAdminOption();
             setAllFiscalYrs();
@@ -466,8 +459,9 @@ function setTotalFlexHrsRequired() {
 }
 
 function getSystemFlexHrs() {
+    var all_fiscal_yrs = $('#all_fiscal_yrs').val();
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(all_fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
@@ -513,8 +507,9 @@ function setPDAmountSummary(fiscal_yrs) {
 }
 
 function getSystemPDAmount(pd_system) {
+    var all_fiscal_yrs = $('#all_fiscal_yrs').val();
     var pdsystem = new Array();
-    pdsystem = db_getPDSystem(pre_sub_date);
+    pdsystem = db_getPDSystem(all_fiscal_yrs);
     
     for(var i = 0; i < pdsystem.length; i++) {
         var sys_name = pdsystem[i][1];
