@@ -740,7 +740,7 @@ function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 1, hrs_status_id);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 1, hrs_status_id, "");
         }
-        else {
+        else if (m_hrs_step === "1" && m_hrs_status === "4") {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
         }
@@ -749,7 +749,7 @@ function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 1, reimb_status_id);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 1, reimb_status_id, "");
         }
-        else {
+        else if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
         }
@@ -1642,14 +1642,14 @@ function addLogHistorySaveAsDraft() {
         if (m_hrs_step === "1" && m_hrs_status === "4") {
             log_msg += "Hours Post-activity save as draft\n";
         }
-        else {
+        else if ((m_hrs_step === "1" || m_hrs_step === "2") && (m_hrs_status === "1" || m_hrs_status === "5")) {
             log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft\n";
         }
         
         if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
             log_msg += "Reimbursement Post-activity save as draft\n";
         }
-        else {
+        else if ((m_reimb_step === "1" || m_reimb_step === "2") && (m_reimb_status === "1" || m_reimb_status === "5")) {
             log_msg += "Reimbursement " + $('#reimb_current_step').html() + " save as draft\n";
         }
     }
@@ -1679,14 +1679,14 @@ function addLogHistorySubmitted() {
         if (m_hrs_step === "1" && m_hrs_status === "4") {
             log_msg += "Hours Post-activity submitted\n";
         }
-        else {
+        else if ((m_hrs_step === "1" || m_hrs_step === "2") && (m_hrs_status === "1" || m_hrs_status === "5")) {
             log_msg += "Hours " + $('#hrs_current_step').html() + " submitted\n";
         }
         
         if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
             log_msg += "Reimbursement Post-activity submitted";
         }
-        else {
+        else if ((m_reimb_step === "1" || m_reimb_step === "2") && (m_reimb_status === "1" || m_reimb_status === "5")) {
             log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
         }
     }
