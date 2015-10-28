@@ -133,7 +133,8 @@ $(document).ready(function() {
             else if ((hrs_step === "Pre-activity" && hrs_status === "Approved") 
                     || (hrs_step === "Pre-activity" && hrs_status === "More Information")
                     || (hrs_step === "Post-activity" && hrs_status === "More Information")
-                    || (reimb_step === "Pre-activity" && reimb_status === "Approved") 
+                    || (reimb_step === "Pre-activity" && reimb_status === "Approved")
+                    || (reimb_step === "Pre-activity" && reimb_status === "Approved Pending Funds") 
                     || (reimb_step === "Pre-activity" && reimb_status === "More Information")
                     || (reimb_step === "Post-activity" && reimb_status === "More Information")) {
                 window.open('postPDRequest.html', '_self');
