@@ -204,10 +204,6 @@ $(document).ready(function() {
         preCalculateTotalCost();
     });
     
-//    $("input[name=rdo_fs_approval]:radio").change(function () {
-//        preCalculateTotalCost();
-//    });
-    
     // user save as draft click ////////////////////////////////////////////////
     $('#btn_save_draft').click(function() {         
         var err = formMainValidation(false);
@@ -950,14 +946,7 @@ function getSelectPDReqReimb() {
         $('#other_cost_description').val(pd_req_reimb[0]['OtherSource']);
         $('#pre_other_cost').val(formatDollar(Number(pd_req_reimb[0]['PreOthCost']), 2));
         $('#pre_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PreSubTotal']), 2));
-        $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
-        
-//        var fs_approved = pd_req_reimb[0]['FSApproved'];
-//        if (fs_approved === "1") {
-//            $('#fs_approved_2').prop("checked", true);
-//        }
-//        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
-        
+        $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);        
         $('#pre_funding_other').val(formatDollar(Number(pd_req_reimb[0]['PreFunCost']), 2));
         $('#pre_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTotalCost']), 2));
         $('#pre_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtRequest']), 2));
@@ -1032,24 +1021,6 @@ function getSelectStepStatus() {
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
     }
-
-//    var pd_step_status = new Array();
-//    pd_step_status = db_getPDRequest(PDRequestID);
-//    if (pd_step_status.length === 1) {
-//        PDReqStepID = pd_step_status[0]['PDReqStepID'];
-//        var pd_req_step_list = new Array();
-//        pd_req_step_list = db_getPDReqStep(PDReqStepID);
-//        if (pd_req_step_list.length === 1) {
-//            $('#current_step').html(pd_req_step_list[0][1]);
-//        }
-//        
-//        StatusID = pd_step_status[0]['StatusID'];
-//        var status_list = new Array();
-//        status_list = db_getStatus(StatusID);
-//        if (status_list.length === 1) {
-//            $('#current_status').html(status_list[0][1]);
-//        }
-//    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1262,17 +1233,7 @@ function preCalculateSubTotal() {
 
 function preCalculateTotalCost() {
     var pre_sub_total = Number(revertDollar($('#pre_sub_total').html()));
-    var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));
-//    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
-//    var pre_total_cost = 0;
-//    
-//    if (fs_approved === "1") {
-//        pre_total_cost = pre_sub_total - pre_funding_other;
-//    }
-//    else {
-//        pre_total_cost = pre_sub_total;
-//    }
-    
+    var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));    
     var pre_total_cost = pre_sub_total - pre_funding_other;
     if (pre_total_cost === 0) {
         $('#pre_total_cost').html('');

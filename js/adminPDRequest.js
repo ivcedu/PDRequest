@@ -516,15 +516,7 @@ function getSelectPDReqReimb() {
         $('#pre_other_cost').html(formatDollar(pre_oth_cost, 2));
         var pre_sub_total = Number(pd_req_reimb[0]['PreSubTotal']);
         $('#pre_sub_total').html(formatDollar(pre_sub_total, 2));
-//        $('#funding_other_source').html(pd_req_reimb[0]['FundingSource']);
-//        var fs_approved = pd_req_reimb[0]['FSApproved'];
-//        if (fs_approved === "1") {
-//            $('#fs_approved_2').prop("checked", true);
-//        }
-//        else {
-//            $('#fs_approved_1').prop("checked", true);
-//        }
-//        $('#fs_comments').html(pd_req_reimb[0]['FSComments']);
+        $('#funding_other_source').html(pd_req_reimb[0]['FundingSource']);
         var pre_fun_cost = Number(pd_req_reimb[0]['PreFunCost']);
         $('#pre_funding_other').html(formatDollar(pre_fun_cost, 2));
         var pre_total_cost = Number(pd_req_reimb[0]['PreTotalCost']);

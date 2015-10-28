@@ -222,10 +222,6 @@ $(document).ready(function() {
         preCalculateTotalCost();
     });
     
-//    $("input[name=rdo_fs_approval]:radio").change(function () {
-//        preCalculateTotalCost();
-//    });
-    
     // post-activity reimbursement fields change ///////////////////////////////   
     $('#post_reg_fee').change(function() {      
         var input_val = Number($(this).val().replace(/[^0-9\.]/g, ''));       
@@ -313,10 +309,6 @@ $(document).ready(function() {
         postCalculateSubTotal();
         postCalculateTotalCost();
     });
-    
-//    $("input[name=rdo_fs_approval]:radio").change(function () {
-//        postCalculateTotalCost();
-//    });
     
     // user save as draft click ////////////////////////////////////////////////
     $('#btn_save_draft').click(function() {
@@ -690,18 +682,6 @@ function updatePDReqReimbPostActivity() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//function updateStep(new_step_ID) {
-//    if (PDRequestID !== "") {
-//        db_updatePDRequestStep(PDRequestID, new_step_ID);
-//    }
-//}
-
-//function updateStatus(new_status_ID) {
-//    if (PDRequestID !== "") {
-//        db_updatePDRequestStatus(PDRequestID, new_status_ID);
-//    }
-//}
-
 function updateComments(submit) {
     var ckb_comm = false;
     var comments = "";
@@ -1032,17 +1012,7 @@ function getSelectPDReqReimb() {
         $('#other_cost_description').val(pd_req_reimb[0]['OtherSource']);
         $('#pre_other_cost').val(formatDollar(Number(pd_req_reimb[0]['PreOthCost']), 2));
         $('#pre_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PreSubTotal']), 2));
-        $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);
-        
-//        var fs_approved = pd_req_reimb[0]['FSApproved'];
-//        if (fs_approved === "1") {
-//            $('#fs_approved_2').prop("checked", true);
-//        }
-//        else {
-//            $('#fs_approved_1').prop("checked", true);
-//        }
-//        $('#fs_comments').val(pd_req_reimb[0]['FSComments']);
-        
+        $('#funding_other_source').val(pd_req_reimb[0]['FundingSource']);        
         $('#pre_funding_other').val(formatDollar(Number(pd_req_reimb[0]['PreFunCost']), 2));
         $('#pre_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTotalCost']), 2));
         $('#pre_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtRequest']), 2));
@@ -1551,17 +1521,7 @@ function postCalculateSubTotal() {
 ////////////////////////////////////////////////////////////////////////////////
 function preCalculateTotalCost() {
     var pre_sub_total = Number(revertDollar($('#pre_sub_total').html()));
-    var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));
-//    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
-//    var pre_total_cost = 0;
-//    
-//    if (fs_approved === "1") {
-//        pre_total_cost = pre_sub_total - pre_funding_other;
-//    }
-//    else {
-//        pre_total_cost = pre_sub_total;
-//    }
-    
+    var pre_funding_other = Number(revertDollar($('#pre_funding_other').val()));    
     var pre_total_cost = pre_sub_total - pre_funding_other;
     if (pre_total_cost === 0) {
         $('#pre_total_cost').html('');
@@ -1575,17 +1535,7 @@ function preCalculateTotalCost() {
 
 function postCalculateTotalCost() {
     var post_sub_total = Number(revertDollar($('#post_sub_total').html()));
-    var post_funding_other = Number(revertDollar($('#post_funding_other').val()));
-//    var fs_approved = $('input[name="rdo_fs_approval"]:checked').val();
-//    var post_total_cost = 0;
-//    
-//    if (fs_approved === "1") {
-//        post_total_cost = post_sub_total - post_funding_other;
-//    }
-//    else {
-//        post_total_cost = post_sub_total;
-//    }
-    
+    var post_funding_other = Number(revertDollar($('#post_funding_other').val()));    
     var post_total_cost = post_sub_total - post_funding_other;
     if (post_total_cost === 0) {
         $('#post_total_cost').html('');

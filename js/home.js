@@ -392,12 +392,6 @@ function getLoginUserFlexWeekListByFiscalYrs(fiscal_yrs) {
             var end_date = result[i]['EndDate'] + " " + result[i]['EndTime'];
             fw_list_html += setFlexWeekListHTML(result[i]['FlexWeekID'], result[i]['ActTitle'], result[i]['ActPresenter'], start_date, end_date, result[i]['FWHours']);
             flex_hrs += Number(result[i]['FWHours']);
-            
-//            setFlexWeekEnableFields(result[i]['FlexWeekID'], result[i]['FWHours'], result[i]['Confirmed'], end_date);
-//            
-//            if (result[i]['Confirmed'] === "1") {
-//                flex_hrs += Number(result[i]['FWHours']);
-//            } 
         }
     }
     $("#fw_body_tr").append(fw_list_html);
@@ -410,32 +404,10 @@ function setFlexWeekListHTML(FlexWeekID, act_title, act_presenter, start_date, e
     tbody += "<td class='span2'>" + start_date + "</td>";  
     tbody += "<td class='span2'>" + end_date + "</td>";
     tbody += "<td class='span1' style='text-align: center;'>" + fw_hrs + "</td>";
-//    tbody += "<td class='span1'><input class='span12' type='text' style='text-align: center;' id='flex_hrs_" + FlexWeekID + "'/></td>";
-//    tbody += "<td class='span1 text-center' style='padding-bottom: 7px;'><input type='checkbox' id='ckb_flex_week_confirmed_" + FlexWeekID + "'></td>"; 
-//    tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_flex_week_ID_" + FlexWeekID + "'><i class='icon-trash icon-black'></i></button></td>";
     tbody += "</tr>";
     
     return tbody;
 }
-
-//function setFlexWeekEnableFields(FlexWeekID, fw_hrs, confirmed, end_date) {
-//    var dt_end_date = new Date(end_date);
-//    var dt_cur_date = new Date();
-//    
-//    $('#flex_hrs_' + FlexWeekID).val(fw_hrs);
-//    $('#flex_hrs_' + FlexWeekID).prop('disabled', true);
-//    
-//    if (dt_cur_date > dt_end_date) {
-//        if (confirmed === "1") {
-//            $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('checked', true);
-//            $('#flex_hrs_' + FlexWeekID).prop('disabled', false);
-//        }
-//        $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('disabled', false);
-//    }
-//    else {
-//        $('#ckb_flex_week_confirmed_' + FlexWeekID).prop('disabled', true);
-//    }
-//}
 
 ////////////////////////////////////////////////////////////////////////////////
 function setTotalFlexHrsRequired() {

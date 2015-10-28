@@ -464,6 +464,7 @@ function getSelectPDReqReimb() {
         $('#other_cost_description').html(pd_req_reimb[0]['OtherSource']);
         $('#pre_other_cost').html(formatDollar(Number(pd_req_reimb[0]['PreOthCost']), 2));
         $('#pre_sub_total').html(formatDollar(Number(pd_req_reimb[0]['PreSubTotal']), 2));
+        $('#funding_other_source').html(pd_req_reimb[0]['FundingSource']);
         $('#pre_funding_other').html(formatDollar(Number(pd_req_reimb[0]['PreFunCost']), 2));
         $('#pre_total_cost').html(formatDollar(Number(pd_req_reimb[0]['PreTotalCost']), 2));
         $('#pre_total_amount_request').html(formatDollar(Number(pd_req_reimb[0]['PreTotalAmtRequest']), 2));
@@ -1455,21 +1456,6 @@ function pdf_setRequestForReimbursement() {
         }
     }
     
-//    line_pos += 0.25;
-//    pdf.text(margin_x, line_pos, 'Is funding from Other Sources approved?');
-//    if ($('#fs_approved_1').is(':checked')) {
-//        pdf.circle(margin_x + (column_width * 2) + 0.1, line_pos - 0.05, 0.05, 'F');
-//        pdf.circle(margin_x + (column_width * 2.5) + 0.1, line_pos - 0.05, 0.05);
-//    }
-//    else {
-//        pdf.circle(margin_x + (column_width * 2) + 0.1, line_pos - 0.05, 0.05);
-//        pdf.circle(margin_x + (column_width * 2.5) + 0.1, line_pos - 0.05, 0.05, 'F');
-//    }
-//    pdf.text(margin_x + (column_width * 2) + 0.2 , line_pos, 'No');
-//    pdf.text(margin_x + (column_width * 2.5) + 0.2 , line_pos, 'Yes');   
-//    pdf.text(margin_x + (column_width * 3), line_pos, 'Comments:');
-//    pdf.text(margin_x + (column_width * 3.5), line_pos, $('#fs_comments').html());
-    
     line_pos += 0.25;
     pdf.text(margin_x, line_pos, 'Total Costs:');
     pdf.setFontType("bold");
@@ -1528,14 +1514,6 @@ function pdf_setRequestForReimbursement() {
     text = $('#post_total_amount_not_approved').html();
     x_offset = getPDFCenterOffset(pdf, column_width, text);
     pdf.text(margin_x + (column_width * 5) + x_offset, line_pos, text);
-    
-//    line_pos += 0.25;
-//    pdf.text(margin_x, line_pos, 'PD Limit:');
-//    pdf.text(margin_x + column_width, line_pos, $('#sys_pd_limit_amount').html());
-//    pdf.text(margin_x + (column_width * 2), line_pos, 'PD Encumbered:');
-//    pdf.text(margin_x + (column_width * 3), line_pos, $('#pd_amount_convert').html());
-//    pdf.text(margin_x + (column_width * 4), line_pos, 'PD Available:');
-//    pdf.text(margin_x + (column_width * 5), line_pos, $('#pd_available_amount').html());
 }
 
 function pdf_setCommentsHistory() {
