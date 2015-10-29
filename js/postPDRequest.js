@@ -312,6 +312,7 @@ $(document).ready(function() {
     
     // user save as draft click ////////////////////////////////////////////////
     $('#btn_save_draft').click(function() {
+        $(this).prop('disabled', true);
         updateJustArea();
         updateNarrative();
         updatePAReqInfo1();
@@ -326,9 +327,11 @@ $(document).ready(function() {
     
     // user submit click ///////////////////////////////////////////////////////
     $('#btn_submit').click(function() {
+        $(this).prop('disabled', true);
         var err = formMainValidation();
         if (err !== "") {
             alert(err);
+            $(this).prop('disabled', false);
             return false;
         }
         
@@ -716,20 +719,27 @@ function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
         }
     }
     else {
-        if (m_hrs_step === "1" && m_hrs_status === "5") {
+        if ((m_hrs_step === "1" && m_hrs_status === "1") 
+            || (m_hrs_step === "1" && m_hrs_status === "5")) {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 1, hrs_status_id);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 1, hrs_status_id, "");
         }
-        else if (m_hrs_step === "1" && m_hrs_status === "4") {
+        else if ((m_hrs_step === "1" && m_hrs_status === "4")
+                || (m_hrs_step === "2" && m_hrs_status === "1")
+                || (m_hrs_step === "2" && m_hrs_status === "5")) {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 2, hrs_status_id);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, hrs_status_id, "");
         }
         
-        if (m_reimb_step === "1" && m_reimb_status === "5") {
+        if ((m_reimb_step === "1" && m_reimb_status === "1")
+            || (m_reimb_step === "1" && m_reimb_status === "5")) {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 1, reimb_status_id);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 1, reimb_status_id, "");
         }
-        else if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+        else if ((m_reimb_step === "1" && m_reimb_status === "4")
+                || (m_reimb_step === "1" && m_reimb_status === "7")
+                || (m_reimb_step === "2" && m_reimb_status === "1")
+                || (m_reimb_step === "2" && m_reimb_status === "5")) {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 2, reimb_status_id);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, reimb_status_id, "");
         }

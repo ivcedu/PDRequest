@@ -1390,7 +1390,7 @@ function sendPostActivityCreatorDenied(rtype) {
     
     var subject = rtype + " Post-activity Professional Development Request has been Denied";
     var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
+    message += "Your " + rtype + " Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
     message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";

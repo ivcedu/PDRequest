@@ -205,10 +205,12 @@ $(document).ready(function() {
     });
     
     // user save as draft click ////////////////////////////////////////////////
-    $('#btn_save_draft').click(function() {         
+    $('#btn_save_draft').click(function() { 
+        $(this).prop('disabled', true);
         var err = formMainValidation(false);
         if (err !== "") {
             alert(err);
+            $(this).prop('disabled', false);
             return false;
         }
         
@@ -227,6 +229,7 @@ $(document).ready(function() {
     
     // user submit click ///////////////////////////////////////////////////////
     $('#btn_submit').click(function() {
+        $(this).prop('disabled', true);
         var err = formMainValidation(false);
         err += formNarrativeValidation();
         if (err !== "") {
