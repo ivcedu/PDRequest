@@ -593,17 +593,14 @@ function getHrsStepStatus() {
     $('#cur_hrs_dtstamp').html(convertDBDateTimeToString(result[0]['HrsDTStamp']));
     
     if (hrs_step_id === "1") {
-        if (hrs_status_id !== "2" && hrs_status_id !== "6") {
+        if (hrs_status_id === "2") {
             $('.admin_pre_hrs_class').prop('readonly', false);
-        }
-        else {
-            $('.admin_pre_hrs_class').prop('readonly', true);
         }
     }
     else {
         $('.admin_post_hrs_class').show();
-        if (hrs_status_id !== "2") {
-            $('.admin_post_hrs_class').prop('readonly', true);
+        if (hrs_status_id === "2") {
+            $('.admin_post_hrs_class').prop('readonly', false);
         }
     }
     
@@ -629,17 +626,14 @@ function getReimbStepStatus() {
     $('#cur_reimb_dtstamp').html(convertDBDateTimeToString(result[0]['ReimbDTStamp']));
     
     if (reimb_step_id === "1") {
-        if (reimb_status_id !== "2" && reimb_status_id !== "6") {
+        if (reimb_status_id === "2") {
             $('.admin_pre_reimb_class').prop('readonly', false);
-        }
-        else {
-            $('.admin_pre_reimb_class').prop('readonly', true);
         }
     }
     else {
         $('.admin_post_reimb_class').show();
-        if (reimb_status_id !== "2" && reimb_status_id !== "7") {
-            $('.admin_post_reimb_class').prop('readonly', true);
+        if (reimb_status_id === "2" || reimb_status_id === "7") {
+            $('.admin_post_reimb_class').prop('readonly', false);
         }
     }
     
