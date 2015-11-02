@@ -593,7 +593,12 @@ function getHrsStepStatus() {
     $('#cur_hrs_dtstamp').html(convertDBDateTimeToString(result[0]['HrsDTStamp']));
     
     if (hrs_step_id === "1") {
-        $('.admin_pre_hrs_class').prop('readonly', false);
+        if (hrs_status_id !== "2" && hrs_status_id !== "6") {
+            $('.admin_pre_hrs_class').prop('readonly', false);
+        }
+        else {
+            $('.admin_pre_hrs_class').prop('readonly', true);
+        }
     }
     else {
         $('.admin_post_hrs_class').show();
@@ -624,7 +629,12 @@ function getReimbStepStatus() {
     $('#cur_reimb_dtstamp').html(convertDBDateTimeToString(result[0]['ReimbDTStamp']));
     
     if (reimb_step_id === "1") {
-        $('.admin_pre_reimb_class').prop('readonly', false);
+        if (reimb_status_id !== "2" && reimb_status_id !== "6") {
+            $('.admin_pre_reimb_class').prop('readonly', false);
+        }
+        else {
+            $('.admin_pre_reimb_class').prop('readonly', true);
+        }
     }
     else {
         $('.admin_post_reimb_class').show();
