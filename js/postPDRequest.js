@@ -704,7 +704,8 @@ function saveDraftPDReqHRProcess() {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 2, 1);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, 1, "");
         }
-        else {
+        else if ((m_hrs_step === "1" && m_hrs_status === "1") || (m_hrs_step === "1" && m_hrs_status === "5")
+                || (m_hrs_step === "2" && m_hrs_status === "1") || (m_hrs_step === "2" && m_hrs_status === "5")) {
             db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, 1);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, 1, "");
         }
@@ -724,7 +725,8 @@ function saveDraftPDReqHRProcess() {
             db_updatePDReqHRProcessHrs(PDRequestID, null, 2, 1);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, 1, "");
         }
-        else {
+        else if ((m_hrs_step === "1" && m_hrs_status === "1") || (m_hrs_step === "1" && m_hrs_status === "5")
+                || (m_hrs_step === "2" && m_hrs_status === "1") || (m_hrs_step === "2" && m_hrs_status === "5")) {
             db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, 1);
             db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, 1, "");
         }
@@ -733,7 +735,8 @@ function saveDraftPDReqHRProcess() {
             db_updatePDReqHRProcessReimb(PDRequestID, null, 2, 1);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, 1, "");
         }
-        else {
+        else if ((m_reimb_step === "1" && m_reimb_status === "1") || (m_reimb_step === "1" && m_reimb_status === "5")
+                || (m_reimb_step === "2" && m_reimb_status === "1") || (m_reimb_step === "2" && m_reimb_status === "5")) {
             db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, 1);
             db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, 1, "");
         }
@@ -1140,31 +1143,49 @@ function getSelectStepStatus() {
     m_reimb_status = result[0]['ReimbStatusID'];
     
     if (ResourceTypeID === "1") {
-        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
-        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
-        if (m_hrs_status === "1" || m_hrs_status === "4") {
+        if (m_hrs_step === "2") {
             $('#post_activity_required_info').show();
         }
+        else {
+            if (m_hrs_status === "1" || m_hrs_status === "4") {
+                $('#post_activity_required_info').show();
+            }
+        }
+        
+        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
+        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
         $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
         $('#hrs_current_status').html(hrs_status[0]['Status']);
     }
     else if (ResourceTypeID === "2") {
-        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
-        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
-        if (m_reimb_status === "1" || m_reimb_status === "4" || m_reimb_status === "7") {
+        if (m_reimb_step === "2") {
             $('#post_activity_required_info').show();
         }
+        else {
+            if (m_reimb_status === "1" || m_reimb_status === "4" || m_reimb_status === "7") {
+                $('#post_activity_required_info').show();
+            }
+        }
+        
+        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
+        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
     }
     else {
+        if (m_hrs_step === "2" || m_reimb_step === "2") {
+            $('#post_activity_required_info').show();
+        }
+        else {
+            if (m_hrs_status === "1" || m_hrs_status === "4" || m_reimb_status === "1" || m_reimb_status === "4" || m_reimb_status === "7") {
+                $('#post_activity_required_info').show();
+            }
+        }
+        
         var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
         var hrs_status = db_getStatus(result[0]['HrsStatusID']);
         var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
         var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
-        if (m_hrs_status === "1" || m_hrs_status === "4" || m_reimb_status === "1" || m_reimb_status === "4" || m_reimb_status === "7") {
-            $('#post_activity_required_info').show();
-        }
         $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
         $('#hrs_current_status').html(hrs_status[0]['Status']);
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);

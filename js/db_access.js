@@ -709,6 +709,20 @@ function db_getTracDoc(TracDocID) {
     return result;
 }
 
+function db_getTracDocByPDRequestID(PDRequestID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getTracDocByPDRequestID.php",
+        data:{PDRequestID:PDRequestID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 function db_getPDRequestFiscalYrs() {
     var result = new Array();
     $.ajax({
