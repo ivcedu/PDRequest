@@ -2,6 +2,8 @@ var fiscal_yrs = "";
 
 var m_hrs_step = "1";
 var m_reimb_step = "1";
+var m_hrs_status = null;
+var m_reimb_status = null;
 
 var pd_limit = 0.0;
 var amount_convert = 0.0;
@@ -223,7 +225,7 @@ $(document).ready(function() {
         updatePDReqHRProcess(1, 1);
         
         // insert log
-        db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "pre-activity save as draft");
+        addLogHistorySaveAsDraft();
         window.open('home.html', '_self');
     });
     
@@ -248,11 +250,17 @@ $(document).ready(function() {
         updatePDReqHRProcessSubmissionDate();
         addTransaction();
         
-        db_deleteTracDoc(PDRequestID);
-        db_insertTracDoc(PDRequestID);
+        var result = new Array();
+        result = db_getTracDocByPDRequestID(PDRequestID);
+        if (result.length === 0) {
+            db_insertTracDoc(PDRequestID);
+        }
+        
+//        db_deleteTracDoc(PDRequestID);
+//        db_insertTracDoc(PDRequestID);
         
         // insert log
-        db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), "submit pre-activity");
+        addLogHistorySubmitted();
         sendPreActivityCreatorSubmitted();
         sendPreActivityApproverSubmitted();
 
@@ -429,6 +437,8 @@ function setHoursSetting() {
     $('#comments_section').show();
     $('#hrs_step_status').show();
     $('#reimb_step_status').hide();
+    
+    $('.pre_hrs_class').prop('readonly', true);
 }
 
 function setReimbursementSetting() {
@@ -441,6 +451,9 @@ function setReimbursementSetting() {
     $('#comments_section').show();
     $('#hrs_step_status').hide();
     $('#reimb_step_status').show();
+    
+    $('.pre_reimb_class').prop('readonly', true);
+    $('.fs_list_class').prop('disabled', true);
     
     setPDLimitSummary();
 }
@@ -455,6 +468,10 @@ function setHoursReimbursementSetting() {
     $('#comments_section').show();
     $('#hrs_step_status').show();
     $('#reimb_step_status').show();
+    
+    $('.pre_hrs_class').prop('readonly', true);
+    $('.pre_reimb_class').prop('readonly', true);
+    $('.fs_list_class').prop('disabled', true);
     
     setPDLimitSummary();
 }
@@ -834,15 +851,19 @@ function getSelectResourceType() {
             if (ResourceTypeID === "1") {
                 setHoursSetting();
                 getSelectPDReqHours();
+                getSelectHrsSection();
             }
             else if (ResourceTypeID === "2") {
                 setReimbursementSetting();
                 getSelectPDReqReimb();
+                getSelectReimbSection();
             }
             else {
                 setHoursReimbursementSetting();
                 getSelectPDReqHours();
                 getSelectPDReqReimb();
+                getSelectHrsSection();
+                getSelectReimbSection();
             }
 
             getSelectTransaction();
@@ -1000,6 +1021,8 @@ function getSelectStepStatus() {
     
     m_hrs_step = result[0]['HrsStepID'];
     m_reimb_step = result[0]['ReimbStepID'];
+    m_hrs_status = result[0]['HrsStatusID'];
+    m_reimb_status = result[0]['ReimbStatusID'];
     
     if (ResourceTypeID === "1") {
         var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
@@ -1023,6 +1046,20 @@ function getSelectStepStatus() {
         var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function getSelectHrsSection() {
+    if (m_hrs_status === "1" || m_hrs_status === "5") {
+        $('.pre_hrs_class').prop('readonly', false);
+    }
+}
+
+function getSelectReimbSection() {
+    if (m_reimb_status === "1" || m_reimb_status === "5") {
+        $('.pre_reimb_class').prop('readonly', false);
+        $('.fs_list_class').prop('disabled', false);
     }
 }
 
@@ -1142,7 +1179,7 @@ function getActiveFundingSrcListHTML(index, fund_src_type_id, fund_src_type) {
     var new_row_start = "<div class='row' style='padding-top: 5px;'>";
     var new_row_end = "</div>";
     
-    str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' id='fs_selected_" + fund_src_type_id + "'></div>";
+    str_html += "<div class='span1 text-center' style='padding-top: 2px;'><input type='checkbox' class='fs_list_class' id='fs_selected_" + fund_src_type_id + "'></div>";
     str_html += "<div class='span3' style='padding-top: 5px;' id='fs_name_" + fund_src_type_id + "'>" + fund_src_type + "</div>";
     
     if (Number(index) % 3 === 0) {
@@ -1254,6 +1291,81 @@ function getFileIndex(fl_name, f_name) {
     temp = temp.replace("_" + f_name, "");
     
     return temp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function addLogHistorySaveAsDraft() {    
+    var log_msg = "";
+    if (ResourceTypeID === "1") {
+        if (m_hrs_status === "4") {
+            log_msg += "Hours Post-activity save as draft";
+        }
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft";
+        }
+    }
+    else if (ResourceTypeID === "2") {
+        if ((m_reimb_status === "4" || m_reimb_status === "7")) {
+            log_msg += "Reimbursement Post-activity save as draft";
+        }
+        else {
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " save as draft";
+        }
+    }
+    else {
+        if (m_hrs_status === "4") {
+            log_msg += "Hours Post-activity save as draft\n";
+        }
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " save as draft\n";
+        }
+        
+        if (m_reimb_status === "4" || m_reimb_status === "7") {
+            log_msg += "Reimbursement Post-activity save as draft\n";
+        }
+        else {
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " save as draft\n";
+        }
+    }
+    
+    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg.trim());
+}
+
+function addLogHistorySubmitted() {      
+    var log_msg = "";
+    if (ResourceTypeID === "1") {
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            log_msg += "Hours Post-activity submitted";
+        }
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " submitted";
+        }
+    }
+    else if (ResourceTypeID === "2") {
+        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+            log_msg += "Reimbursement Post-activity submitted";
+        }
+        else {
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
+        }
+    }
+    else {
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            log_msg += "Hours Post-activity submitted\n";
+        }
+        else {
+            log_msg += "Hours " + $('#hrs_current_step').html() + " submitted\n";
+        }
+        
+        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+            log_msg += "Reimbursement Post-activity submitted";
+        }
+        else {
+            log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
+        }
+    }
+    
+    db_insertLogHistory(PDRequestID, sessionStorage.getItem('m_loginName'), log_msg.trim());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
