@@ -629,7 +629,7 @@ function getReimbStepStatus() {
     $('#cur_reimb_dtstamp').html(convertDBDateTimeToString(result[0]['ReimbDTStamp']));
     
     if (reimb_step_id === "1") {
-        if (reimb_status_id === "2") {
+        if (reimb_status_id === "2" || reimb_status_id === "7") {
             $('.admin_pre_reimb_class').prop('readonly', false);
         }
     }

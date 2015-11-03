@@ -71,14 +71,18 @@ $(document).ready(function() {
         else if (resource_type === "Hours") {
             ResourceTypeID = getResourceTypeID(resource_type);
             setHoursSetting();
+            getSelectHrsSection();
         }
         else if (resource_type === "Reimbursement") {
             ResourceTypeID = getResourceTypeID(resource_type); 
             setReimbursementSetting();
+            getSelectReimbSection();
         }
         else {
             ResourceTypeID = getResourceTypeID(resource_type);      
             setHoursReimbursementSetting();
+            getSelectHrsSection();
+            getSelectReimbSection();
         }
         
         setStepStatus();
@@ -1051,13 +1055,13 @@ function getSelectStepStatus() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function getSelectHrsSection() {
-    if (m_hrs_status === "1" || m_hrs_status === "5") {
+    if (m_hrs_status === null || m_hrs_status === "1" || m_hrs_status === "5") {
         $('.pre_hrs_class').prop('readonly', false);
     }
 }
 
 function getSelectReimbSection() {
-    if (m_reimb_status === "1" || m_reimb_status === "5") {
+    if (m_reimb_status === null || m_reimb_status === "1" || m_reimb_status === "5") {
         $('.pre_reimb_class').prop('readonly', false);
         $('.fs_list_class').prop('disabled', false);
     }
