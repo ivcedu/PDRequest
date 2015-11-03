@@ -602,6 +602,9 @@ function getHrsStepStatus() {
         if (hrs_status_id === "2") {
             $('.admin_post_hrs_class').prop('readonly', false);
         }
+        else {
+            $('.admin_post_hrs_class').prop('readonly', true);
+        }
     }
     
     if (hrs_status_id !== "2") {
@@ -634,6 +637,9 @@ function getReimbStepStatus() {
         $('.admin_post_reimb_class').show();
         if (reimb_status_id === "2" || reimb_status_id === "7") {
             $('.admin_post_reimb_class').prop('readonly', false);
+        }
+        else {
+            $('.admin_post_reimb_class').prop('readonly', true);
         }
     }
     

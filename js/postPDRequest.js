@@ -319,6 +319,7 @@ $(document).ready(function() {
         updatePAReqInfo2();
         updateRequestDetail();
         updateComments(false);
+        saveDraftPDReqHRProcess();
         
         // insert log
         addLogHistorySaveAsDraft();
@@ -694,6 +695,49 @@ function updateComments(submit) {
     }
     
     db_updatePDRequestComments(PDRequestID, comments, ckb_comm);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function saveDraftPDReqHRProcess() {
+    if (ResourceTypeID === "1") {
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, 1);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, 1, "");
+        }
+        else {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, 1);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, 1, "");
+        }
+    }
+    else if (ResourceTypeID === "2") {
+        if ((m_reimb_step === "1" && m_reimb_status === "4") || (m_reimb_step === "1" && m_reimb_status === "7")) {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, 1);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, 1, "");
+        }
+        else {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, 1);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, 1, "");
+        }
+    }
+    else {
+        if (m_hrs_step === "1" && m_hrs_status === "4") {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, 2, 1);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, 2, 1, "");
+        }
+        else {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, 1);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, 1, "");
+        }
+        
+        if ((m_reimb_step === "1" && m_reimb_status === "4") || (m_reimb_step === "1" && m_reimb_status === "7")) {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, 2, 1);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, 2, 1, "");
+        }
+        else {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, 1);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, 1, "");
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1134,7 +1178,7 @@ function getSelectHrsSection() {
             $('.post_hrs_class').hide();
         }
         else {
-            $('.pre_hrs_class').prop('readonly', false);
+            $('.pre_hrs_class').prop('readonly', true);
         }
     }
     else if (m_hrs_status === "4" || m_hrs_status === "7") {
@@ -1167,7 +1211,7 @@ function getSelectReimbSection() {
             $('.post_reimb_class').hide();
         }
         else {
-            $('.pre_reimb_class').prop('readonly', false);
+            $('.pre_reimb_class').prop('readonly', true);
         }
     }
     else if (m_reimb_status === "4" || m_reimb_status === "7") {
