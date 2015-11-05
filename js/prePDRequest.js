@@ -260,9 +260,6 @@ $(document).ready(function() {
             db_insertTracDoc(PDRequestID);
         }
         
-//        db_deleteTracDoc(PDRequestID);
-//        db_insertTracDoc(PDRequestID);
-        
         // insert log
         addLogHistorySubmitted();
         sendPreActivityCreatorSubmitted();
@@ -661,17 +658,26 @@ function updatePDRequest(submit) {
 
 function updatePDReqHRProcess(hrs_status_id, reimb_status_id) {
     if (ResourceTypeID === "1") {
-        db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
-        db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, hrs_status_id, "");
+        if (m_hrs_status === null || m_hrs_status === "1" || m_hrs_status === "5") {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, hrs_status_id, "");
+        }
     }
     else if (ResourceTypeID === "2") {
-        db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
-        db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, reimb_status_id, "");
+        if (m_reimb_status === null || m_reimb_status === "1" || m_reimb_status === "5") {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, reimb_status_id, "");
+        }
     }
     else {
-        db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
-        db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
-        db_insertPDReqHRProcessLog(PDRequestID, null, m_hrs_step, hrs_status_id, "", null, m_reimb_step, reimb_status_id, "");
+        if (m_hrs_status === null || m_hrs_status === "1" || m_hrs_status === "5") {
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, hrs_status_id);
+            db_insertPDReqHRProcessLogHrs(PDRequestID, null, m_hrs_step, hrs_status_id, "");
+        }
+        if (m_reimb_status === null || m_reimb_status === "1" || m_reimb_status === "5") {
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+            db_insertPDReqHRProcessLogReimb(PDRequestID, null, m_reimb_step, reimb_status_id, "");
+        }
     } 
 }
 
@@ -1338,33 +1344,33 @@ function addLogHistorySaveAsDraft() {
 function addLogHistorySubmitted() {      
     var log_msg = "";
     if (ResourceTypeID === "1") {
-        if (m_hrs_step === "1" && m_hrs_status === "4") {
+        if (m_hrs_status === "4") {
             log_msg += "Hours Post-activity submitted";
         }
-        else {
+        else if (m_hrs_status === null || m_hrs_status === "1" || m_hrs_status === "5") {
             log_msg += "Hours " + $('#hrs_current_step').html() + " submitted";
         }
     }
     else if (ResourceTypeID === "2") {
-        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+        if (m_reimb_status === "4" || m_reimb_status === "7") {
             log_msg += "Reimbursement Post-activity submitted";
         }
-        else {
+        else if (m_reimb_status === null || m_reimb_status === "1" || m_reimb_status === "5") {
             log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
         }
     }
     else {
-        if (m_hrs_step === "1" && m_hrs_status === "4") {
+        if (m_hrs_status === "4") {
             log_msg += "Hours Post-activity submitted\n";
         }
-        else {
+        else if (m_hrs_status === null || m_hrs_status === "1" || m_hrs_status === "5") {
             log_msg += "Hours " + $('#hrs_current_step').html() + " submitted\n";
         }
         
-        if (m_reimb_step === "1" && (m_reimb_status === "4" || m_reimb_status === "7")) {
+        if (m_reimb_status === "4" || m_reimb_status === "7") {
             log_msg += "Reimbursement Post-activity submitted";
         }
-        else {
+        else if (m_reimb_status === null || m_reimb_status === "1" || m_reimb_status === "5") {
             log_msg += "Reimbursement " + $('#reimb_current_step').html() + " submitted";
         }
     }

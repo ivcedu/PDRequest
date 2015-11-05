@@ -129,9 +129,13 @@ $(document).ready(function() {
             if ((hrs_step === "Pre-activity" && hrs_status === "Draft" && reimb_step === "Pre-activity" && reimb_status === "Draft")
                 || (hrs_step === "Pre-activity" && hrs_status === "Draft" && reimb_step === "Pre-activity" && reimb_status === "More Information")
                 || (hrs_step === "Pre-activity" && hrs_status === "Draft" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+                || (hrs_step === "Pre-activity" && hrs_status === "Draft" && reimb_step === "Pre-activity" && reimb_status === "Denied")
                 || (hrs_step === "Pre-activity" && hrs_status === "More Information" && reimb_step === "Pre-activity" && reimb_status === "Draft")
                 || (hrs_step === "Pre-activity" && hrs_status === "More Information" && reimb_step === "Pre-activity" && reimb_status === "More Information")
                 || (hrs_step === "Pre-activity" && hrs_status === "More Information" && reimb_step === "Pre-activity" && reimb_status === "Submitted")
+                || (hrs_step === "Pre-activity" && hrs_status === "More Information" && reimb_step === "Pre-activity" && reimb_status === "Denied")
+                || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "Draft")
+                || (hrs_step === "Pre-activity" && hrs_status === "Denied" && reimb_step === "Pre-activity" && reimb_status === "More Information")
                 || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "Draft")
                 || (hrs_step === "Pre-activity" && hrs_status === "Submitted" && reimb_step === "Pre-activity" && reimb_status === "More Information")) {
                 window.open('prePDRequest.html', '_self');
