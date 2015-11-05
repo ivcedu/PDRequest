@@ -94,7 +94,8 @@
             . "LEFT JOIN [IVCPD].[dbo].[PDReqHours] AS pdrh ON trdc.PDRequestID = pdrh.PDRequestID "
             . "LEFT JOIN [IVCPD].[dbo].[PDReqReimb] AS pdrr ON trdc.PDRequestID = pdrr.PDRequestID "
             . "LEFT JOIN [IVCPD].[dbo].[Login] AS logn ON pdrq.LoginID = logn.LoginID "
-            . $str_where;
+            . $str_where
+            . " ORDER BY pdrq.PDRequestID ASC";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute();
