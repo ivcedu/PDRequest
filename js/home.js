@@ -352,7 +352,7 @@ function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_
             tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
         }
         
-        if (hrs_status === "Draft" || reimb_status === "Draft") {
+        if ((hrs_step === "Pre-activity" && hrs_status === "Draft") || (reimb_step === "Pre-activity" && reimb_status === "Draft")) {
             tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
         }
         else {
