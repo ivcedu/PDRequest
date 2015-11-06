@@ -1299,7 +1299,7 @@ function pdf_setRequestForReimbursement() {
     text = $('#post_input_mileage').html();
     x_offset = getPDFCenterOffset(pdf, column_width * 0.5, text);
     pdf.text(margin_x + (column_width * 4.5) + x_offset, line_pos, text);
-    text = $('#post_travel_cost').html();
+    text = $('#post_mileage_cost').html();
     x_offset = getPDFCenterOffset(pdf, column_width, text);
     pdf.text(margin_x + (column_width * 5) + x_offset, line_pos, text);
     
