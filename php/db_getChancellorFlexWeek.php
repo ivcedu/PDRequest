@@ -14,6 +14,7 @@
     $str3_start_date = "";
     $str3_end_date = "";
     $str3_etype = "";
+    $str4_where = "";
     
     if ($StartDate !== "") {
         $str2_start_date = "CONVERT(DATETIME, flwk.StartDate) >= CONVERT(DATETIME, '".$StartDate."')";
@@ -28,14 +29,17 @@
             case "Full Time":
                 $str2_etype = "logn.LoginEType = 'Full Time Faculty' ";
                 $str3_etype = "logn.LoginEType = 'Full Time Faculty' ";
+                $str4_where = "WHERE Employee = 'Full Time Faculty'";
                 break;
             case "Part Time":
                 $str2_etype = "logn.LoginEType = 'Part Time Faculty' ";
                 $str3_etype = "logn.LoginEType = 'Part Time Faculty' ";
+                $str4_where = "WHERE Employee = 'Part Time Faculty'";
                 break;
             case "Staff":
                 $str2_etype = "logn.LoginEType = 'Staff' ";
                 $str3_etype = "logn.LoginEType = 'Staff' ";
+                $str4_where = "WHERE Employee = 'Staff'";
                 break;
         }
     }
@@ -64,7 +68,7 @@
         $str2_where = "WHERE flwk.FiscalYrs = '".$FiscalYrs."' ";
     }
     else {
-        $str2_where = $str2_where." AND flwk.FiscalYrs = '".$FiscalYrs."' ";
+        $str2_where = $str2_where."AND flwk.FiscalYrs = '".$FiscalYrs."' ";
     }
     
     if ($str3_start_date !== "") {
@@ -91,7 +95,7 @@
         $str3_where = "WHERE pdrq.FiscalYrs = '".$FiscalYrs."' ";
     }
     else {
-        $str3_where = $str3_where." AND pdrq.FiscalYrs = '".$FiscalYrs."' ";
+        $str3_where = $str3_where."AND pdrq.FiscalYrs = '".$FiscalYrs."' ";
     }
 
     $dbConn->setAttribute(constant('PDO::SQLSRV_ATTR_DIRECT_QUERY'), true);
@@ -115,7 +119,7 @@
             
     
     $query5 = "SELECT FacultyName, Employee, SUM(RequestHrs) AS RequestHrs, SUM(ApprovedHrs) AS ApprovedHrs, SUM(RequestAmount) AS RequestAmount, SUM(ApprovedAmount) AS ApprovedAmount "
-                ."FROM #RESULT GROUP BY FacultyName, Employee ORDER BY FacultyName ASC";
+                ."FROM #RESULT ".$str4_where." GROUP BY FacultyName, Employee ORDER BY FacultyName ASC";
     
     $query6 = "DROP TABLE #RESULT";
     
