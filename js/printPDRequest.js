@@ -1190,7 +1190,7 @@ function pdf_setRequestForHours() {
     text = $('#pre_participant_hrs').html();
     x_offset = getPDFCenterOffset(pdf, column_width * 0.5, text);
     pdf.text(margin_x + (column_width * 4) + x_offset, line_pos, text);
-    text = $('#pre_participant_hrs').html();
+    text = $('#post_participant_hrs').html();
     x_offset = getPDFCenterOffset(pdf, column_width * 0.5, text);
     pdf.text(margin_x + (column_width * 5.5) + x_offset, line_pos, text);
     
