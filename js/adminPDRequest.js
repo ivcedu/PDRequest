@@ -1238,12 +1238,13 @@ function sendPreActivityCreatorApproved(rtype) {
     var subject = rtype + " Pre-activity Professional Development Request has been Approved";
     var message = "Dear " + requestor_name + ", <br><br>";
     message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>, ";
-    message += "based on the merit of your Professional Development activity. ";
-    message += "Upon conclusion of this professional development activity, Please use the link below to complete the Post-activity fields and submit for final approval ";
-    message += "of funding and/or professional development credit hours.<br><br>";
+    message += "based on the merit of your Professional Development activity.<br><br>";
+    var str_url = sessionStorage.getItem('m_parentSite');
+    message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br><br>";
+    message += "Once your request has been \"pre-approved\", there are some additional steps that must be completed within \"Workday\" that we can assist you with. ";
+    message += "There is a new step called a \"Spend Authorization\" that must be complete <b>AFTER</B> your FPD request has been pre-approved.<br><br>";
+    message += "<a href='" + str_url + "'/PDRequest/doc/Dear Colleagues email.pdf>Dear colleagues email</a><br><br>";
     
-    var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
     message += "Thank you.<br>";
     message += "IVC Professional Development Officer<br>";
     message += "flexofficer@ivc.edu";
@@ -1335,14 +1336,12 @@ function sendPostActivityCreatorApproved(rtype) {
     var subject = rtype + " Post-activity Professional Development Request has been Approved";
     var message = "Dear " + requestor_name + ", <br><br>";
     message += "Your " + rtype + " Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>.<br><br>";
-    message += "Remember, all expenses must be paid up front. To apply for reimbursement of expenses for the approved activity:<br><br>";
-    message += "1) Complete the <a href='https://sharepoint.socccd.edu/bs/acct/Lists/Accounting%20Forms/AllItems.aspx?&&p_SortBehavior=0&p_Order=6900%2e00000000000&&PageFirstRow=1&&View=\\\\\\\\\\{4E4A84AB-B879-465B-855E-C104BD533B22\\\\\\\\\\}'>FS 12008 Employee Travel Reimbursement Claim</a> ";
-    message += "form for the appropriate travel dates. Include original receipts for any approved reimbursable expenses(s). ";
-    message += "Under the field \"Employee's Supervisor Signature\", your Dean does NOT need to sign this form; the Dean who oversee faculty professional development (Dean Cathleen Greiner) will sign this form.<br><br>";
-    message += "2) Submit the completed and signed reimbursement claim form, with original receipts, <strong>within 21 calendar days</strong> after the last day of the activity to Stefanie Alvarez (<a href='mailto:salvarez@ivc.edu'>salvarez@ivc.edu</a>, phone: 949-451-5709, Location: A 304). ";
-    message += "the requisition will expire 30 days from the return date and the funds will be reallocated if receipts are not received within the allotted time. ";
-    message += "In some circumstances, the expiration may be sooner.<br><br>";
-    
+    message += "Log back into the FPD request site and fill out your \"Post-activity\" information and click on the submit button with all of the required fields filled in and the \"actuals\" of what you spent.<br><br>";
+    message += "All of the receipts will then be forwarded either hard or digital copies of the required receipts, to Stefanie Alvarez, who will submit these on your behalf. ";
+    message += "This is to verify that your expenses are approved for the conference that you attended.<br><br>";
+    message += "This process must be followed in order to ensure proper reimbursement for conference and that the proper receipts are provided. ";
+    message += "If follow up documentation is required, then e-mail will be sent to you and you must respond within a timely manner in order to assure that you are reimbursed properly. ";
+    message += "Any delay or no-response will result in nonpayment for that expense.<br><br>";    
     message += "Please use the link below to review the approved hours and funding at anytime.<br><br>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
