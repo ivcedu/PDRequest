@@ -1403,8 +1403,6 @@ function sendPreActivityCreatorSubmitted() {
 
 function sendPreActivityApproverSubmitted() {
     var approver_email = "bmckim@ivc.edu";
-    // testing
-    approver_email = "presidenttest@ivc.edu";
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').val();
     

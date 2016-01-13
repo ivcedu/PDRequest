@@ -1744,8 +1744,6 @@ function sendPostActivityCreatorSubmitted() {
 
 function sendPostActivityApproverSubmitted() {
     var approver_email = "bmckim@ivc.edu";
-    // testing
-    approver_email = "presidenttest@ivc.edu";
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').html();
     
@@ -1763,8 +1761,6 @@ function sendPostActivityApproverSubmitted() {
 
 function sendPostActivityApproverMoreInfo() {
     var approver_email = "bmckim@ivc.edu";
-    // testing
-    approver_email = "presidenttest@ivc.edu";
     var approver_name = "Brett McKim";
     var act_title = $('#activity_title').html();
     
