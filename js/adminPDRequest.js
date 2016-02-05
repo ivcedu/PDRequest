@@ -705,7 +705,9 @@ function getPrintFundingSrcListHTML(index, fs_selected, fund_src_type) {
 
 function setPDReqFSComments() {
     var fs_comments =  db_getPDReqFSComments(PDRequestID, PDReqReimbID);
-    $('#fs_comments').html(fs_comments.replace(/\n/g, "<br>"));
+    if (fs_comments !== null) {
+        $('#fs_comments').html(fs_comments.replace(/\n/g, "<br>"));
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
