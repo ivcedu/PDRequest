@@ -138,17 +138,17 @@ function getPDSystem() {
         
         if (sys_name === "Breakfast") {
             sys_breakfast_amt = Number(pdsystem[i][2]);
-            var str_breakfast_amt = formatDollar(sys_breakfast_amt, 0);
+            var str_breakfast_amt = formatDollar(sys_breakfast_amt, 2);
             $('#breakfast_text').html("Number of Breakfasts ( " + str_breakfast_amt + " per breakfast):");
         }
         else if (sys_name === "Lunch") {
             sys_lunch_amt = Number(pdsystem[i][2]);
-            var str_lunch_amt = formatDollar(sys_lunch_amt, 0);
+            var str_lunch_amt = formatDollar(sys_lunch_amt, 2);
             $('#lunch_text').html("Number of Lunches ( " + str_lunch_amt + " per lunch):");
         }
         else if (sys_name === "Dinner") {
             sys_dinner_amt = Number(pdsystem[i][2]);
-            var str_dinner_amt = formatDollar(sys_dinner_amt, 0);
+            var str_dinner_amt = formatDollar(sys_dinner_amt, 2);
             $('#dinner_text').html("Number of Dinners ( " + str_dinner_amt + " per dinner):");
         }
         else if (sys_name === "Mileage") {
