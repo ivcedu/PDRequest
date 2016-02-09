@@ -106,6 +106,7 @@ $(document).ready(function() {
             return false;
         }
         
+        copyToAvailPDRequest(hrs_approval_status, reimb_approval_status);
         updatePDRequestApprovalFields();
         updatePDReqHRProcess(hrs_approval_status, reimb_approval_status);
         updatePDRequestHrsStatusChange(hrs_approval_status);
@@ -947,7 +948,7 @@ function updatePDRequestHrsStatusChange(hrs_approval_status_id) {
                 break;
             case "4":
                 if (hrs_step_id === "1") {
-                    copyToAvailPDRequest();
+//                    copyToAvailPDRequest();
                     copyPDReqHoursPreToPost();
                     sendPreActivityCreatorApproved("Hours");
                     addLogHistoryPreHrsApproved(status_name);
@@ -1002,7 +1003,7 @@ function updatePDRequestReimbStatusChange(reimb_approval_status_id) {
                 break;
             case "4":
                 if (reimb_step_id === "1") {
-                    copyToAvailPDRequest();
+//                    copyToAvailPDRequest();
                     copyPDReqReimbPreToPost();
                     sendPreActivityCreatorApproved("Reimbursement");
                     addLogHistoryPreReimbApproved(status_name);
@@ -1034,7 +1035,7 @@ function updatePDRequestReimbStatusChange(reimb_approval_status_id) {
                 break;
             case "7":
                 if (reimb_step_id === "1") {
-                    copyToAvailPDRequest();
+//                    copyToAvailPDRequest();
                     copyPDReqReimbPreToPost();
                     sendPreActivityCreatorPendingApproval("Reimbursement");
                     addLogHistoryPreReimbApproved(status_name);
@@ -1050,13 +1051,29 @@ function updatePDRequestReimbStatusChange(reimb_approval_status_id) {
     }
 }
 
-function copyToAvailPDRequest() {
-    var result = new Array();
-    result = db_getAvailPDRequestByID(PDRequestID);
+function copyToAvailPDRequest(hrs_approval_status, reimb_approval_status) {
+    var act_title = $('#activity_title').html();
+    var fis_yrs = $('#fiscal').html();
     
-    if (result.length === 0) {
-        db_insertAvailPDRequest(PDRequestID);
-    }
+    var result = new Array();
+    result = db_getPDRequestByActTitle(act_title, fis_yrs);
+    if (result.length === 1) {
+        if (ResourceTypeID === "1") {
+            if (hrs_approval_status === "4") {
+                db_insertAvailPDRequest(PDRequestID);
+            }
+        }
+        else if (ResourceTypeID === "2") {
+            if (reimb_approval_status === "4" || reimb_approval_status === "7") {
+                db_insertAvailPDRequest(PDRequestID);
+            }
+        }
+        else {
+            if (hrs_approval_status === "4" && (reimb_approval_status === "4" || reimb_approval_status === "7")) {
+                db_insertAvailPDRequest(PDRequestID);
+            }
+        }
+    } 
 }
 
 function copyPDReqHoursPreToPost() {

@@ -161,15 +161,26 @@ function copyPDRequest(pd_request_ID, resource_type_ID) {
     
     if (resource_type_ID === "1") {
         db_copyPDReqHours(pd_request_ID, new_pd_request_ID);
+        db_insertPDReqHRProcess(new_pd_request_ID);
+        db_updatePDReqHRProcessHrs(new_pd_request_ID, null, 1, 1);
+        db_insertPDReqHRProcessLogHrs(new_pd_request_ID, null, 1, 1, "");
     }
     else if (resource_type_ID === "2") {
         db_copyPDReqReimb(pd_request_ID, new_pd_request_ID);
+        db_insertPDReqHRProcess(new_pd_request_ID);
+        db_updatePDReqHRProcessReimb(new_pd_request_ID, null, 1, 1);
+        db_insertPDReqHRProcessLogReimb(new_pd_request_ID, null, 1, 1, "");
     }
     else {
         db_copyPDReqHours(pd_request_ID, new_pd_request_ID);
         db_copyPDReqReimb(pd_request_ID, new_pd_request_ID);
+        db_insertPDReqHRProcess(new_pd_request_ID);
+        db_updatePDReqHRProcessHrs(new_pd_request_ID, null, 1, 1);
+        db_insertPDReqHRProcessLogHrs(new_pd_request_ID, null, 1, 1, "");
+        db_updatePDReqHRProcessReimb(new_pd_request_ID, null, 1, 1);
+        db_insertPDReqHRProcessLogReimb(new_pd_request_ID, null, 1, 1, "");
     }
-    
+
     return new_pd_request_ID;
 }
 
