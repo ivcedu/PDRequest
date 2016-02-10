@@ -111,9 +111,16 @@ $(document).ready(function() {
         window.open(parent_site, '_self');
     });
     
-    $('#refresh').click(function() {
-        getAdminPDRequestList();
-        initPDRequestTable();
+    $('#refresh').click(function() {        
+        if (sessionStorage.getItem('m_admin_page') === "PDRequest_List") {
+            getAdminPDRequestList();
+            initPDRequestTable();
+        }
+        else {
+            var fiscal_yrs = $('#fw_fiscal_yrs').val();
+            getAvailFlexWeekListByFiscalYrs(fiscal_yrs);
+            initFlexWeekTable();
+        }  
     });
     
     // pd request click ////////////////////////////////////////////////////////
