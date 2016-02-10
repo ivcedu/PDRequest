@@ -9,7 +9,8 @@
             . "FROM [IVCPD].[dbo].[PDRequest] AS pdrt LEFT JOIN [IVCPD].[dbo].[PDReqHRProcess] AS pdpr ON pdrt.PDRequestID = pdpr.PDRequestID "
             . "LEFT JOIN [IVCPD].[dbo].[ResourceType] AS rstp ON pdrt.ResourceTypeID = rstp.ResourceTypeID "
             . "LEFT JOIN [IVCPD].[dbo].[PDReqUserInfo] AS pduf ON pdrt.PDRequestID = pduf.PDRequestID "
-            . "WHERE pdpr.HrsStatusID = 2 OR pdpr.ReimbStatusID = 2 OR pdpr.ReimbStatusID = 7";
+            . "WHERE pdpr.HrsStatusID = 2 OR pdpr.ReimbStatusID = 2 OR pdpr.ReimbStatusID = 7 "
+            . "ORDER BY pdrt.PDRequestID ASC";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 

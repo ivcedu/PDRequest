@@ -261,36 +261,39 @@ function setPDRequestAdminList(PDRequestID, resource_type_id, resource_type, act
     var tbody = "";
     if (resource_type_id === "3") {
         tbody += set_tr_color;
+        tbody += "<td class='span1'>" + PDRequestID + "</td>";
         tbody += "<td class='span2'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
         tbody += "<td class='span1'>" + create_date + "</td>";
         tbody += "<td class='span2'>" + requestor + "</td>";
         tbody += "<td class='span2'>Hours</td>"; 
         tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
-        tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        tbody += "<td class='span2' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
         tbody += "</tr>";
         
         tbody += set_tr_color;
+        tbody += "<td class='span1'></td>";
         tbody += "<td class='span2'></td>";
         tbody += "<td class='span1'></td>";
         tbody += "<td class='span2'></td>";
         tbody += "<td class='span2'>Reimbursement</td>"; 
         tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
-        tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        tbody += "<td class='span2' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
         tbody += "</tr>";
     }
     else {
         tbody += set_tr_color;
+        tbody += "<td class='span1'>" + PDRequestID + "</td>";
         tbody += "<td class='span2'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
         tbody += "<td class='span1'>" + create_date + "</td>";
         tbody += "<td class='span2'>" + requestor + "</td>";
         tbody += "<td class='span2'>" + resource_type + "</td>"; 
         if (resource_type_id === "1") {
             tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
-            tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+            tbody += "<td class='span2' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
         }
         else {
             tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
-            tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+            tbody += "<td class='span2' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
         }
         tbody += "</tr>";
     }
