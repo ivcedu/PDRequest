@@ -338,6 +338,28 @@ function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_
         tbody += "<td class='span1 text-center'></td>";
         tbody += "</tr>";
     }
+    else if (resource_type_id === "1") {
+        tbody += set_tr_color;
+        tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
+        tbody += "<td class='span1'>" + create_date + "</td>";
+        tbody += "<td class='span2'>" + resource_type + "</td>"; 
+        if (resource_type_id === "1") {
+            tbody += "<td class='span2' id='pd_request_hrs_step_" + PDRequestID + "'>" + hrs_step + "</td>";  
+            tbody += "<td class='span3' id='pd_request_hrs_status_" + PDRequestID + "'>" + hrs_status + "</td>";
+        }
+        else {
+            tbody += "<td class='span2' id='pd_request_reimb_step_" + PDRequestID + "'>" + reimb_step + "</td>";  
+            tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
+        }
+        
+        if (hrs_step === "Pre-activity" && hrs_status === "Draft") {
+            tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
+        }
+        else {
+            tbody += "<td class='span1 text-center'></td>";
+        }
+        tbody += "</tr>";
+    }
     else {
         tbody += set_tr_color;
         tbody += "<td class='span3'><a href=# id='pd_request_ID_" + PDRequestID +  "'>" + act_title + "</a></td>"; 
@@ -352,7 +374,7 @@ function setPDRequestListHTML(PDRequestID, resource_type_id, resource_type, act_
             tbody += "<td class='span3' id='pd_request_reimb_status_" + PDRequestID + "'>" + reimb_status + "</td>";
         }
         
-        if ((hrs_step === "Pre-activity" && hrs_status === "Draft") || (reimb_step === "Pre-activity" && reimb_status === "Draft")) {
+        if (reimb_step === "Pre-activity" && reimb_status === "Draft") {
             tbody += "<td class='span1 text-center'><button class='btn btn-mini' id='btn_delete_PDRequest_" + PDRequestID + "'><i class='icon-trash icon-black'></i></button></td>";
         }
         else {

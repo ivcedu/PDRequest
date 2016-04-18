@@ -86,6 +86,7 @@ $(document).ready(function() {
         }
         
         setStepStatus();
+        getSelectResourceType();
     });
     
     // justification narrative add file click //////////////////////////////////
@@ -567,22 +568,34 @@ function addNarrative() {
 }
 
 function addPDReqHours() {
-    if (PDReqHoursID === "" && PDRequestID !== "") {
+    var result = new Array();
+    result = db_getPDReqHours(PDRequestID);
+    
+    if (result.length === 0) {
         var result_ID = db_insertPDReqHours(PDRequestID);
         if (result_ID !== "") {
             PDReqHoursID = result_ID;
         }
     }
+    else {
+        PDReqHoursID = result[0['PDReqHoursID']];
+    }
 }
 
 function addPDReqReimb() {
-    if (PDReqReimbID === "" && PDRequestID !== "") {
+    var result = new Array();
+    result = db_getPDReqReimb(PDRequestID);
+    
+    if (result.length === 0) {
         var result_ID = db_insertPDReqReimb(PDRequestID);
         if (result_ID !== "") {
             PDReqReimbID = result_ID;
             addPDReqFundSrc();
             addPDReqFSComments();
-        }      
+        }
+    }
+    else {
+        PDReqReimbID = result[0['PDReqReimbID']];
     }
 }
 
@@ -1024,6 +1037,7 @@ function setPDLimitSummary() {
     }
 }
 
+// bug found... need to change
 ////////////////////////////////////////////////////////////////////////////////
 function getSelectStepStatus() {
     var result = new Array();
@@ -1035,25 +1049,49 @@ function getSelectStepStatus() {
     m_reimb_status = result[0]['ReimbStatusID'];
     
     if (ResourceTypeID === "1") {
-        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
-        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        if (m_hrs_step === null && m_hrs_status === null) {
+            m_hrs_step = "1";
+            m_hrs_status = "1";
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, m_hrs_status);
+        }
+        
+        var hrs_step = db_getPDReqStep(m_hrs_step);
+        var hrs_status = db_getStatus(m_hrs_status);
         $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
         $('#hrs_current_status').html(hrs_status[0]['Status']);
     }
     else if (ResourceTypeID === "2") {
-        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
-        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        if (m_reimb_step === null && m_reimb_status === null) {
+            m_reimb_step = "1";
+            m_reimb_status = "1";
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+        }
+        
+        var reimb_step = db_getPDReqStep(m_reimb_step);
+        var reimb_status = db_getStatus(m_reimb_status);
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
     }
     else {
-        var hrs_step = db_getPDReqStep(result[0]['HrsStepID']);
-        var hrs_status = db_getStatus(result[0]['HrsStatusID']);
+        if (m_hrs_step === null && m_hrs_status === null) {
+            m_hrs_step = "1";
+            m_hrs_status = "1";
+            db_updatePDReqHRProcessHrs(PDRequestID, null, m_hrs_step, m_hrs_status);
+        }
+        
+        var hrs_step = db_getPDReqStep(m_hrs_step);
+        var hrs_status = db_getStatus(m_hrs_status);
         $('#hrs_current_step').html(hrs_step[0]['PDReqStep']);
         $('#hrs_current_status').html(hrs_status[0]['Status']);
         
-        var reimb_step = db_getPDReqStep(result[0]['ReimbStepID']);
-        var reimb_status = db_getStatus(result[0]['ReimbStatusID']);
+        if (m_reimb_step === null && m_reimb_status === null) {
+            m_reimb_step = "1";
+            m_reimb_status = "1";
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+        }
+        
+        var reimb_step = db_getPDReqStep(m_reimb_step);
+        var reimb_status = db_getStatus(m_reimb_status);
         $('#reimb_current_step').html(reimb_step[0]['PDReqStep']);
         $('#reimb_current_status').html(reimb_status[0]['Status']);
     }
