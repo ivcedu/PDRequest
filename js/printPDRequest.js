@@ -1362,10 +1362,10 @@ function pdf_setRequestForReimbursement() {
     line_pos += 0.25;
     pdf.text(margin_x, line_pos, 'Other Cost Total:');
     pdf.text(margin_x + (column_width * 1.5), line_pos, $('#other_cost_description').html());
-    text = $('#pre_lodging_cost').html();
+    text = $('#pre_other_cost').html();
     x_offset = getPDFCenterOffset(pdf, column_width, text);
     pdf.text(margin_x + (column_width * 3.5) + x_offset, line_pos, text);
-    text = $('#post_lodging_cost').html();
+    text = $('#post_other_cost').html();
     x_offset = getPDFCenterOffset(pdf, column_width, text);
     pdf.text(margin_x + (column_width * 5) + x_offset, line_pos, text);
     
