@@ -1282,7 +1282,7 @@ function sendPreActivityCreatorReimbApproved(rtype) {
     message += "Since your request has been \"pre-approved\", there are some additional steps that must be completed within in \"Workday\" that we can assist you with. ";
     message += "There is a new step called a \"Spend Authorization\" that must be completed.<br>";
     message += "Please click below link to open detail instruction<br><br>";
-    message += "<a href='" + str_url + "'/PDRequest/doc/Dear Colleagues email.pdf>Dear colleagues email</a><br><br>";
+    message += "<a href='" + str_url + "/PDRequest/doc/Dear Colleagues email.pdf>Dear colleagues email</a><br><br>";
     message += "After attending your conference/training, you will need to log back into the FPD request site and fill out your \"Post-activity\" information and click on the submit button ";
     message += "with all of the required fields filled in and the \"actuals\" of what you spent.<br>";
     message += "All of the receipts will then be forwarded either hard or digital copies of the required receipts to Stefanie Alvarez, who will submit these on your behalf. ";
