@@ -5,6 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         <meta http-equiv="Cache-Control" content="no-cache"/>
         <title>Professional Development Login</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/sweetalert/css/sweetalert.css"/>
         <!-- application css -->
         <link rel="stylesheet" href="css/style-2.css"/>
     </head>
@@ -25,6 +27,7 @@
         <!-- include javascript -->
         <script src="../include/jquery/jquery-2.0.3.min.js"></script>
         <script src="../include/bowser/bowser.min.js"></script>
+        <script src="../include/sweetalert/js/sweetalert.min.js"></script>
         <!-- application javascript -->
         <script src="js/Login.js"></script>
         <script src="js/session_data.js"></script>
