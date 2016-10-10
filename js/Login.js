@@ -50,19 +50,20 @@ $(document).ready(function() {
             );
         }
         ////////////////////////////////////////////////////////////////////////
-        
-        var url_param = sessionStorage.getItem('m_url_param');
-        if(loginInfo()) {
-            if (url_param === null) {
-                window.open('home.html', '_self');
-            }
-            else {  
-                window.open(url_param, '_self');
-            }
-        }
         else {
-            $('#logn_error').show();
-            this.blur();
+            var url_param = sessionStorage.getItem('m_url_param');
+            if(loginInfo()) {
+                if (url_param === null) {
+                    window.open('home.html', '_self');
+                }
+                else {  
+                    window.open(url_param, '_self');
+                }
+            }
+            else {
+                $('#logn_error').show();
+                this.blur();
+            }
         }
     });
 });
@@ -125,7 +126,7 @@ function getLoginUserInfo(php_file, user, pass) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function ireportValidation() {
-    var username = $('#username').val().toLowerCase().replace("@ivc.edu", "");
+    var username = $('#username').val().toLowerCase().replace("@ivc.edu", "").replace("@saddleback.edu", "");
     if (ireportDBgetUserAccess(username) !== null) {
         return true;
     }
