@@ -68,7 +68,6 @@ function setUserInformation() {
     result = db_getLogin(email);
     if (result.length === 1) {
         user_setup = true;
-        LoginID = result[0]['LoginID'];
         $('#up_name').val(result[0]['LoginName']);
         $('#up_email').val(result[0]['LoginEmail']);
         $('#up_depart').val(result[0]['LoginDepart']);
@@ -95,11 +94,14 @@ function saveUserProfile() {
     var division = textReplaceApostrophe($('#up_division').val());
     var etype = textReplaceApostrophe($('#up_etype').val());
     
-    if (LoginID === "") {
-        LoginID = db_insertLogin(name, email, depart, phone, division, etype);
+    var result = new Array();
+    result = db_getLogin(email);
+    if (result.length === 0) {
+        db_insertLogin(name, email, depart, phone, division, etype);
     }
     else {
-        db_updateLogin(LoginID, name, email, depart, phone, division, etype);
+        var login_id = result[0]['LoginID'];
+        db_updateLogin(login_id, name, email, depart, phone, division, etype);
     }
     
     user_setup = true;
