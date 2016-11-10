@@ -1,5 +1,10 @@
 .container {
-    width: 3600px;
+    width: 4000px;
+}
+
+.col_400 {
+    width: 400px;
+    padding-right: 10px;
 }
 
 .col_300 {

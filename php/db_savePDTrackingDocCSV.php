@@ -66,6 +66,7 @@
     
     $query = "SELECT pdrq.PDRequestID, "
             . "trdc.TracDocID, "
+            . "pdrq.ActTitle, "
             . "logn.LoginName AS FacultyName, "
             . "pdrq.StartDate, "
             . "pdrq.EndDate, "
@@ -107,7 +108,7 @@
     $out = fopen("php://output", 'w+');
 
     // Write the spreadsheet column titles / labels
-    fputcsv($out, array('PDRequestID','FacultyName', 'StartDate', 'EndDate', 
+    fputcsv($out, array('PDRequestID','ActivityTitle','FacultyName','StartDate','EndDate', 
                         'HrsPreSubDate','HrsPreAprDate','ReimbPreSubDate','ReimbPreAprDate',
                         'PreHrsRequest', 'PreHrsApproved','PreAmtRequest','PreAmtApproved',
                         'HrsPostSubDate','HrsPostAprDate','ReimbPostSubDate','ReimbPostAprDate',
@@ -115,7 +116,7 @@
                         'ReqNum', 'DistrictAllocation', 'Comments'));
     // Write all the user records to the spreadsheet
     foreach($data as $row) {        
-        fputcsv($out, array($row['PDRequestID'], $row['FacultyName'], $row['StartDate'], $row['EndDate'], 
+        fputcsv($out, array($row['PDRequestID'], $row['ActTitle'], $row['FacultyName'], $row['StartDate'], $row['EndDate'], 
                             $row['HrsPreSubDate'], $row['HrsPreAprDate'], $row['ReimbPreSubDate'], $row['ReimbPreAprDate'], 
                             $row['PreHrsRequest'], $row['PreHrsRequest'], $row['PreAmtRequest'], $row['PreAmtApproved'], 
                             $row['HrsPostSubDate'], $row['HrsPostAprDate'], $row['ReimbPostSubDate'], $row['ReimbPostAprDate'], 

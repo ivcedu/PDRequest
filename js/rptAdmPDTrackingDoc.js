@@ -199,7 +199,7 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
         var post_amt_app = formatDollar(Number(result[i]['PostAmtApproved']), 2);
         var dist_alloc = formatDollar(Number(result[i]['DistPaid']), 2);
 
-        str_html += setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['FacultyName'], start_date, end_date, 
+        str_html += setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['ActTitle'], result[i]['FacultyName'], start_date, end_date, 
                                                 hrs_pre_sub_date, hrs_pre_app_date, reimb_pre_sub_date, reimb_pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
                                                 hrs_post_sub_date, hrs_post_app_date, reimb_post_sub_date, reimb_post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, 
                                                 result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
@@ -208,13 +208,14 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
     $("#pd_tracking_doc_tbl").trigger("update");
 }
 
-function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, faculty_name, start_date, end_date, 
+function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, act_title, faculty_name, start_date, end_date, 
                                     hrs_pre_sub_date, hrs_pre_app_date, reimb_pre_sub_date, reimb_pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
                                     hrs_post_sub_date, hrs_post_app_date, reimb_post_sub_date, reimb_post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, 
                                     req_num, dist_alloc, comments) {    
     var tbl_html = "<tr>";
     tbl_html += "<td class='col_50'><a href=# id='trac_doc_id_" + trac_doc_id +  "'>" + pd_request_id + "</a></td>";
-    tbl_html += "<td class='col_150'>" + faculty_name + "</td>";
+    tbl_html += "<td class='col_400'>" + act_title + "</td>";
+    tbl_html += "<td class='col_250'>" + faculty_name + "</td>";
     tbl_html += "<td class='col_100'>" + start_date + "</td>";
     tbl_html += "<td class='col_100'>" + end_date + "</td>";
     tbl_html += "<td class='col_200'>" + hrs_pre_sub_date + "</td>";

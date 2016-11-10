@@ -66,6 +66,7 @@
     
     $query = "SELECT pdrq.PDRequestID, "
             . "trdc.TracDocID, "
+            . "pdrq.ActTitle, "
             . "logn.LoginName AS FacultyName, "
             . "pdrq.StartDate, "
             . "pdrq.EndDate, "
