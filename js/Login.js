@@ -28,13 +28,6 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {  
-    // enter key to login
-    $('#password').keypress(function (e) {
-        if(e.keyCode === 13){
-            $('#btn_login').click();
-        }
-    });
-    
     $('#btn_login').click(function() {
         // ireport.ivc.edu validation //////////////////////////////////////////
         if(location.href.indexOf("ireport.ivc.edu") >= 0 && !ireportValidation()) {
@@ -61,11 +54,15 @@ $(document).ready(function() {
                 }
             }
             else {
+                $('#error_msg').html("Invalid Username or Password");
                 $('#logn_error').show();
                 this.blur();
             }
         }
+        return false;
     });
+    
+    $.backstretch(["images/pac_back.jpg"], {duration: 3000, fade: 750});
 });
 
 ////////////////////////////////////////////////////////////////////////////////
