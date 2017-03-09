@@ -113,9 +113,10 @@ function setFundSrcTypeListHTML(fund_src_type_id) {
     list_html += "<div class='span1' style='padding-top: 5px;'>" + fund_src_type_id + "</div>";
     list_html += "<div class='span1' style='padding-top: 2px;'><input type='checkbox' id='active_" + fund_src_type_id + "'></div>";
     list_html += "<div class='span3'><input type='text' class='span12' style='font-weight: bold;' id='fund_type_" + fund_src_type_id + "'></div>";
-    list_html += "<div class='span3'><input type='text' class='span12' id='admin_name_" + fund_src_type_id + "'></div>";
+    list_html += "<div class='span2'><input type='text' class='span12' id='admin_name_" + fund_src_type_id + "'></div>";
     list_html += "<div class='span3'><input type='text' class='span12' id='admin_email_" + fund_src_type_id + "'></div>";  
-    list_html += "<div class='span1 form-horizontal'><button class='btn span12' id='btn_update_id_" + fund_src_type_id + "'><i class='icon-circle-arrow-up icon-black'></i></button></div>";
+//    list_html += "<div class='span1 form-horizontal'><button class='btn span12' id='btn_update_id_" + fund_src_type_id + "'><i class='icon-circle-arrow-up icon-black'></i></button></div>";
+    list_html += "<div class='span2 form-horizontal'><button class='btn span12' id='btn_update_id_" + fund_src_type_id + "'>Update</button></div>";
     list_html += "</div>";
     list_html += "<div class='row-fluid'>";
     list_html += "<div class='span2'>Description:</div>";
