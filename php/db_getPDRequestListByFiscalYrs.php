@@ -11,7 +11,7 @@
             . "(SELECT [Status] FROM [IVCPD].[dbo].[Status] WHERE StatusID = pdpr.ReimbStatusID) AS  ReimbStatus "
             . "FROM [IVCPD].[dbo].[PDRequest] AS pdrt LEFT JOIN [IVCPD].[dbo].[PDReqHRProcess] AS pdpr ON pdrt.PDRequestID = pdpr.PDRequestID "
             . "LEFT JOIN [IVCPD].[dbo].[ResourceType] AS rstp ON pdrt.ResourceTypeID = rstp.ResourceTypeID "
-            . "WHERE pdrt.LoginID = '".$LoginID."' AND pdrt.FiscalYrs = '".$FiscalYrs."' AND StatusID <> 8";
+            . "WHERE pdrt.LoginID = '".$LoginID."' AND pdrt.FiscalYrs = '".$FiscalYrs."' AND pdrt.StatusID <> 8";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 
