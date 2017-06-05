@@ -1051,6 +1051,17 @@ function pdf_setJestificationNarrative() {
             pdf.text(margin_x, line_pos, ar_just_narr[i]);
         }
     }
+    
+    var attach_files = new Array();
+    attach_files = db_getNarrativeAttach(PDRequestID);
+    if (attach_files.length > 0) {
+        line_pos += 0.25;
+        for (var i = 0; i < attach_files.length; i++) {
+            line_pos += 0.25;
+            var f_name = attach_files[i]['FileName'];
+            pdf.text(margin_x * 4, line_pos, f_name);
+        }
+    }
 }
 
 function pdf_setPostActivityReqInformation() {
@@ -1105,6 +1116,17 @@ function pdf_setPostActivityReqInformation() {
         }
     }
     
+    var result1 = new Array();
+    result1 = db_getPAReqInfo1Attach(PDRequestID);
+    if (result1.length > 0) {
+        line_pos += 0.25;
+        for (var i = 0; i < result1.length; i++) {
+            line_pos += 0.25;
+            var f_name = result1[i]['FileName'];
+            pdf.text(margin_x * 4, line_pos, f_name);
+        }
+    }
+    
     line_pos += 0.25;
     pdf.setFontType("bold");
     pdf.text(margin_x, line_pos, 'What were the end products or materials from this activity?.');
@@ -1125,6 +1147,17 @@ function pdf_setPostActivityReqInformation() {
         else {
             line_pos += 0.15;
             pdf.text(margin_x, line_pos, ar_pai_2[i]);
+        }
+    }
+    
+    var result2 = new Array();
+    result2 = db_getPAReqInfo2Attach(PDRequestID);
+    if (result2.length > 0) {
+        line_pos += 0.25;
+        for (var i = 0; i < result2.length; i++) {
+            line_pos += 0.25;
+            var f_name = result2[i]['FileName'];
+            pdf.text(margin_x * 4, line_pos, f_name);
         }
     }
 }

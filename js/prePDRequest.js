@@ -70,23 +70,25 @@ $(document).ready(function() {
         }
         else if (resource_type === "Hours") {
             ResourceTypeID = getResourceTypeID(resource_type);
+            addPDRequest(ResourceTypeID);
             setHoursSetting();
             getSelectHrsSection();
         }
         else if (resource_type === "Reimbursement") {
             ResourceTypeID = getResourceTypeID(resource_type); 
+            addPDRequest(ResourceTypeID);
             setReimbursementSetting();
             getSelectReimbSection();
         }
         else {
-            ResourceTypeID = getResourceTypeID(resource_type);      
+            ResourceTypeID = getResourceTypeID(resource_type);    
+            addPDRequest(ResourceTypeID);
             setHoursReimbursementSetting();
             getSelectHrsSection();
             getSelectReimbSection();
         }
         
         setStepStatus();
-        getSelectResourceType();
     });
     
     // justification narrative add file click //////////////////////////////////
@@ -119,7 +121,7 @@ $(document).ready(function() {
     
     $('#pre_participant_hrs').change(function() {      
         var input_val = Number($(this).val().replace(/[^0-9\.]/g, '')).toFixed(2);       
-            $(this).val(input_val);
+        $(this).val(input_val);
         preCalculateTotalHrs();
     });
     
@@ -221,7 +223,6 @@ $(document).ready(function() {
             return false;
         }
         
-        addPDRequest(ResourceTypeID);
         updatePDReqUserInfo();
         updatePDRequest(false);
         updateJustArea();
@@ -241,10 +242,10 @@ $(document).ready(function() {
         err += formNarrativeValidation();
         if (err !== "") {
             alert(err);
+            $(this).prop('disabled', false);
             return false;
         }
         
-        addPDRequest(ResourceTypeID);
         updatePDReqUserInfo();
         updatePDRequest(true);
         updateJustArea();
@@ -871,6 +872,7 @@ function getSelectResourceType() {
             $('#resource_type').val(resource_type[i][1]);
             $('.selectpicker').selectpicker('refresh');
             getSelectStepStatus();
+            
             if (ResourceTypeID === "1") {
                 setHoursSetting();
                 getSelectPDReqHours();
@@ -1037,7 +1039,6 @@ function setPDLimitSummary() {
     }
 }
 
-// bug found... need to change
 ////////////////////////////////////////////////////////////////////////////////
 function getSelectStepStatus() {
     var result = new Array();
@@ -1064,7 +1065,7 @@ function getSelectStepStatus() {
         if (m_reimb_step === null && m_reimb_status === null) {
             m_reimb_step = "1";
             m_reimb_status = "1";
-            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, m_reimb_status);
         }
         
         var reimb_step = db_getPDReqStep(m_reimb_step);
@@ -1087,7 +1088,7 @@ function getSelectStepStatus() {
         if (m_reimb_step === null && m_reimb_status === null) {
             m_reimb_step = "1";
             m_reimb_status = "1";
-            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, reimb_status_id);
+            db_updatePDReqHRProcessReimb(PDRequestID, null, m_reimb_step, m_reimb_status);
         }
         
         var reimb_step = db_getPDReqStep(m_reimb_step);
@@ -1424,14 +1425,14 @@ function sendPreActivityCreatorSubmitted() {
     
     var subject = "Professional Development Request has been submitted";
     var message = "Dear " + login_name + ", <br/><br/>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been submitted. ";
+    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been submitted. ";
     message += "Your request will be forwarded to the IVC Professional Development Officer and Academic Affairs Committee. ";
     message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
     message += "In some circumstances, additional processing time may be required.<br/><br/>";
     message += "Please use the link below to review the status of your submission at any time.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
     message += "Thank you.<br/>";
     message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
@@ -1446,11 +1447,11 @@ function sendPreActivityApproverSubmitted() {
     
     var subject = "New Pre-activity Professional Development Request has been assigned to you";
     var message = "Dear Brett McKim,<br/><br/>";
-    message += "A New Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
+    message += "A New Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been assigned to you for approval. ";
     message += "Please use the link below to start the approval process.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
     message += "Thank you.";
     
     proc_sendEmail(approver_email, approver_name, subject, message);

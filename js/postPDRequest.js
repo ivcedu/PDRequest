@@ -948,7 +948,7 @@ function getSelectNarrative() {
     
     if (narrative.length === 1) {
         NarrativeID = narrative[0][0];
-        $('#just_narrative_descrip').val(narrative[0]['Narrative']);
+        $('#just_narrative_descrip').val(narrative[0]['Narrative']).trigger('autosize.resize');
     }
     
     getSelectNarrativeAttachment();
@@ -976,7 +976,7 @@ function getSelectPAReqInfo1() {
     
     if (pa_req_info_1.length === 1) {
         PAReqInfo1ID = pa_req_info_1[0][0];
-        $('#post_activity_info_1_descrip').val(pa_req_info_1[0]['PAReqInfo1']);
+        $('#post_activity_info_1_descrip').val(pa_req_info_1[0]['PAReqInfo1']).trigger('autosize.resize');
     }
     
     getSelectPAReqInfo1Attachment();
@@ -1004,7 +1004,7 @@ function getSelectPAReqInfo2() {
     
     if (pa_req_info_2.length === 1) {
         PAReqInfo2ID = pa_req_info_2[0][0];
-        $('#post_activity_info_2_descrip').val(pa_req_info_2[0]['PAReqInfo2']);
+        $('#post_activity_info_2_descrip').val(pa_req_info_2[0]['PAReqInfo2']).trigger('autosize.resize');
     }
     
     getSelectPAReqInfo2Attachment();
@@ -1278,7 +1278,7 @@ function getSelectTransaction() {
             var login_name = transaction[i]['LoginName'];
             var note = transaction[i]['Note'];
             
-            str_comments += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
+            str_comments += login_name + " : " + dt_stamp + "<br/>" + note.replace(/\n/g, "<br/>") + "<br/><br/>";
         }
         $("#comments_history").append(str_comments);
     }
@@ -1726,17 +1726,17 @@ function sendPostActivityCreatorSubmitted() {
     var act_title = $('#activity_title').html();
     
     var subject = "Professional Development Post-Request has been submitted";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Professional Development Request, title <strong>" + act_title + "</strong> has been submitted. ";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Professional Development Request, title <b>" + act_title + "</b> has been submitted. ";
     message += "Your request will be forwarded to the IVC Professional Development Officer and Academic Affairs Committee. ";
     message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
-    message += "In some circumstances, additional processing time may be required. <br><br>";
-    message += "Please use the link below to review the status of your submission at any time.<br><br>";
+    message += "In some circumstances, additional processing time may be required. <br/><br/>";
+    message += "Please use the link below to review the status of your submission at any time.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1748,12 +1748,12 @@ function sendPostActivityApproverSubmitted() {
     var act_title = $('#activity_title').html();
     
     var subject = "New Professional Development Request has been assigned to you";
-    var message = "Dear Brett McKim,<br><br>";
-    message += "A New Professional Development Request, title <strong>" + act_title + "</strong> has been assigned to you for approval. ";
-    message += "Please use the link below to start the approval process.<br><br>";
+    var message = "Dear Brett McKim,<br/><br/>";
+    message += "A New Professional Development Request, title <b>" + act_title + "</b> has been assigned to you for approval. ";
+    message += "Please use the link below to start the approval process.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
     message += "Thank you.";
     
     proc_sendEmail(approver_email, approver_name, subject, message);
@@ -1765,12 +1765,12 @@ function sendPostActivityApproverMoreInfo() {
     var act_title = $('#activity_title').html();
     
     var subject = "More Information Professional Development Request has been updated";
-    var message = "Dear Brett McKim,<br><br>";
-    message += "Professional Development Request, title <strong>" + act_title + "</strong> has been updated and assigned to you for approval.<br>";
-    message += "Please use the link below to start the approval process.<br><br>";
+    var message = "Dear Brett McKim,<br/><br/>";
+    message += "Professional Development Request, title <b>" + act_title + "</b> has been updated and assigned to you for approval.<br/>";
+    message += "Please use the link below to start the approval process.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
     message += "Thank you.";
     
     proc_sendEmail(approver_email, approver_name, subject, message);

@@ -1224,8 +1224,7 @@ function getTransactionHistory() {
         var login_name = result[i]['LoginName'];
         var note = result[i]['LogMsg'];
 
-        str_log += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
-        
+        str_log += login_name + " : " + dt_stamp + "<br/>" + note.replace(/\n/g, "<br/>") + "<br/><br/>";
     }
     $("#transaction_history").append(str_log);
 }
@@ -1237,13 +1236,13 @@ function sendPreActivityCreatorBackToDraft(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = rtype + " Pre-activity Professional Development Request sent Back To Draft";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been set back to <strong>Draft</strong> status.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your " + rtype + " Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been set back to <b>Draft</b> status.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1255,14 +1254,14 @@ function sendPreActivityCreatorHrsApproved(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Hours Approval";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>, ";
-    message += "based on the merit of your Professional Development activity.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your " + rtype + " Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>, ";
+    message += "based on the merit of your Professional Development activity.<br/><br/>";
     var str_url = sessionStorage.getItem('m_parentSite');
-    message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br><br>";
+    message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
     
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1274,27 +1273,27 @@ function sendPreActivityCreatorReimbApproved(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Pre-activity Approval";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>, ";
-    message += "based on the merit of your Professional Development activity.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>, ";
+    message += "based on the merit of your Professional Development activity.<br/><br/>";
     var str_url = sessionStorage.getItem('m_parentSite');
-    message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br><br>";
+    message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
     message += "Since your request has been \"pre-approved\", there are some additional steps that must be completed within in \"Workday\" that we can assist you with. ";
-    message += "There is a new step called a \"Spend Authorization\" that must be completed.<br>";
-    message += "Please click below link to open detail instruction<br><br>";
-    message += "<a href='" + str_url + "/PDRequest/doc/Dear Colleagues email.pdf'>Dear colleagues email</a><br><br>";
+    message += "There is a new step called a \"Spend Authorization\" that must be completed.<br/>";
+    message += "Please click below link to open detail instruction<br/><br/>";
+    message += "<a href='" + str_url + "/PDRequest/doc/Dear Colleagues email.pdf'>Dear colleagues email</a><br/><br/>";
     message += "After attending your conference/training, you will need to log back into the FPD request site and fill out your \"Post-activity\" information and click on the submit button ";
-    message += "with all of the required fields filled in and the \"actuals\" of what you spent.<br>";
+    message += "with all of the required fields filled in and the \"actuals\" of what you spent.<br/>";
     message += "All of the receipts will then be forwarded either hard or digital copies of the required receipts to Stefanie Alvarez, who will submit these on your behalf. ";
-    message += "This is to verify that your expenses are approved for the conference that you attended.<br><br>";
+    message += "This is to verify that your expenses are approved for the conference that you attended.<br/><br/>";
     message += "This process must be followed in order to ensure proper reimbursement for conference and that the proper receipts are provided. If follow up documentation is required, ";
     message += "then an e-mail will be sent to you and you must responed within a timely manner in order to assure that you are reimbursed properly. ";
-    message += "Any delay or no-response will result in nonpayment for that expenses.<br><br>";
-    message += "We thank you for all of your service to the students and college.<br><br>";
+    message += "Any delay or no-response will result in nonpayment for that expenses.<br/><br/>";
+    message += "We thank you for all of your service to the students and college.<br/><br/>";
     
-    message += "Regards:<br>";
-    message += "Brett McKim<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "Regards:<br/>";
+    message += "Brett McKim<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1306,15 +1305,15 @@ function sendPreActivityCreatorPendingApproval(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Pre-activity Professional Development Request has been Approved Pending Funds";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> is approved based on merit. ";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> is approved based on merit. ";
     message += "However, currently all the Professional Development funds for the year have been encumbered; we are waiting to see if there will be any funds available. ";
-    message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br><br>";
+    message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1326,14 +1325,14 @@ function sendPreActivityCreatorMoreInfo(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Pre-activity Professional Development Request need More Information";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> required additional information.<br>";
-    message += "Please use the link below to read the comments which explain what more information is required.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> required additional information.<br/>";
+    message += "Please use the link below to read the comments which explain what more information is required.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1345,13 +1344,13 @@ function sendPreActivityCreatorDenied(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Pre-activity Professional Development Request has been Denied";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your " + rtype + " Pre-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
-    message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your " + rtype + " Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Denied</b>.<br/>";
+    message += "Please use the link below to read the comments which explain the reason for the denieal.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1364,13 +1363,13 @@ function sendPostActivityCreatorBackToDraft(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = rtype + " Post-activity Professional Development Request sent back to Draft";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your " + rtype + " Post-activity Professional Development Request, title <strong>" + act_title + "</strong> rhas been set back to <strong>Draft</strong> status.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your " + rtype + " Post-activity Professional Development Request, title <b>" + act_title + "</b> rhas been set back to <b>Draft</b> status.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1382,14 +1381,14 @@ function sendPostActivityCreatorHrsApproved(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Hours Approval";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Hours Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>, ";
-    message += "based on the merit of your Professional Development activity.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Hours Post-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>, ";
+    message += "based on the merit of your Professional Development activity.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1401,19 +1400,19 @@ function sendPostActivityCreatorReimbApproved(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Post-activity Approval for Funding";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Approved</strong>.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>.<br/><br/>";
     message += "All of the receipts will then be forwarded either hard or digital copies of the required receipts, to Stefanie Alvarez, who will submit these on your behalf. ";
-    message += "This is to verify that your expenses are approved for the conference that you attended.<br><br>";
+    message += "This is to verify that your expenses are approved for the conference that you attended.<br/><br/>";
     message += "This process must be followed in order to ensure proper reimbursement for conference and that the proper receipts are provided. ";
     message += "If follow up documentation is required, then an e-mail will be sent to you and you must respond within a timely manner in order to assure that you are reimbursed properly. ";
-    message += "Any delay or no-response will result in nonpayment for that expense.<br><br>";  
-    message += "Please use the link below to review the approved hours and funding at anytime.<br><br>";
+    message += "Any delay or no-response will result in nonpayment for that expense.<br/><br/>";  
+    message += "Please use the link below to review the approved hours and funding at anytime.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1425,15 +1424,15 @@ function sendPostActivityCreatorPendingApproval(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Post-activity Professional Development Request has been Approved Pending Funds";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> is approved based on merit. ";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> is approved based on merit. ";
     message += "However, currently all the Professional Development funds for the year have been encumbered; we are waiting to see if there will be any funds available. ";
-    message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br><br>";
+    message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1445,14 +1444,14 @@ function sendPostActivityCreatorMoreInfo(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Post-activity Professional Development Request need More Information";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> required additional information.<br>";
-    message += "Please use the link below to read the comments which explain what more information is required.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> required additional information.<br/>";
+    message += "Please use the link below to read the comments which explain what more information is required.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "Thank you.<br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "Thank you.<br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
@@ -1464,13 +1463,13 @@ function sendPostActivityCreatorDenied(rtype) {
     var act_title = $('#activity_title').html();
     
     var subject = "Post-activity Professional Development Request has been Denied";
-    var message = "Dear " + requestor_name + ", <br><br>";
-    message += "Your Post-activity Professional Development Request, title <strong>" + act_title + "</strong> has been <strong>Denied</strong>.<br>";
-    message += "Please use the link below to read the comments which explain the reason for the denieal.<br><br>";
+    var message = "Dear " + requestor_name + ", <br/><br/>";
+    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Denied</b>.<br/>";
+    message += "Please use the link below to read the comments which explain the reason for the denieal.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
-    message += "<a href='" + str_url + "'>Professional Development Request</a><br><br>";
-    message += "IVC Professional Development Officer<br>";
+    message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
+    message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
     proc_sendEmail(requestor_email, requestor_name, subject, message);
