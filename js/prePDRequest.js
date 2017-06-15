@@ -1441,12 +1441,12 @@ function sendPreActivityCreatorSubmitted() {
 }
 
 function sendPreActivityApproverSubmitted() {
-    var approver_email = "bmckim@ivc.edu";
-    var approver_name = "Brett McKim";
+    var approver_email = "dderoulet@ivc.edu";
+    var approver_name = "Daniel DeRoulet";
     var act_title = $('#activity_title').val();
     
     var subject = "New Pre-activity Professional Development Request has been assigned to you";
-    var message = "Dear Brett McKim,<br/><br/>";
+    var message = "Dear Daniel DeRoulet,<br/><br/>";
     message += "A New Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been assigned to you for approval. ";
     message += "Please use the link below to start the approval process.<br/><br/>";
     

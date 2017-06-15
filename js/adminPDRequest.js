@@ -1292,7 +1292,7 @@ function sendPreActivityCreatorReimbApproved(rtype) {
     message += "We thank you for all of your service to the students and college.<br/><br/>";
     
     message += "Regards:<br/>";
-    message += "Brett McKim<br/>";
+    message += "Daniel DeRoulet<br/>";
     message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
