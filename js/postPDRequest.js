@@ -1727,10 +1727,9 @@ function sendPostActivityCreatorSubmitted() {
     
     var subject = "Professional Development Post-Request has been submitted";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Professional Development Request, title <b>" + act_title + "</b> has been submitted. ";
-    message += "Your request will be forwarded to the IVC Professional Development Officer and Academic Affairs Committee. ";
+    message += "Your Professional Development Request, titled <b>" + act_title + "</b>, has been submitted. ";
     message += "You will receive an email notification of the decision regarding your application within in 10-15 business days. ";
-    message += "In some circumstances, additional processing time may be required. <br/><br/>";
+    message += "In some circumstances, additional processing time may be required.<br/><br/>";
     message += "Please use the link below to review the status of your submission at any time.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";

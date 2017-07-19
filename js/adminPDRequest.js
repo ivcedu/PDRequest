@@ -1255,7 +1255,7 @@ function sendPreActivityCreatorHrsApproved(rtype) {
     
     var subject = "Hours Approval";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your " + rtype + " Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>, ";
+    message += "Your Hours Pre-activity Professional Development Request, titled <b>" + act_title + "</b>, has been <b>Approved</b>, ";
     message += "based on the merit of your Professional Development activity.<br/><br/>";
     var str_url = sessionStorage.getItem('m_parentSite');
     message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
@@ -1274,25 +1274,21 @@ function sendPreActivityCreatorReimbApproved(rtype) {
     
     var subject = "Pre-activity Approval";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>, ";
+    message += "Your Pre-activity Professional Development Request, titled <b>" + act_title + "</b>, has been <b>Approved</b>, ";
     message += "based on the merit of your Professional Development activity.<br/><br/>";
     var str_url = sessionStorage.getItem('m_parentSite');
     message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
-    message += "Since your request has been \"pre-approved\", there are some additional steps that must be completed within in \"Workday\" that we can assist you with. ";
-    message += "There is a new step called a \"Spend Authorization\" that must be completed.<br/>";
-    message += "Please click below link to open detail instruction<br/><br/>";
-    message += "<a href='" + str_url + "/PDRequest/doc/Dear Colleagues email.pdf'>Dear colleagues email</a><br/><br/>";
-    message += "After attending your conference/training, you will need to log back into the FPD request site and fill out your \"Post-activity\" information and click on the submit button ";
-    message += "with all of the required fields filled in and the \"actuals\" of what you spent.<br/>";
-    message += "All of the receipts will then be forwarded either hard or digital copies of the required receipts to Stefanie Alvarez, who will submit these on your behalf. ";
-    message += "This is to verify that your expenses are approved for the conference that you attended.<br/><br/>";
+    
+    message += "After attending your activity, you will need to log back into the FPD request site, submit your \"Post-activity\" information with the required fields and the \"actuals\" ";
+    message += "of what you spent filled out, and send your receipts to Stafanie Alvarez within 2 weeks of the conference end date or you will risk forfeiting funding for this activity.<br/> ";
+    message += "Stefanie Alvarez will submit your reimbursement request in Workday on your behalf. This is to verify that your expenses are approved for the conference that you attended.<br/> ";
     message += "This process must be followed in order to ensure proper reimbursement for conference and that the proper receipts are provided. If follow up documentation is required, ";
-    message += "then an e-mail will be sent to you and you must responed within a timely manner in order to assure that you are reimbursed properly. ";
-    message += "Any delay or no-response will result in nonpayment for that expenses.<br/><br/>";
+    message += "then an e-mail will be sent to you and you must respond within a timely manner in order to assure that you are reimbursed properly. ";
+    message += "Any delay or no-response will result in nonpayment for that expense.<br/><br/>";
     message += "We thank you for all of your service to the students and college.<br/><br/>";
     
     message += "Regards:<br/>";
-    message += "Daniel DeRoulet<br/>";
+    message += "Daniel deRoulet<br/>";
     message += "IVC Professional Development Officer<br/>";
     message += "flexofficer@ivc.edu";
     
@@ -1306,9 +1302,9 @@ function sendPreActivityCreatorPendingApproval(rtype) {
     
     var subject = "Pre-activity Professional Development Request has been Approved Pending Funds";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> is approved based on merit. ";
+    message += "Your Pre-activity Professional Development Request, titled <b>" + act_title + "</b>, is approved based on merit. ";
     message += "However, currently all the Professional Development funds for the year have been encumbered; we are waiting to see if there will be any funds available. ";
-    message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br/><br/>";
+    message += "Your request will be ranked with other requests, prioritized in the order received, and you will be notified if funds become available. Please also investigate other funding sources.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
     message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
@@ -1326,8 +1322,8 @@ function sendPreActivityCreatorMoreInfo(rtype) {
     
     var subject = "Pre-activity Professional Development Request need More Information";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Pre-activity Professional Development Request, title <b>" + act_title + "</b> required additional information.<br/>";
-    message += "Please use the link below to read the comments which explain what more information is required.<br/><br/>";
+    message += "Your Pre-activity Professional Development Request, titled <b>" + act_title + "</b>, requires additional information.<br/>";
+    message += "Please use the link below to read the comments which explain what information is required.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
     message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
@@ -1343,9 +1339,9 @@ function sendPreActivityCreatorDenied(rtype) {
     var requestor_name = $('#requestor').html();
     var act_title = $('#activity_title').html();
     
-    var subject = "Pre-activity Professional Development Request has been Denied";
+    var subject = "Pre-activity Professional Development Request Denied";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your " + rtype + " Pre-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Denied</b>.<br/>";
+    message += "Your Pre-activity Professional Development Request, titled <b>" + act_title + "</b>, has been <b>Denied</b>.<br/>";
     message += "Please use the link below to read the comments which explain the reason for the denieal.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
@@ -1382,7 +1378,7 @@ function sendPostActivityCreatorHrsApproved(rtype) {
     
     var subject = "Hours Approval";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Hours Post-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>, ";
+    message += "Your Hours Post-activity Professional Development Request, titled <b>" + act_title + "</b>, has been <b>Approved</b>, ";
     message += "based on the merit of your Professional Development activity.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
@@ -1401,9 +1397,10 @@ function sendPostActivityCreatorReimbApproved(rtype) {
     
     var subject = "Post-activity Approval for Funding";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Approved</b>.<br/><br/>";
-    message += "All of the receipts will then be forwarded either hard or digital copies of the required receipts, to Stefanie Alvarez, who will submit these on your behalf. ";
-    message += "This is to verify that your expenses are approved for the conference that you attended.<br/><br/>";
+    message += "Your Post-activity Professional Development Request, titled <b>" + act_title + "</b>, has been <b>Approved</b>.<br/><br/>";
+    message += "All of the receipts will then be forwarded within 2 weeks after the end of the conference to Stefanie Alvarez, who will submit these on your behalf in Workday. ";
+    message += "Failure to comply with this deadline will result in forfeiting your funding allotment. Receipts are needed to verify that your expenses are approved for the conference that you attended.<br/><br/>";
+
     message += "This process must be followed in order to ensure proper reimbursement for conference and that the proper receipts are provided. ";
     message += "If follow up documentation is required, then an e-mail will be sent to you and you must respond within a timely manner in order to assure that you are reimbursed properly. ";
     message += "Any delay or no-response will result in nonpayment for that expense.<br/><br/>";  
@@ -1425,9 +1422,9 @@ function sendPostActivityCreatorPendingApproval(rtype) {
     
     var subject = "Post-activity Professional Development Request has been Approved Pending Funds";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> is approved based on merit. ";
+    message += "Your Post-activity Professional Development Request, titled <b>" + act_title + "</b>, is approved based on merit. ";
     message += "However, currently all the Professional Development funds for the year have been encumbered; we are waiting to see if there will be any funds available. ";
-    message += "Your request will remain in the order received and you will be notified if funds become available. Please also investigate other funding sources.<br/><br/>";
+    message += "Your request will be ranked with other requests, prioritized in the order received, and you will be notified if funds become available. Please also investigate other funding sources.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
     message += "<a href='" + str_url + "'>Professional Development Request</a><br/><br/>";
@@ -1445,7 +1442,7 @@ function sendPostActivityCreatorMoreInfo(rtype) {
     
     var subject = "Post-activity Professional Development Request need More Information";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> required additional information.<br/>";
+    message += "Your Post-activity Professional Development Request, titled <b>" + act_title + "</b>, requires additional information.<br/>";
     message += "Please use the link below to read the comments which explain what more information is required.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
@@ -1464,7 +1461,7 @@ function sendPostActivityCreatorDenied(rtype) {
     
     var subject = "Post-activity Professional Development Request has been Denied";
     var message = "Dear " + requestor_name + ", <br/><br/>";
-    message += "Your Post-activity Professional Development Request, title <b>" + act_title + "</b> has been <b>Denied</b>.<br/>";
+    message += "Your Post-activity Professional Development Request, titled <b>" + act_title + "</b>, has been <b>Denied</b>.<br/>";
     message += "Please use the link below to read the comments which explain the reason for the denieal.<br/><br/>";
     
     var str_url = sessionStorage.getItem('m_parentSite') + "/PDRequest/Login.html";
