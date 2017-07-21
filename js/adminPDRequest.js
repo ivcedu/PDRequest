@@ -1280,8 +1280,8 @@ function sendPreActivityCreatorReimbApproved(rtype) {
     message += "<a href='" + str_url + "/PDRequest/Login.html'>Professional Development Request</a><br/><br/>";
     
     message += "After attending your activity, you will need to log back into the FPD request site, submit your \"Post-activity\" information with the required fields and the \"actuals\" ";
-    message += "of what you spent filled out, and send your receipts to Stafanie Alvarez within 2 weeks of the conference end date or you will risk forfeiting funding for this activity.<br/> ";
-    message += "Stefanie Alvarez will submit your reimbursement request in Workday on your behalf. This is to verify that your expenses are approved for the conference that you attended.<br/> ";
+    message += "of what you spent filled out, and send your receipts to Stafanie Alvarez within 2 weeks of the conference end date or you will risk forfeiting funding for this activity.<br/><br/>";
+    message += "Stefanie Alvarez will submit your reimbursement request in Workday on your behalf. This is to verify that your expenses are approved for the conference that you attended.<br/><br/>";
     message += "This process must be followed in order to ensure proper reimbursement for conference and that the proper receipts are provided. If follow up documentation is required, ";
     message += "then an e-mail will be sent to you and you must respond within a timely manner in order to assure that you are reimbursed properly. ";
     message += "Any delay or no-response will result in nonpayment for that expense.<br/><br/>";
