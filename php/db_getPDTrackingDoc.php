@@ -86,6 +86,7 @@
             . "ISNULL(pdrh.PostAppHr, 0) AS PostHrsApproved, "
             . "ISNULL(pdrr.PostTotalAmtRequest, 0) AS PostAmtRequest, "
             . "ISNULL(pdrr.PostTotalAmtApproved, 0) AS PostAmtApproved, "
+            . "trdc.ExpenseReport, "
             . "trdc.ReqNum, "
             . "trdc.DistPaid, "
             . "trdc.DistCompDate, "

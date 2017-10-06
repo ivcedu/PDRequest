@@ -86,6 +86,7 @@
             . "ISNULL(pdrh.PostAppHr, 0) AS PostHrsApproved, "
             . "ISNULL(pdrr.PostTotalAmtRequest, 0) AS PostAmtRequest, "
             . "ISNULL(pdrr.PostTotalAmtApproved, 0) AS PostAmtApproved, "
+            . "trdc.ExpenseReport, "
             . "trdc.ReqNum, "
             . "trdc.DistPaid, "
             . "trdc.DistCompDate, "
@@ -113,7 +114,7 @@
                         'PreHrsRequest', 'PreHrsApproved','PreAmtRequest','PreAmtApproved',
                         'HrsPostSubDate','HrsPostAprDate','ReimbPostSubDate','ReimbPostAprDate',
                         'PostHrsRequest','PostHrsApproved','PostAmtRequest','PostAmtApproved',
-                        'ReqNum', 'DistrictAllocation', 'Comments'));
+                        'ExpenseReport', 'SpendAuthorization', 'DistrictAllocation', 'Comments'));
     // Write all the user records to the spreadsheet
     foreach($data as $row) {        
         fputcsv($out, array($row['PDRequestID'], $row['ActTitle'], $row['FacultyName'], $row['StartDate'], $row['EndDate'], 
@@ -121,7 +122,7 @@
                             $row['PreHrsRequest'], $row['PreHrsRequest'], $row['PreAmtRequest'], $row['PreAmtApproved'], 
                             $row['HrsPostSubDate'], $row['HrsPostAprDate'], $row['ReimbPostSubDate'], $row['ReimbPostAprDate'], 
                             $row['PostHrsRequest'], $row['PostHrsApproved'], $row['PostAmtRequest'], $row['PostAmtApproved'], 
-                            $row['ReqNum'], $row['DistPaid'], $row['Comments']));
+                            $row['ExpenseReport'], $row['ReqNum'], $row['DistPaid'], $row['Comments']));
     }
     
     fclose($out);
