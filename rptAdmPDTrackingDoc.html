@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
         <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/> 
         <!-- application css -->
-        <link rel="stylesheet" href="css/rptAdmPDTrackingDoc.css"/>
+        <link rel="stylesheet" href="css/rptAdmPDTrackingDoc.css?v=1.6.1"/>
     </head>
     <body id="body">
         <div class="well container">
@@ -79,7 +79,8 @@
                             <th class="col_100"><a href="#" style="color: white;">PostHrsApp</a></th>
                             <th class="col_150"><a href="#" style="color: white;">PostAmtReq</a></th>
                             <th class="col_150"><a href="#" style="color: white;">PostAmtApp</a></th>
-                            <th class="col_150"><a href="#" style="color: white;">ReqNum</a></th>
+                            <th class="col_200"><a href="#" style="color: white;">ExpenseReport</a></th>
+                            <th class="col_150"><a href="#" style="color: white;">SpendAuthorization</a></th>
                             <th class="col_150"><a href="#" style="color: white;">DistAllocation</a></th>
                             <th class="col_200"><a href="#" style="color: white;">Comments</a></th>
                         </tr>
@@ -107,7 +108,11 @@
                         </div>
                     </div>
                     <div class="row-fluid">
-                        <div class="span4 text-left" style="padding-top: 5px;">Requisition Number:</div>
+                        <div class="span4 text-left" style="padding-top: 5px;">Expense Report:</div>
+                        <div class="span8"><textarea class="span12" style="resize: none;" id="mod_trac_doc_expense_report"></textarea></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4 text-left" style="padding-top: 5px;">Spend Authorization:</div>
                         <div class="span8"><input type="text" class="span12" id="mod_trac_doc_req_num"></div>
                     </div>
                     <div class="row-fluid">
@@ -140,8 +145,8 @@
         <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
         <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
         <!-- application javascript -->
-        <script src="js/rptAdmPDTrackingDoc.js"></script>
-        <script src="js/session_data.js"></script>
-        <script src="js/db_access.js"></script>
+        <script src="js/rptAdmPDTrackingDoc.js?v=1.6.0"></script>
+        <script src="js/session_data.js?v=1.6.0"></script>
+        <script src="js/db_access.js?v=1.6.0"></script>
     </body>
 </html>
