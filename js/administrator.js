@@ -105,10 +105,9 @@ $(document).ready(function() {
         window.open('home.html', '_self');
     });
     
-    $('#logout').click(function() {
-        var parent_site = sessionStorage.getItem('m_parentSite');
+    $('#nav_logout').click(function() {
         sessionStorage.clear();
-        window.open(parent_site, '_self');
+        window.open("Login.html", '_self');
     });
     
     $('#refresh').click(function() {        

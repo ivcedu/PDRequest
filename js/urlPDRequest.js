@@ -3,7 +3,7 @@ var url_pd_request_id = "";
 var url_cur_status_id = "";
 var url_cur_step_id = "";
 var pd_limit = 0.0;
-var amount_convert = 0.0;
+var amt_encumbered = 0.0;
 var available_amount = 0.0;
 
 var fiscal_yrs = "";
@@ -16,7 +16,7 @@ window.onload = function() {
         
         sessionStorage.setItem('m_PDRequestID', url_pd_request_id);
         sessionStorage.setItem('m_pd_limit', pd_limit);
-        sessionStorage.setItem('m_amount_convert', amount_convert);
+        sessionStorage.setItem('m_amt_encumbered', amt_encumbered);
         sessionStorage.setItem('m_available_amount', available_amount);
         
         if (url_cur_status_id === "2" || url_cur_status_id === "6") {
@@ -110,15 +110,15 @@ function getConvertAmount(PDRequestID, PDReqStepID, StatusID) {
     if (result.length === 1) {
         if (PDReqStepID === "1") {
             if (StatusID === "4") {
-                amount_convert += Number(result[0]['PreTotalAmtApproved']);
+                amt_encumbered += Number(result[0]['PreTotalAmtApproved']);
             }
         }
         else {
             if (StatusID === "4") {
-                amount_convert += Number(result[0]['PostTotalAmtApproved']);
+                amt_encumbered += Number(result[0]['PostTotalAmtApproved']);
             }
             else if (StatusID === "2" || StatusID === "5" || StatusID === "7") {
-                amount_convert += Number(result[0]['PreTotalAmtApproved']);
+                amt_encumbered += Number(result[0]['PreTotalAmtApproved']);
             }
         }
     }
@@ -138,7 +138,7 @@ function setPDAmountSummary() {
         getSystemPDAmount("PartTimeLimit");
     }
 
-    available_amount = pd_limit - amount_convert;
+    available_amount = pd_limit - amt_encumbered;
 }
 
 function getSystemPDAmount(pd_system) {

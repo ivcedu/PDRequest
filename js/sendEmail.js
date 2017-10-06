@@ -1,5 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 function proc_sendEmail(email, name, subject, message) {
+    // for testing ...
+    if (email === "dderoulet@ivc.edu") {
+        email = "presidenttest@ivc.edu";
+    }
+    
     var Result = false;
     $.ajax({
         type:"POST",
