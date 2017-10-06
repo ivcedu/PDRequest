@@ -1839,12 +1839,12 @@ function db_updateAvailFWJustArea(AvailFlexWeekID, FWJust1, FWJust2, FWJust3, FW
     return Result;
 }
 
-function db_updateTracDoc(TracDocID, ReqNum, DistPaid, Comments) {
+function db_updateTracDoc(TracDocID, ExpenseReport, ReqNum, DistPaid, Comments) {
     var Result = false;
     $.ajax({
         type:"POST",
         url:"php/db_updateTracDoc.php",
-        data:{TracDocID:TracDocID, ReqNum:ReqNum, DistPaid:DistPaid, Comments:Comments},
+        data:{ExpenseReport:ExpenseReport, TracDocID:TracDocID, ReqNum:ReqNum, DistPaid:DistPaid, Comments:Comments},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

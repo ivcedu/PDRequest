@@ -129,6 +129,7 @@ $(document).ready(function() {
     $('.selectpicker').selectpicker();
     
     // auto size
+    $('#mod_trac_doc_expense_report').autosize();
     $('#mod_trac_doc_comments').autosize();
 });
 
@@ -202,7 +203,7 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
         str_html += setPDTrackingDocListHTML(result[i]['PDRequestID'], result[i]['TracDocID'], result[i]['ActTitle'], result[i]['FacultyName'], start_date, end_date, 
                                                 hrs_pre_sub_date, hrs_pre_app_date, reimb_pre_sub_date, reimb_pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
                                                 hrs_post_sub_date, hrs_post_app_date, reimb_post_sub_date, reimb_post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, 
-                                                result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
+                                                result[i]['ExpenseReport'], result[i]['ReqNum'], dist_alloc, result[i]['Comments']);
     }
     $("#body_tr").append(str_html);
     $("#pd_tracking_doc_tbl").trigger("update");
@@ -211,7 +212,7 @@ function getPDTrackingDocList(start_date, end_date, etype, fiscal_yrs) {
 function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, act_title, faculty_name, start_date, end_date, 
                                     hrs_pre_sub_date, hrs_pre_app_date, reimb_pre_sub_date, reimb_pre_app_date, pre_hr_req, pre_hr_app, pre_amt_req, pre_amt_app,
                                     hrs_post_sub_date, hrs_post_app_date, reimb_post_sub_date, reimb_post_app_date, post_hr_req, post_hr_app, post_amt_req, post_amt_app, 
-                                    req_num, dist_alloc, comments) {    
+                                    expense_report, req_num, dist_alloc, comments) {    
     var tbl_html = "<tr>";
     tbl_html += "<td class='col_50'><a href=# id='trac_doc_id_" + trac_doc_id +  "'>" + pd_request_id + "</a></td>";
     tbl_html += "<td class='col_400'>" + act_title + "</td>";
@@ -234,6 +235,7 @@ function setPDTrackingDocListHTML(pd_request_id, trac_doc_id, act_title, faculty
     tbl_html += "<td class='col_100'>" + post_hr_app + "</td>";
     tbl_html += "<td class='col_150'>" + post_amt_req + "</td>";
     tbl_html += "<td class='col_150'>" + post_amt_app + "</td>";
+    tbl_html += "<td class='col_200'>" + expense_report + "</td>";
     tbl_html += "<td class='col_150'>" + req_num + "</td>";
     tbl_html += "<td class='col_150'>" + dist_alloc + "</td>";
     tbl_html += "<td class='col_200'>" + comments + "</td>";
@@ -247,6 +249,7 @@ function getTracDoc() {
     result = db_getTracDoc(trac_doc_id);
     
     if (result.length === 1) {
+        $('#mod_trac_doc_expense_report').val(result[0]['ExpenseReport']).trigger('autosize.resize');
         $('#mod_trac_doc_req_num').val(result[0]['ReqNum']);
         $('#mod_trac_doc_dist_alloc').val(formatDollar(Number(result[0]['DistPaid']), 2));
         $('#mod_trac_doc_comments').val(result[0]['Comments']).trigger('autosize.resize');
@@ -254,12 +257,14 @@ function getTracDoc() {
 }
 
 function updateTracDoc() {
+    var expense_report = textReplaceApostrophe($('#mod_trac_doc_expense_report').val());
     var req_num = textReplaceApostrophe($('#mod_trac_doc_req_num').val());
     var str_dist_alloc = $('#mod_trac_doc_dist_alloc').val();
     var dist_alloc = revertDollar(str_dist_alloc);
     var comments = textReplaceApostrophe($('#mod_trac_doc_comments').val());
-    var note = "update TracDoc ReqNum: " + req_num + " District Allocation: " + str_dist_alloc + " Comments: " + comments;
     
-    db_updateTracDoc(trac_doc_id, req_num, dist_alloc, comments);
+    var note = "update TracDoc Spend Authorization: " + req_num + " District Allocation: " + str_dist_alloc + " Comments: " + comments + " Expense Report: " + expense_report;
+    
+    db_updateTracDoc(trac_doc_id, expense_report, req_num, dist_alloc, comments);
     db_insertLogHistory(pd_request_id, sessionStorage.getItem('m_loginName'), note);
 }
