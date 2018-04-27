@@ -4,7 +4,16 @@
     $LoginID = filter_input(INPUT_POST, 'LoginID');
     $FiscalYrs = filter_input(INPUT_POST, 'FiscalYrs');
 
-    $query = "SELECT pdrb.PDRequestID, pdrp.ReimbStatusID, pdrp.ReimbStepID, pdrb.PreTotalAmtApproved, pdrb.PostTotalAmtApproved, trdc.DistPaid "
+    $query = "SELECT pdrb.PDRequestID, "
+            . "pdrp.ReimbStatusID, "
+            . "pdrp.ReimbStepID, "
+            . "pdrb.PreTotalAmtRequest, "
+            . "pdrb.PreTotalAmtApproved, "
+            . "pdrb.PreTotalAmtPendingFunds, "
+            . "pdrb.PostTotalAmtRequest, "
+            . "pdrb.PostTotalAmtApproved, "
+            . "pdrb.PostTotalAmtPendingFunds, "
+            . "trdc.DistPaid "
             . "FROM [IVCPD].[dbo].[PDReqReimb] AS pdrb LEFT JOIN [IVCPD].[dbo].[PDRequest] AS pdrq ON pdrb.PDRequestID = pdrq.PDRequestID "
             . "LEFT JOIN [IVCPD].[dbo].[PDReqHRProcess] AS pdrp ON pdrp.PDRequestID = pdrq.PDRequestID "
             . "LEFT JOIN [IVCPD].[dbo].[TracDoc] AS trdc ON pdrb.PDRequestID = trdc.PDRequestID "

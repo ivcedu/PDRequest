@@ -1,5 +1,5 @@
 var pd_limit = 0.0;
-var amount_convert = 0.0;
+var amt_encumbered = 0.0;
 var available_amount = 0.0;
 var fiscal_yrs = "";
 
@@ -676,49 +676,15 @@ function setPDReqFSComments() {
 ////////////////////////////////////////////////////////////////////////////////
 function setSelectPDLimitSummary() {
     getSelectPDLimit();
-    calculateEncumberedAmt();
     
-    available_amount = pd_limit - amount_convert;
+    amt_encumbered = pd_encumbered.getAmount(LoginID, fiscal_yrs);
+    available_amount = pd_limit - amt_encumbered;
     $('#sys_pd_limit_amount').html(formatDollar(pd_limit, 2));
-    $('#pd_amount_convert').html(formatDollar(amount_convert, 2));
+    $('#pd_amount_encumbered').html(formatDollar(amt_encumbered, 2));
     $('#pd_available_amount').html(formatDollar(available_amount, 2));
     
     if (available_amount < 0) {
         $('#pd_available_amount').css('color', 'red');
-    }
-}
-
-function calculateEncumberedAmt() {
-    var result = new Array(); 
-    result = db_getPDReqReimbByLoginFiscalYrs(LoginID, $('#fiscal').html());
-    
-    for(var i = 0; i < result.length; i++) {
-        if (result[i]['ReimbStepID'] === "1") {
-            if (result[i]['ReimbStatusID'] === "4") {
-                amount_convert += Number(result[i]['PreTotalAmtApproved']);
-            }
-        }
-        else {
-            if (result[i]['ReimbStatusID'] === "4") {
-                var dist_paid = Number(result[i]['DistPaid']);
-                if (dist_paid === 0) {
-                    amount_convert += Number(result[i]['PostTotalAmtApproved']);
-                }
-                else {
-                    var amt_approved = Number(result[i]['PostTotalAmtApproved']);
-                    var diff_amt = amt_approved - dist_paid;
-                    if (diff_amt === 0) {
-                        amount_convert += Number(result[i]['PostTotalAmtApproved']);
-                    }
-                    else {
-                        amount_convert += amt_approved - diff_amt;
-                    }
-                }
-            }
-            else if (result[i]['ReimbStatusID'] === "2" || result[i]['ReimbStatusID'] === "5" || result[i]['ReimbStatusID'] === "7") {
-                amount_convert += Number(result[i]['PostTotalAmtApproved']);
-            }
-        }
     }
 }
 
@@ -750,26 +716,6 @@ function getSystemPDAmount(pd_system) {
     }
 }
 
-function getConvertAmount(PDRequestID, PDReqStepID, StatusID) {
-    var result = new Array(new Array()); 
-    result = db_getPDReqReimb(PDRequestID);
-    
-    if (result.length === 1) {
-        if (PDReqStepID === "1") {
-            if (StatusID === "4") {
-                amount_convert += Number(result[0]['PreTotalAmtApproved']);
-            }
-        }
-        else {
-            if (StatusID === "4") {
-                amount_convert += Number(result[0]['PostTotalAmtApproved']);
-            }
-            else if (StatusID === "2" || StatusID === "5" || StatusID === "7") {
-                amount_convert += Number(result[0]['PreTotalAmtApproved']);
-            }
-        }
-    }
-}
 ////////////////////////////////////////////////////////////////////////////////
 function updatePDRequestApprovalFields() {
     if (ResourceTypeID === "1") {

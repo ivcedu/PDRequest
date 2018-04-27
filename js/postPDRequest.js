@@ -4,6 +4,10 @@ var m_hrs_step = null;
 var m_hrs_status = null;
 var m_reimb_step = null;
 var m_reimb_status = null;
+
+var pd_limit = 0.0;
+var amt_encumbered = 0.0;
+var available_amount = 0.0;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {
     if (sessionStorage.key(0) !== null) {     
@@ -42,9 +46,8 @@ $(document).ready(function() {
     });
     
     $('#nav_logout').click(function() {
-        var parent_site = sessionStorage.getItem('m_parentSite');
         sessionStorage.clear();
-        window.open(parent_site, '_self');
+        window.open("Login.html", '_self');
     });
 
     // justification narrative add file click //////////////////////////////////
@@ -1121,11 +1124,12 @@ function setPDReqFSComments() {
 }
 
 function setPDLimitSummary() {
-    var pd_limit = Number(sessionStorage.getItem('m_pd_limit'));
-    var amount_convert = Number(sessionStorage.getItem('m_amount_convert'));
-    var available_amount = Number(sessionStorage.getItem('m_available_amount'));
+    getSelectPDLimit();
+    
+    amt_encumbered = pd_encumbered.getAmount(LoginID, fiscal_yrs);
+    available_amount = pd_limit - amt_encumbered;
     $('#sys_pd_limit_amount').html(formatDollar(pd_limit, 2));
-    $('#pd_amount_convert').html(formatDollar(amount_convert, 2));
+    $('#pd_amount_encumbered').html(formatDollar(amt_encumbered, 2));
     $('#pd_available_amount').html(formatDollar(available_amount, 2));
     
     if (available_amount < 0) {
@@ -1133,6 +1137,35 @@ function setPDLimitSummary() {
     }
 }
 
+function getSelectPDLimit() {
+    var result = new Array(); 
+    result = db_getLoginByID(LoginID);
+    
+    if (result.length === 1) {
+        var login_etype = result[0]['LoginEType'];
+        if (login_etype === "Full Time Faculty") {
+            getSystemPDAmount("FullTimeLimit");
+        }
+        else if (login_etype === "Part Time Faculty") {
+            getSystemPDAmount("PartTimeLimit");
+        }
+    }
+}
+
+function getSystemPDAmount(pd_system) {
+    var pdsystem = new Array();
+    pdsystem = db_getPDSystem(fiscal_yrs);
+    
+    for(var i = 0; i < pdsystem.length; i++) {
+        var sys_name = pdsystem[i][1];
+        if (sys_name === pd_system) {
+            pd_limit = Number(pdsystem[i][2]);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function getSelectStepStatus() {
     var result = new Array();
     result = db_getPDReqHRProcess(PDRequestID);

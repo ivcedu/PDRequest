@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
         <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
         <!-- application css -->
-        <link rel="stylesheet" href="css/home.css"/>
+        <link rel="stylesheet" href="css/home.css?v=1.6.0"/>
     </head>
     <body id="body">
         <div class="well container">
@@ -26,18 +26,8 @@
                     <ul class="nav">
                         <li><a href=# id="avail_flex_week"><i class="icon-folder-open icon-white"></i> Avail. Flex Week</a></li>
                     </ul>
-                    <!--
                     <ul class="nav pull-right">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href=#><i class="icon-question-sign icon-white"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="doc/PD Request User Manual.pdf" target="_blank">User Manual</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    -->
-                    <ul class="nav pull-right">
-                        <li><a href=# id="logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
+                        <li><a href=# id="nav_logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
                     </ul>
                     <ul class="nav pull-right">
                         <li id="show_admin"><a href=# id="administrator"><i class="icon-lock icon-white"></i> Admin</a></li>
@@ -74,7 +64,7 @@
                     <div class="span2" style="font-weight: bold;">PD Limit:</div>
                     <div class="span2 text-right" style="font-weight: bold;" id="sys_pd_limit_amount"></div>
                     <div class="span2" style="font-weight: bold;">PD Encumbered:</div>
-                    <div class="span2 text-right" style="font-weight: bold;" id="pd_amount_convert"></div>
+                    <div class="span2 text-right" style="font-weight: bold;" id="pd_amount_encumbered"></div>
                     <div class="span2" style="font-weight: bold;">PD Available:</div>
                     <div class="span2 text-right" style="font-weight: bold; color: blue;" id="pd_available_amount"></div>
                 </div>
@@ -164,8 +154,9 @@
         <script src="../include/bootstrap-popover/js/bootstrap-popover.2.0.1.min.js"></script>
         <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
         <!-- application javascript -->
-        <script src="js/home.js"></script>
-        <script src="js/session_data.js"></script>
-        <script src="js/db_access.js"></script>
+        <script src="js/home.js?v=1.6.1"></script>
+        <script src="js/encumbered.js?v=1.0.0"></script>
+        <script src="js/session_data.js?v=1.6.0"></script>
+        <script src="js/db_access.js?v=1.6.0"></script>
     </body>
 </html>

@@ -8,8 +8,8 @@
         <!-- include css -->
         <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
         <!-- application css -->
-        <link rel="stylesheet" href="css/home.css"/>
-        <link rel="stylesheet" href="css/printPDRequest.css"/>
+        <link rel="stylesheet" href="css/home.css?v=1.6.0"/>
+        <link rel="stylesheet" href="css/printPDRequest.css?v=1.6.0"/>
     </head>
     <body id="body">
         <div class="well container">
@@ -371,7 +371,7 @@
                     <div class="span2" style="font-weight: bold;">PD Limit:</div>
                     <div class="span2" style="font-weight: bold;" id="sys_pd_limit_amount"></div>
                     <div class="span2" style="font-weight: bold;">PD Encumbered:</div>
-                    <div class="span2" style="font-weight: bold;" id="pd_amount_convert"></div>
+                    <div class="span2" style="font-weight: bold;" id="pd_amount_encumbered"></div>
                     <div class="span2" style="font-weight: bold;">PD Available:</div>
                     <div class="span2" style="font-weight: bold; color: blue;" id="pd_available_amount"></div>
                 </div>
@@ -421,9 +421,10 @@
         <script src="../include/jspdf/jspdf.plugin.total_pages.js"></script>
         <script src="../include/bowser/bowser.min.js"></script>
         <!-- application javascript -->
-        <script src="js/editPDRequest.js"></script>
-        <script src="js/session_data.js"></script>
-        <script src="js/db_access.js"></script>
-        <script src="js/sendEmail.js"></script>
+        <script src="js/editPDRequest.js?v=1.6.1"></script>
+        <script src="js/encumbered.js?v=1.0.0"></script>
+        <script src="js/session_data.js?v=1.6.0"></script>
+        <script src="js/db_access.js?v=1.6.0"></script>
+        <script src="js/sendEmail.js?v=1.6.0"></script>
     </body>
 </html>

@@ -10,8 +10,8 @@
         <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
         <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
         <!-- application css -->
-        <link rel="stylesheet" href="css/home.css"/>
-        <link rel="stylesheet" href="css/fundSrcPopSize.css"/>
+        <link rel="stylesheet" href="css/home.css?v=1.6.0"/>
+        <link rel="stylesheet" href="css/fundSrcPopSize.css?v=1.6.0"/>
     </head>
     <body id="body">
         <div class="well container">
@@ -295,13 +295,12 @@
                     <div class="span2" style="font-weight: bold;">PD Limit:</div>
                     <div class="span2" style="font-weight: bold;" id="sys_pd_limit_amount"></div>
                     <div class="span2" style="font-weight: bold;">PD Encumbered:</div>
-                    <div class="span2" style="font-weight: bold;" id="pd_amount_convert"></div>
+                    <div class="span2" style="font-weight: bold;" id="pd_amount_encumbered"></div>
                     <div class="span2" style="font-weight: bold;">PD Available:</div>
                     <div class="span2" style="font-weight: bold; color: blue;" id="pd_available_amount"></div>
                 </div>
             </div>
             <br>
-
             <!-- professional development approval request -->
             <div id="approval_section">
                 <div class="row" style="padding-bottom: 10px">
@@ -336,7 +335,6 @@
                 </div>
                 <br>
             </div>
-            
             <!-- comments history -->
             <div id="comments_section">
                 <div class="row" style="padding-bottom: 10px">
@@ -347,7 +345,6 @@
                 </div>
             </div>
         </div>
-        
         <!-- include javascript -->
         <script src="../include/jquery/jquery-2.0.3.min.js"></script>
         <script src="../include/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
@@ -360,10 +357,11 @@
         <script src="../include/bootstrap-filestyle/js/bootstrap-filestyle.1.0.3.min.js"></script>
         <script src="../include/bootstrap-popover/js/bootstrap-popover.2.0.1.min.js"></script>
         <!-- application javascript -->
-        <script src="js/prePDRequest.js"></script>
-        <script src="js/session_data.js"></script>
-        <script src="js/db_access.js"></script>
-        <script src="js/sendEmail.js"></script>
+        <script src="js/prePDRequest.js?v=1.6.1"></script>
+        <script src="js/encumbered.js?v=1.0.0"></script>
+        <script src="js/session_data.js?v=1.6.0"></script>
+        <script src="js/db_access.js?v=1.6.0"></script>
+        <script src="js/sendEmail.js?v=1.6.0"></script>
     </body>
 </html>
     
