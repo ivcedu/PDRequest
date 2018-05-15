@@ -3,7 +3,7 @@
     
     $FiscalYrs = filter_input(INPUT_POST, 'FiscalYrs');
 
-    $query = "SELECT pdrt.PDRequestID, "
+    $query = "SELECT DISTINCT pdrt.PDRequestID, "
             . "pdrt.ActTitle, "
             . "pdrt.ActOrganizer, "
             . "pdrt.ActCity, "
